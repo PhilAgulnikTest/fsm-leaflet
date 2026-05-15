@@ -1,9 +1,10 @@
 # Render.com blueprint.
 #
-# After the GitHub repo is connected on Render, this file is detected and the
-# service is provisioned automatically. The free tier sleeps after 15 min of
-# inactivity (first request after wakes it in ~10s) — fine for the small-circulation
-# v1 launch the brief targets.
+# Free tier configuration. NOTE: free plan does NOT support persistent disks,
+# so SQLite lives on ephemeral storage that resets on every deploy/restart.
+# Fine for a demo (the seed scripts re-populate templates, LA clients, and
+# demo schools on boot) but published customisations won't survive a restart.
+# Upgrade to "starter" plan ($7/mo) and add a disk block to keep state.
 
 services:
   - type: web
@@ -11,15 +12,12 @@ services:
     runtime: docker
     plan: free
     healthCheckPath: /healthz
-    disk:
-      name: fsm-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: DATABASE_PATH
-        value: /data/fsm.db
+        # /tmp is writable on Render free tier (ephemeral).
+        value: /tmp/fsm.db
       - key: PUBLIC_BASE_URL
         # Render injects RENDER_EXTERNAL_URL at runtime; the server will read
         # this if PUBLIC_BASE_URL is unset. Override in the Render dashboard

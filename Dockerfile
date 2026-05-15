@@ -43,11 +43,11 @@ COPY templates ./templates
 COPY reference ./reference
 COPY --from=client-build /repo/client/dist ./client/dist
 
-# Persistent SQLite. The path here must match the volume mount declared in
-# render.yaml / fly.toml.
-ENV DATABASE_PATH=/data/fsm.db
-RUN mkdir -p /data
-VOLUME ["/data"]
+# SQLite path. On Render free tier this is /tmp/fsm.db (ephemeral, see render.yaml).
+# On Render starter+ tier with a disk attached, override DATABASE_PATH to
+# /data/fsm.db and uncomment the VOLUME line below.
+ENV DATABASE_PATH=/tmp/fsm.db
+# VOLUME ["/data"]
 
 EXPOSE 4000
 
