@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}" dir="{{DIR}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <link rel="stylesheet" href="{{CSS_URL}}">
+</head>
+<body class="leaflet leaflet--{{TEMPLATE_SLUG}}">
+
+  <main class="leaflet__page" role="main" aria-label="Free school meals leaflet">
+
+    <header class="leaflet__hero" style="--brand: {{BRAND_COLOUR}}; --accent: {{ACCENT_COLOUR}};">
+      <div class="leaflet__hero-meta">
+        <span class="leaflet__hero-badge">PRINT-READY · A4</span>
+      </div>
+      <h1 class="leaflet__title">{{HERO_TITLE}}</h1>
+      <p class="leaflet__subtitle">{{HERO_SUBTITLE}}</p>
+      <p class="leaflet__hero-date">{{HERO_DATE}}</p>
+    </header>
+
+    <section class="leaflet__intro">
+      <p>{{INTRO_HTML}}</p>
+    </section>
+
+    <section class="leaflet__cta-primary" style="background: var(--cta-bg, #1f7a3f);">
+      <h2 class="leaflet__cta-primary-title">{{CTA_PRIMARY_TITLE}}</h2>
+      <p class="leaflet__cta-primary-body">{{CTA_PRIMARY_BODY_HTML}}</p>
+    </section>
+
+    <h2 class="leaflet__section-heading">WHAT THIS MEANS FOR YOU</h2>
+
+    <section class="leaflet__info-boxes">
+      <article class="leaflet__info-box">
+        <h3 class="leaflet__info-box-title">{{BOX1_TITLE}}</h3>
+        <div class="leaflet__info-box-body">{{BOX1_BODY_HTML}}</div>
+      </article>
+      <article class="leaflet__info-box">
+        <h3 class="leaflet__info-box-title">{{BOX2_TITLE}}</h3>
+        <div class="leaflet__info-box-body">{{BOX2_BODY_HTML}}</div>
+      </article>
+    </section>
+
+    <section class="leaflet__how-to-claim">
+      <h3 class="leaflet__how-to-title">HOW TO CLAIM</h3>
+      <p class="leaflet__how-to-intro">{{HOW_TO_INTRO}}</p>
+      <ul class="leaflet__how-to-list">
+        {{HOW_TO_STEPS_HTML}}
+      </ul>
+    </section>
+
+    <section class="leaflet__cta-secondary">
+      <h3 class="leaflet__cta-secondary-title">{{CTA_SECONDARY_TITLE}}</h3>
+      <p class="leaflet__cta-secondary-body">{{CTA_SECONDARY_BODY_HTML}}</p>
+      <p class="leaflet__cta-secondary-link">
+        <a href="{{CALCULATOR_URL}}">{{CALCULATOR_URL_DISPLAY}}</a>
+      </p>
+    </section>
+
+    <section class="leaflet__contact" aria-label="Contact details">
+      <p class="leaflet__contact-name">{{CONTACT_NAME}}</p>
+      <p class="leaflet__contact-details">
+        <span class="leaflet__contact-phone">{{CONTACT_PHONE}}</span>
+        <span class="leaflet__contact-email">{{CONTACT_EMAIL}}</span>
+        <span class="leaflet__contact-website">{{CONTACT_WEBSITE}}</span>
+      </p>
+    </section>
+
+    <footer class="leaflet__credit">
+      <p>
+        <strong>Template by NAWRA</strong> — National Association of Welfare Rights Advisors ·
+        <a href="https://nawra.org.uk">nawra.org.uk</a>
+        {{ENTITLEDTO_CREDIT_HTML}}
+      </p>
+      <p class="leaflet__credit-licence">
+        Free to copy, adapt and share · <span class="leaflet__cc">CC BY 4.0</span>
+      </p>
+    </footer>
+
+    {{QR_BLOCK_HTML}}
+
+  </main>
+
+</body>
+</html>

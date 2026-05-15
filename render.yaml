@@ -1,0 +1,35 @@
+# Render.com blueprint.
+#
+# After the GitHub repo is connected on Render, this file is detected and the
+# service is provisioned automatically. The free tier sleeps after 15 min of
+# inactivity (first request after wakes it in ~10s) — fine for the small-circulation
+# v1 launch the brief targets.
+
+services:
+  - type: web
+    name: fsm-leaflet
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    disk:
+      name: fsm-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: /data/fsm.db
+      - key: PUBLIC_BASE_URL
+        # Render injects RENDER_EXTERNAL_URL at runtime; the server will read
+        # this if PUBLIC_BASE_URL is unset. Override in the Render dashboard
+        # once you've picked a custom domain.
+        sync: false
+      - key: PLATFORM_ADMIN_EMAILS
+        value: phil@entitledto.co.uk
+      - key: EMAIL_PROVIDER
+        value: none
+      - key: ANTHROPIC_API_KEY
+        # Set this in the Render dashboard (Environment → Add Environment Variable).
+        # Don't paste secrets here — sync: false keeps Render from prompting on each deploy.
+        sync: false

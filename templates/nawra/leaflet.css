@@ -1,0 +1,337 @@
+/* FSM leaflet — v11 NAWRA template.
+   A4 portrait. Brand colour is parameterised via the --brand custom property
+   on .leaflet__hero so LA-bespoke variants can re-skin without forking the CSS. */
+
+:root {
+  --brand: #1F4F5C;            /* NAWRA dark teal */
+  --accent: #16A34A;            /* CTA green */
+  --ink: #0F172A;
+  --ink-muted: #475569;
+  --paper: #ffffff;
+  --paper-tint: #F1F5F9;
+  --box-blue: #E5EEF5;
+  --box-blue-border: #B6CCDB;
+  --warning-yellow: #FEF3C7;
+  --warning-yellow-border: #FCD34D;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #E5E7EB;
+  color: var(--ink);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 11.5pt;
+  line-height: 1.4;
+}
+
+/* A4 portrait — 210 mm × 297 mm. Constrained for screen preview, expanded
+   to full bleed for the printed PDF (see @page). */
+.leaflet__page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 1.5rem auto;
+  background: var(--paper);
+  padding: 14mm 14mm 12mm;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.12);
+}
+
+@page { size: A4; margin: 0; }
+@media print {
+  body { background: var(--paper); }
+  .leaflet__page { margin: 0; box-shadow: none; }
+}
+
+/* Hero ------------------------------------------------------------------- */
+
+.leaflet__hero {
+  background: var(--brand);
+  color: #fff;
+  padding: 18mm 14mm 12mm;
+  margin: -14mm -14mm 6mm;
+  position: relative;
+}
+
+.leaflet__hero-meta {
+  position: absolute;
+  top: 6mm;
+  right: 8mm;
+}
+
+.leaflet__hero-badge {
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.leaflet__title {
+  font-size: 30pt;
+  line-height: 1.05;
+  font-weight: 800;
+  margin: 0 0 4mm;
+  letter-spacing: -0.01em;
+}
+
+.leaflet__subtitle {
+  font-size: 13pt;
+  font-weight: 500;
+  margin: 0 0 2mm;
+  opacity: 0.92;
+}
+
+.leaflet__hero-date {
+  font-size: 12pt;
+  font-weight: 600;
+  margin: 0;
+  color: var(--accent-on-hero, #BAE6FD);
+}
+
+/* Intro ------------------------------------------------------------------ */
+
+.leaflet__intro p {
+  font-size: 13pt;
+  line-height: 1.45;
+  margin: 4mm 0 6mm;
+  font-weight: 500;
+}
+
+/* Primary CTA (green or magenta on LA-bespoke) --------------------------- */
+
+.leaflet__cta-primary {
+  color: #fff;
+  padding: 8mm 9mm;
+  margin: 0 0 7mm;
+  border-radius: 3mm;
+}
+
+.leaflet__cta-primary-title {
+  font-size: 24pt;
+  font-weight: 800;
+  margin: 0 0 3mm;
+  line-height: 1.1;
+}
+
+.leaflet__cta-primary-body {
+  font-size: 11.5pt;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Section heading -------------------------------------------------------- */
+
+.leaflet__section-heading {
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--brand);
+  margin: 4mm 0 4mm;
+}
+
+/* Info boxes ------------------------------------------------------------- */
+
+.leaflet__info-boxes {
+  display: grid;
+  gap: 4mm;
+  margin: 0 0 6mm;
+}
+
+.leaflet__info-box {
+  background: var(--box-blue);
+  border-left: 4mm solid var(--brand);
+  padding: 5mm 6mm 5mm 6mm;
+  border-radius: 0 2mm 2mm 0;
+}
+
+.leaflet__info-box-title {
+  font-size: 14pt;
+  font-weight: 700;
+  margin: 0 0 2mm;
+}
+
+.leaflet__info-box-body {
+  font-size: 11pt;
+  margin: 0;
+}
+
+.leaflet__info-box-body p { margin: 0 0 1mm; }
+.leaflet__info-box-body p:last-child { margin: 0; }
+
+/* How to claim ----------------------------------------------------------- */
+
+.leaflet__how-to-claim {
+  border: 1px solid var(--box-blue-border);
+  border-radius: 2mm;
+  padding: 4mm 6mm;
+  margin: 0 0 6mm;
+}
+
+.leaflet__how-to-title {
+  font-size: 10pt;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--brand);
+  margin: 0 0 2mm;
+}
+
+.leaflet__how-to-intro {
+  font-size: 10.5pt;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin: 0 0 2mm;
+}
+
+.leaflet__how-to-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.leaflet__how-to-list li {
+  position: relative;
+  padding: 1mm 0 1mm 7mm;
+  font-size: 11pt;
+}
+
+.leaflet__how-to-list li::before {
+  content: "›";
+  position: absolute;
+  left: 2mm;
+  color: var(--brand);
+  font-weight: 700;
+}
+
+/* Secondary CTA (yellow) ------------------------------------------------- */
+
+.leaflet__cta-secondary {
+  background: var(--warning-yellow);
+  border-left: 4mm solid var(--warning-yellow-border);
+  padding: 5mm 6mm;
+  border-radius: 0 2mm 2mm 0;
+  margin: 0 0 6mm;
+}
+
+.leaflet__cta-secondary-title {
+  font-size: 14pt;
+  font-weight: 700;
+  margin: 0 0 2mm;
+}
+
+.leaflet__cta-secondary-body {
+  font-size: 11pt;
+  margin: 0 0 2mm;
+}
+
+.leaflet__cta-secondary-link a {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+/* Contact ---------------------------------------------------------------- */
+
+.leaflet__contact {
+  margin: 6mm 0 4mm;
+  padding-top: 4mm;
+  border-top: 1px solid #E2E8F0;
+}
+
+.leaflet__contact-name {
+  font-size: 12pt;
+  font-weight: 700;
+  margin: 0 0 1mm;
+  font-style: italic;
+  color: var(--ink-muted);
+}
+
+.leaflet__contact-details {
+  font-size: 10.5pt;
+  color: var(--ink-muted);
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5mm;
+}
+
+.leaflet__contact-details span:not(:empty)::before {
+  content: "";
+  display: inline;
+}
+
+/* Credit strip ----------------------------------------------------------- */
+
+.leaflet__credit {
+  margin-top: 4mm;
+  padding-top: 3mm;
+  border-top: 1px solid #E2E8F0;
+  font-size: 9pt;
+  color: var(--ink-muted);
+}
+
+.leaflet__credit p { margin: 0; }
+.leaflet__credit a { color: var(--brand); text-decoration: none; }
+.leaflet__credit-licence { margin-top: 1mm; }
+.leaflet__cc {
+  display: inline-block;
+  padding: 1px 4px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-size: 8.5pt;
+  font-weight: 600;
+}
+
+/* QR block (admin/editor view; omitted from print unless explicitly enabled) */
+
+.leaflet__qr {
+  margin-top: 5mm;
+  padding: 4mm;
+  border: 1px dashed #CBD5E1;
+  border-radius: 2mm;
+  display: flex;
+  align-items: center;
+  gap: 5mm;
+  font-size: 9.5pt;
+  color: var(--ink-muted);
+}
+
+.leaflet__qr img { width: 25mm; height: 25mm; }
+.leaflet__qr-caption { line-height: 1.3; }
+.leaflet__qr-shorturl {
+  display: block;
+  margin-top: 1mm;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media print {
+  .leaflet__qr.leaflet__qr--admin-only { display: none; }
+}
+
+/* RTL adjustments (Arabic, Urdu) ----------------------------------------- */
+
+[dir="rtl"] .leaflet__info-box {
+  border-left: none;
+  border-right: 4mm solid var(--brand);
+  border-radius: 2mm 0 0 2mm;
+}
+
+[dir="rtl"] .leaflet__cta-secondary {
+  border-left: none;
+  border-right: 4mm solid var(--warning-yellow-border);
+  border-radius: 2mm 0 0 2mm;
+}
+
+[dir="rtl"] .leaflet__how-to-list li {
+  padding: 1mm 7mm 1mm 0;
+}
+
+[dir="rtl"] .leaflet__how-to-list li::before {
+  left: auto;
+  right: 2mm;
+  content: "‹";
+}

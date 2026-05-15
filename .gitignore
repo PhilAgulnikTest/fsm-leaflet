@@ -1,0 +1,29 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.DS_Store
+
+# SQLite database files
+server/data/*.db
+server/data/*.db-journal
+server/data/*.db-wal
+server/data/*.db-shm
+server/data/gias/*.csv
+
+# Dev artefacts: PDFs / images generated during local smoke tests.
+# We keep reference/ tracked for the brief and source PNGs but drop test outputs.
+reference/test-*.pdf
+reference/test-*.png
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
