@@ -7,12 +7,13 @@ export function Landing() {
     <>
       <Header />
       <main className="page">
-        <section className="hero">
-          <h2>Free school meals are changing — and we've built something to help.</h2>
+        <section className="hero hero--e2">
+          <div className="hero__chip">an entitledto tool</div>
+          <h2>Help more families claim the free school meals they're entitled to.</h2>
           <p>
-            A simple way for schools and councils to publish a clear, parent-friendly
-            information leaflet about FSM eligibility, branded for their area.
-            Built with NAWRA, licensed Creative Commons.
+            From September 2026 every child whose family receives Universal Credit
+            can get free school meals. Publish a parent-friendly leaflet — branded
+            for your school or your local authority — in under five minutes.
           </p>
         </section>
 
@@ -30,29 +31,28 @@ export function Landing() {
             <span className="cta-card__chip">For local authorities</span>
             <h3>I'm a local authority</h3>
             <p>
-              Pick your LA, customise the messaging, link to your LA-specific
-              entitledto calculator, and publish a bespoke version.
+              Pick your LA, customise the messaging to your area, link to your
+              LA-specific entitledto calculator, and publish a bespoke version.
             </p>
           </Link>
 
           <a
-            href="/generic/nawra?format=pdf"
+            href="/generic/entitledto-la?format=pdf"
             className="cta-card"
             rel="noopener"
             download
           >
             <span className="cta-card__chip">For everyone</span>
-            <h3>I just want the generic PDF</h3>
+            <h3>Just give me the PDF</h3>
             <p>
-              Download the unbranded NAWRA template — no sign-up, no customisation.
-              Use it directly or share with a school.
+              Download the generic entitledto-branded leaflet — no sign-up,
+              no customisation. Use it directly or share with a school.
             </p>
           </a>
         </div>
 
-        <p className="muted" style={{ marginTop: '2rem' }}>
-          Built by entitledto with the National Association of Welfare Rights Advisors.
-          Template licensed CC BY 4.0.
+        <p className="muted" style={{ marginTop: '2rem', fontSize: '0.85rem' }}>
+          An entitledto product. Powered by <a href="https://entitledto.co.uk">entitledto.co.uk</a>.
         </p>
 
         <NotesForPhil />

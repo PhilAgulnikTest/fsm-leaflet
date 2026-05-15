@@ -21,6 +21,36 @@ if (migrationResult.applied.length > 0) {
   console.log(`Applied migrations: ${migrationResult.applied.join(', ')}`);
 }
 
+// Self-seed on first boot. Doesn't rely on the Dockerfile CMD chain — if the
+// DB is empty (e.g. on Render free tier where /tmp resets between deploys),
+// import the seed/sites scripts directly. Both are idempotent so re-running
+// when data already exists is a no-op.
+async function autoSeedIfEmpty() {
+  const templateCount = (db.prepare('SELECT COUNT(*) AS n FROM templates').get() as { n: number }).n;
+  if (templateCount > 0) return;
+  console.log('Empty database detected — running initial seed...');
+  try {
+    // Side-effect imports: seed.ts runs at module top level.
+    await import('./db/seed.js');
+    console.log('Seed complete.');
+  } catch (err) {
+    console.error('Auto-seed failed:', err);
+  }
+  // Sites CSV is best-effort. If reference/sites-csv.csv is missing (e.g. someone
+  // pruned the reference dir), we skip rather than crash the server.
+  try {
+    const sitesPath = path.resolve(config.paths.repoRoot, 'reference', 'sites-csv.csv');
+    if (fs.existsSync(sitesPath)) {
+      process.argv.push(`--file=${sitesPath}`);
+      await import('./db/import-entitledto-sites.js');
+      console.log('Sites CSV imported.');
+    }
+  } catch (err) {
+    console.error('Sites import skipped:', err);
+  }
+}
+await autoSeedIfEmpty();
+
 const app = express();
 app.use(express.json({ limit: '256kb' }));
 app.use(cookieParser());

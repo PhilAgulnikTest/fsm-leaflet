@@ -4,11 +4,10 @@ export function Header() {
   return (
     <header className="app-header">
       <div className="app-header__inner">
-        <h1>
-          <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>
-            FSM Leaflet Platform
-          </Link>
-        </h1>
+        <Link to="/" className="app-header__brand" aria-label="entitledto FSM leaflet — home">
+          <span className="app-header__wordmark">entitledto</span>
+          <span className="app-header__product">FSM Leaflet</span>
+        </Link>
         <nav className="app-header__nav" aria-label="Primary">
           <Link to="/customize/school">For schools</Link>
           <Link to="/customize/la">For local authorities</Link>

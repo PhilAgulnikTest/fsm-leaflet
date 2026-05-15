@@ -24,17 +24,70 @@ body {
 a { color: var(--brand); }
 
 .app-header {
-  background: var(--brand);
+  background: linear-gradient(180deg, var(--brand-dark) 0%, var(--brand) 100%);
   color: #fff;
-  padding: 1rem 2rem;
+  padding: 0.9rem 2rem;
+  border-bottom: 3px solid var(--brand-dark);
 }
 .app-header__inner {
   max-width: 64rem; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
 }
-.app-header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
-.app-header__nav a { color: #fff; text-decoration: none; margin-left: 1.25rem; opacity: 0.85; }
+.app-header__brand {
+  display: flex; align-items: baseline; gap: 0.5rem;
+  color: #fff; text-decoration: none;
+}
+.app-header__wordmark {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.app-header__product {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.72);
+  padding-left: 0.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+.app-header__nav a { color: #fff; text-decoration: none; margin-left: 1.25rem; opacity: 0.82; font-size: 0.95rem; }
 .app-header__nav a:hover { opacity: 1; text-decoration: underline; }
+
+.hero--e2 {
+  background:
+    radial-gradient(circle at 95% 5%, rgba(194, 24, 91, 0.08) 0%, transparent 60%),
+    linear-gradient(135deg, #ffffff 0%, #F8FAFC 100%);
+  border: 1px solid #E2E8F0;
+  border-top: 4px solid var(--brand);
+  padding: 3rem 2.25rem;
+  position: relative;
+}
+.hero__chip {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand);
+  background: rgba(31, 79, 92, 0.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+.hero--e2 h2 {
+  font-size: 2rem;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.hero--e2 p {
+  font-size: 1.05rem;
+  margin: 0;
+  color: var(--ink-muted);
+  max-width: 40rem;
+}
 
 .page {
   max-width: 64rem;
