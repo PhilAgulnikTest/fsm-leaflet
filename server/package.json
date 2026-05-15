@@ -22,6 +22,7 @@
     "express": "^4.21.1",
     "playwright": "^1.49.0",
     "qrcode": "^1.5.4",
+    "tsx": "^4.19.2",
     "undici": "^7.1.0"
   },
   "devDependencies": {
@@ -30,7 +31,6 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.0",
     "@types/qrcode": "^1.5.5",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
   "engines": {
