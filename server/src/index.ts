@@ -1,3 +1,8 @@
+// Sentry must initialise before Express imports so its instrumentation patches
+// the right modules. Side-effect import is intentional.
+import { initSentry, sentry } from './observability.js';
+initSentry();
+
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import path from 'node:path';
@@ -15,6 +20,7 @@ import { platformAuthRouter } from './routes/auth-platform.js';
 import { adminRouter } from './routes/admin.js';
 import { aiRouter } from './routes/ai.js';
 import { attachSession } from './auth/sessions.js';
+import { startBackgroundJobs } from './jobs.js';
 
 // Run pending migrations on boot. Cheap, idempotent, prevents the "forgot to migrate" footgun.
 const migrationResult = runMigrations();
@@ -131,12 +137,17 @@ if (fs.existsSync(clientDist)) {
 // Final error handler — keep stack traces server-side, JSON for API, plain text otherwise.
 app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
+  if (config.sentryDsn) {
+    sentry.captureException(err);
+  }
   if (req.path.startsWith('/api/')) {
     res.status(500).json({ error: 'internal_error' });
   } else {
     res.status(500).type('text/plain').send('Server error.');
   }
 });
+
+startBackgroundJobs();
 
 app.listen(config.port, () => {
   console.log(`FSM Leaflet server listening on http://localhost:${config.port}`);

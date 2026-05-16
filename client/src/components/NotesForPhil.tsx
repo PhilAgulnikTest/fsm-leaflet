@@ -26,6 +26,14 @@ const WORKING: Item[] = [
     body: '/admin/ai-usage shows total calls, accepted vs warnings, per-LA breakdown, last-30-days trend, recent calls with output preview. Cost estimates use Claude Sonnet 4.6 list pricing. Useful for spotting an LA hitting the 20/day rate limit before they call you.',
   },
   {
+    title: '🆕 Published customizations admin view',
+    body: '/admin/customizations lists every published leaflet — public slug, school/LA, template version (with drift indicator if a newer version exists), translation count, owner email. View / delete from one place.',
+  },
+  {
+    title: '🆕 Sentry + hourly maintenance cron',
+    body: 'Sentry wired (no-op until SENTRY_DSN env set; just paste your DSN in Render). Hourly job clears expired sessions, stale magic_links, and clears source_text/source_url on ai_rewrites past their 30-day retention window — keeps the audit row but blanks the PII per the brief.',
+  },
+  {
     title: '🆕 One-click leaflet download',
     body: 'Click the entitledto leaflet preview on the landing page → opens /view/entitledto-la in a new tab with a sticky coral "Download PDF" button at the top. Same wrapper works for any template (/view/nawra, /view/housing-association).',
   },

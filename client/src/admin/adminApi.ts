@@ -144,6 +144,29 @@ export const adminApi = {
       per_la: Array<{ la_slug: string; calls: number; input_tokens: number; output_tokens: number }>;
       last_30_days: Array<{ day: string; calls: number; tokens: number }>;
     }>(`/api/admin/ai-usage`),
+  listCustomizations: () =>
+    jsonFetch<{
+      customizations: Array<{
+        id: number;
+        public_slug: string;
+        school_urn: string | null;
+        la_slug: string | null;
+        owner_email: string | null;
+        template_slug: string;
+        template_name: string;
+        template_version_at_publish: number;
+        current_template_version: number;
+        template_drift: boolean;
+        translation_count: number;
+        published_at: string | null;
+        updated_at: string;
+        school_name: string | null;
+        la_name: string | null;
+      }>;
+    }>(`/api/admin/customizations`),
+  deleteCustomization: (slug: string) =>
+    jsonFetch<{ ok: true }>(`/api/admin/customizations/${slug}`, { method: 'DELETE' }),
+
   aiUsageRecent: () =>
     jsonFetch<{
       recent: Array<{

@@ -390,6 +390,38 @@ adminRouter.get('/ai-usage', (_req, res) => {
   res.json({ totals, per_la: perLa, last_30_days: last30 });
 });
 
+// --- Customizations admin view ---------------------------------------------
+
+adminRouter.get('/customizations', (_req, res) => {
+  const rows = db
+    .prepare(
+      `SELECT c.id, c.public_slug, c.school_urn, c.la_slug, c.owner_email,
+              c.template_version_at_publish, c.published_at, c.updated_at,
+              t.slug AS template_slug, t.name AS template_name,
+              t.version AS current_template_version,
+              s.name AS school_name,
+              la.name AS la_name,
+              (SELECT COUNT(*) FROM customization_translations ct WHERE ct.customization_id = c.id) AS translation_count
+         FROM customizations c
+         JOIN templates t ON t.id = c.template_id
+         LEFT JOIN schools s ON s.urn = c.school_urn
+         LEFT JOIN la_clients la ON la.slug = c.la_slug
+        ORDER BY c.created_at DESC`
+    )
+    .all() as Array<Record<string, unknown> & { template_version_at_publish: number; current_template_version: number }>;
+  const customizations = rows.map((r) => ({
+    ...r,
+    template_drift: r.current_template_version > r.template_version_at_publish,
+  }));
+  res.json({ customizations });
+});
+
+adminRouter.delete('/customizations/:slug', (req, res) => {
+  const result = db.prepare('DELETE FROM customizations WHERE public_slug = ?').run(req.params.slug);
+  if (result.changes === 0) return res.status(404).json({ error: 'not_found' });
+  res.json({ ok: true });
+});
+
 adminRouter.get('/ai-usage/recent', (_req, res) => {
   const rows = db
     .prepare(
