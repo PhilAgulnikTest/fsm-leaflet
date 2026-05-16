@@ -19,11 +19,22 @@ export function Landing() {
             <p className="hero__tagline">independent &nbsp;|&nbsp; accurate &nbsp;|&nbsp; reliable</p>
           </div>
           <div className="hero__art">
-            <img
-              src="/leaflet-preview.png"
-              alt="Preview of the entitledto-branded free school meals leaflet"
-              className="hero__leaflet"
-            />
+            <a
+              href="/view/entitledto-la"
+              target="_blank"
+              rel="noopener"
+              className="hero__leaflet-link"
+              aria-label="Open the entitledto leaflet to download"
+            >
+              <img
+                src="/leaflet-preview.png"
+                alt="Preview of the entitledto-branded free school meals leaflet"
+                className="hero__leaflet"
+              />
+              <span className="hero__leaflet-overlay">
+                <span className="hero__leaflet-overlay-text">Click to download &nbsp;→</span>
+              </span>
+            </a>
             <div className="hero__art-caption">This is the entitledto edition. LAs get a bespoke variant; schools get a customisable version.</div>
           </div>
         </section>

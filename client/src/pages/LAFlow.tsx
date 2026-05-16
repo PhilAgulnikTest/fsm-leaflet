@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Header } from '../components/Header';
 import { api, type LAClient } from '../api';
+import { AIRewriteDialog } from '../components/AIRewriteDialog';
 
 type SaveResult = { public_url: string; edit_url: string; public_slug: string } | null;
 type Step = 'pick_la' | 'editor' | 'request_link' | 'link_sent' | 'published';
@@ -37,6 +38,9 @@ export function LAFlow() {
   const [busy, setBusy] = useState(false);
   const [saveResult, setSaveResult] = useState<SaveResult>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // AI dialog state
+  const [aiDialog, setAiDialog] = useState<{ mode: 'rewrite' | 'translate'; key: string; label: string } | null>(null);
 
   useEffect(() => {
     api.listLAs()
@@ -172,7 +176,7 @@ export function LAFlow() {
             <div>
               <h3 style={{ marginTop: 0 }}>Sections</h3>
               {EDITABLE_SECTIONS.map((s) => (
-                <div className="form-row" key={s.key}>
+                <div className="form-row form-row--with-ai" key={s.key}>
                   <label htmlFor={`fld-${s.key}`}>{s.label}</label>
                   {s.multiline ? (
                     <textarea
@@ -188,6 +192,26 @@ export function LAFlow() {
                       onChange={(e) => setOverrides({ ...overrides, [s.key]: e.target.value })}
                     />
                   )}
+                  <div className="form-row__ai-actions">
+                    <button
+                      type="button"
+                      className="btn-mini"
+                      onClick={() => setAiDialog({ mode: 'rewrite', key: s.key, label: s.label })}
+                      disabled={!overrides[s.key]}
+                      title={overrides[s.key] ? 'Re-write this section using AI against your LA\'s source URL' : 'Add some text first'}
+                    >
+                      ✨ Re-write with AI
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-mini"
+                      onClick={() => setAiDialog({ mode: 'translate', key: s.key, label: s.label })}
+                      disabled={!overrides[s.key]}
+                      title="Translate this section to another language"
+                    >
+                      🌐 Translate
+                    </button>
+                  </div>
                 </div>
               ))}
 
@@ -234,6 +258,21 @@ export function LAFlow() {
           </div>
         )}
       </main>
+
+      {aiDialog && selected && (
+        <AIRewriteDialog
+          open={true}
+          mode={aiDialog.mode}
+          templateSlug="entitledto-la"
+          sectionKey={aiDialog.key}
+          sectionLabel={aiDialog.label}
+          currentText={overrides[aiDialog.key] ?? ''}
+          laSlug={selected.slug}
+          laDefaultSourceUrl={selected.default_source_url}
+          onClose={() => setAiDialog(null)}
+          onAccept={(newText) => setOverrides({ ...overrides, [aiDialog.key]: newText })}
+        />
+      )}
     </>
   );
 }

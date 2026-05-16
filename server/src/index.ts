@@ -13,6 +13,7 @@ import { renderRouter } from './routes/render.js';
 import { authRouter } from './routes/auth.js';
 import { platformAuthRouter } from './routes/auth-platform.js';
 import { adminRouter } from './routes/admin.js';
+import { aiRouter } from './routes/ai.js';
 import { attachSession } from './auth/sessions.js';
 
 // Run pending migrations on boot. Cheap, idempotent, prevents the "forgot to migrate" footgun.
@@ -84,6 +85,7 @@ app.use('/api/customizations', customizationsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/auth/platform', platformAuthRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/ai', aiRouter);
 
 // Public renders + generic template renders
 app.use('/', renderRouter);

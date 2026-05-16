@@ -6,6 +6,14 @@ type Item = { title: string; body: string };
 
 const WORKING: Item[] = [
   {
+    title: '🆕 AI re-write with fact-check warning',
+    body: 'On /customize/la, each editable section now has "✨ Re-write with AI" and "🌐 Translate" buttons. The dialog shows current text on the left, source-URL input + result on the right. Two-pass pipeline: generate → verify against facts_json. Contradicted phrases highlighted in coral with rationale; you can still Accept (recorded as accepted_with_warnings). Needs ANTHROPIC_API_KEY in Render env vars to actually fire — without it the call errors with a clear message.',
+  },
+  {
+    title: '🆕 One-click leaflet download',
+    body: 'Click the entitledto leaflet preview on the landing page → opens /view/entitledto-la in a new tab with a sticky coral "Download PDF" button at the top. Same wrapper works for any template (/view/nawra, /view/housing-association).',
+  },
+  {
     title: 'LA dropdown populated from your sites CSV (149 LAs)',
     body: 'Run-once import via `npm run la:import-sites -w server -- --file=...`. Lambeth\'s original branding (magenta accent, multilingual setup, Lambeth-specific notes) preserved across the upsert. Open /customize/la to see the dropdown.',
   },
@@ -60,6 +68,10 @@ const NEEDS_INPUT: Item[] = [
 
 const SETUP: Item[] = [
   {
+    title: '🔑 Set ANTHROPIC_API_KEY on Render to enable AI re-write',
+    body: 'In Render dashboard → fsm-leaflet → Environment → Add Environment Variable → ANTHROPIC_API_KEY = sk-ant-... The key is read server-side only, never exposed to the client. Once set, the Re-write / Translate buttons on the LA flow start working.',
+  },
+  {
     title: 'GIAS bulk-CSV — manual download workaround',
     body: 'The unauthenticated bulk endpoints I tried all return HTTP 500/404. Workaround: visit https://get-information-schools.service.gov.uk/Downloads → tick "Establishment fields" → CSV → Download, then: npm run gias:import -w server -- --file="C:\\path\\to\\edubasealldata.csv". 3 demo schools cover the flow until then.',
   },
@@ -70,13 +82,12 @@ const SETUP: Item[] = [
 ];
 
 const PASS_B_REMAINING: Item[] = [
-  { title: '🌐 Publish to a URL you can share', body: 'Currently localhost only. SQLite means we need a long-running container (not serverless) — Render, Fly.io, or Railway all fit and have a free tier. Two-step deploy: pick a host, push. ~15 min from picking a target to a live URL.' },
-  { title: '🔒 Pre-deploy checklist', body: 'Before that URL goes anywhere: (a) re-enable the admin password (uncomment 2 lines — see admin.ts and AdminDashboard.tsx), (b) set PUBLIC_BASE_URL in .env to the deployed URL so QR codes encode it, (c) decide which of the 149 LAs to actually keep (non-England councils + placeholder-URL ones).' },
-  { title: 'AI re-write with fact-check warning', body: 'Generate-then-verify pipeline against facts_json. SSRF-safe URL fetcher. PII retention. The biggest single piece of work left and the headline feature for the Oxfordshire/Leeds demos.' },
-  { title: 'Translation mode', body: 'Same AI dialog, target-language picker. Polish + Urdu first.' },
-  { title: 'Template versioning UI on customize/edit flows', body: 'Schema records template_version_at_publish; need to surface the "Template updated — review changes" banner with a diff/adopt path.' },
-  { title: 'Rich-text body editor in the admin Templates tab', body: 'Currently you edit the default_palette JSON directly. A proper editor for the "content" sub-object would be cleaner.' },
-  { title: 'Sentry, backups, GIAS refresh alerting', body: 'Plus per-LA AI cost tracking and a daily cron.' },
+  { title: '🔒 Re-enable admin password before sharing widely', body: 'The /admin area is currently ungated (yellow banner on every admin page makes this obvious). When ready, uncomment 2 lines — see admin.ts and AdminDashboard.tsx.' },
+  { title: 'Filter LA dropdown to England-only', body: 'The 149 imported LAs include Scotland (Aberdeen, Angus, South Ayrshire) and others. Brief says v1 is England-only. Either delete via /admin/la-clients or add a region tag + filter.' },
+  { title: 'Template versioning UI on customize/edit flows', body: 'Schema records template_version_at_publish; need to surface the "Template updated — review changes" banner with a diff/adopt path. Admin can already bump versions in /admin/templates.' },
+  { title: 'Rich-text body editor in the admin Templates tab', body: 'Currently you edit default_palette JSON directly. A WYSIWYG for the "content" sub-object would be cleaner.' },
+  { title: 'Translation publishing in the public render', body: 'AI translation is wired (the dialog produces translated text), but customization_translations rows + a language switcher on the public landing page aren\'t built yet.' },
+  { title: 'Ops: Sentry, nightly backup, AI cost dashboard', body: 'Per-LA AI cost tracking data is captured (input_tokens, output_tokens on ai_rewrites); just needs a dashboard view. Plus Render-native logs are fine for now but Sentry would catch errors more reliably.' },
 ];
 
 function Section({ title, items, tone }: { title: string; items: Item[]; tone: 'good' | 'warn' | 'setup' | 'todo' }) {

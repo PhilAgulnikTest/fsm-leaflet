@@ -107,4 +107,27 @@ export const api = {
       };
     }>(`/api/auth/me`),
   logout: () => jsonFetch<{ ok: true }>(`/api/auth/logout`, { method: 'POST' }),
+
+  // AI re-write
+  aiRewrite: (payload: {
+    template_slug: string;
+    section_key: string;
+    current_text: string;
+    mode: 'rewrite' | 'translate';
+    target_language?: string;
+    source_url?: string;
+    source_text?: string;
+    customization_id?: number;
+    la_slug?: string;
+  }) =>
+    jsonFetch<{
+      rewrite_id: number;
+      output: string;
+      warnings: Array<{ contradicted_phrase: string; fact_key: string; rationale: string }>;
+      source_url_used: string | null;
+      source_byte_count: number;
+    }>(`/api/ai/rewrite`, { method: 'POST', body: JSON.stringify(payload) }),
+
+  acceptRewrite: (id: number) =>
+    jsonFetch<{ ok: true }>(`/api/ai/rewrite/${id}/accept`, { method: 'POST' }),
 };
