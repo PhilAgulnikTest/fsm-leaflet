@@ -21,37 +21,37 @@ if (migrationResult.applied.length > 0) {
   console.log(`Applied migrations: ${migrationResult.applied.join(', ')}`);
 }
 
-// Self-seed on first boot. Doesn't rely on the Dockerfile CMD chain — if the
-// DB is empty (e.g. on Render free tier where /tmp resets between deploys),
-// import the seed/sites scripts directly. Both are idempotent so re-running
-// when data already exists is a no-op.
-async function autoSeedIfEmpty() {
+// Self-seed on every boot. Independent checks per data type — so re-runs don't
+// need to be "all or nothing". All upserts are idempotent.
+async function autoSeed() {
   const templateCount = (db.prepare('SELECT COUNT(*) AS n FROM templates').get() as { n: number }).n;
-  if (templateCount > 0) return;
-  console.log('Empty database detected — running initial seed...');
-  try {
-    // Side-effect imports: seed.ts runs at module top level.
-    await import('./db/seed.js');
-    console.log('Seed complete.');
-  } catch (err) {
-    console.error('Auto-seed failed:', err);
+  if (templateCount === 0) {
+    console.log('Templates table empty — running seed.ts...');
+    try { await import('./db/seed.js'); console.log('Templates + Lambeth seeded.'); }
+    catch (err) { console.error('Template seed failed:', err); }
   }
-  // Sites CSV is best-effort. If reference/sites-csv.csv is missing (e.g. someone
-  // pruned the reference dir), we skip rather than crash the server.
-  try {
+
+  // Sites CSV: run when LA count is below the CSV's row count. Idempotent via
+  // upsert-by-slug, so re-importing on every boot is safe — but checking lets
+  // us skip when the DB already reflects the CSV (saves ~150 ms).
+  const laCount = (db.prepare('SELECT COUNT(*) AS n FROM la_clients').get() as { n: number }).n;
+  const SITES_CSV_EXPECTED = 149;
+  if (laCount < SITES_CSV_EXPECTED) {
     const sitesPath = path.resolve(config.paths.repoRoot, 'reference', 'sites-csv.csv');
     if (fs.existsSync(sitesPath)) {
-      const { importEntitledtoSites } = await import('./db/import-entitledto-sites.js');
-      const result = importEntitledtoSites(sitesPath);
-      console.log(`Sites CSV imported: ${result.imported} LAs (${result.placeholders} with placeholder URLs).`);
+      try {
+        const { importEntitledtoSites } = await import('./db/import-entitledto-sites.js');
+        const result = importEntitledtoSites(sitesPath);
+        console.log(`Sites CSV imported: ${result.imported} LAs (${result.placeholders} placeholders, ${result.skipped.length} skipped).`);
+      } catch (err) {
+        console.error('Sites import failed:', err);
+      }
     } else {
       console.log(`Sites CSV not found at ${sitesPath} — skipping LA import.`);
     }
-  } catch (err) {
-    console.error('Sites import failed:', err);
   }
 }
-await autoSeedIfEmpty();
+await autoSeed();
 
 const app = express();
 app.use(express.json({ limit: '256kb' }));

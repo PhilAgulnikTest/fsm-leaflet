@@ -49,22 +49,34 @@ const NAWRA_FACTS = {
   benefit_calculator_url: 'https://www.gov.uk/benefits-calculators',
 };
 
+// Entitledto-branded version. Copy aligned with the canonical entitledto PNG:
+// hero kept generic; primary CTA reframed as "Check what you're entitled to"
+// pointing at the calculator; secondary CTA mentions the 30+ other benefits
+// the calculator surfaces.
 const ENTITLEDTO_BODY = {
   ...NAWRA_BODY,
+  intro_html:
+    'From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals — but you may be entitled to much more.',
+  cta_primary_title: 'Check what you\'re entitled to',
+  cta_primary_body_html:
+    'Free school meals are just one of many benefits Universal Credit families can claim. <strong><u>Use our free calculator</u></strong> to check in under 10 minutes.',
+  cta_primary_bg: '#2858E5',
+  box2_body_html:
+    '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September. You may also qualify for other benefits you\'re not claiming — check the calculator while you\'re at it.</p>',
   cta_secondary_body_html:
-    'You may still be entitled. Use our free benefit calculator to check if you could qualify for Universal Credit and free school meals.',
+    'You may still be entitled. Use the free, independent entitledto calculator to check Universal Credit, free school meals, and 30+ other benefits in under 10 minutes.',
   calculator_url: 'https://entitledto.co.uk',
   calculator_url_display: 'entitledto.co.uk',
-  contact_name: '[Local authority name]',
-  contact_phone: '[Telephone]',
-  contact_email: '[Email]',
-  contact_website: '[Website]',
+  contact_name: 'independent | accurate | reliable',
+  contact_phone: '',
+  contact_email: '',
+  contact_website: 'Used by Local Authorities, Housing Associations and Citizens Advice · entitledto.co.uk',
 };
 
 const ENTITLEDTO_PALETTE = {
-  brand: '#1F4F5C',
-  accent: '#BAE6FD',
-  cta_primary_bg: '#1F7A3F',
+  brand: '#1B2A6B',          // navy
+  accent: '#E64A3C',         // coral
+  cta_primary_bg: '#2858E5', // bright blue CTA
 };
 
 const HOUSING_BODY = {

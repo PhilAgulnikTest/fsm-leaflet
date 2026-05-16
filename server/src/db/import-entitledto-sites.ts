@@ -23,8 +23,8 @@ import { parse } from 'csv-parse/sync';
 import { db } from './index.js';
 import { runMigrations } from './migrate.js';
 
-const DEFAULT_BRAND = '#1F4F5C';
-const DEFAULT_ACCENT = '#2563EB';
+const DEFAULT_BRAND = '#1B2A6B';   // entitledto navy
+const DEFAULT_ACCENT = '#E64A3C';  // entitledto coral
 
 function slugFromUrl(url: string): string | null {
   try {

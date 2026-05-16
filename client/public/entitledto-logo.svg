@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" role="img" aria-label="entitledto">
+  <rect x="0" y="0" width="160" height="36" rx="6" fill="#ffffff"/>
+  <text x="10" y="25" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-weight="800" font-size="22" letter-spacing="-0.5" fill="#0F172A">entitled<tspan fill="#E64A3C">to</tspan></text>
+  <g transform="translate(124 11)" fill="#E64A3C">
+    <rect width="3" height="3"/>
+    <rect x="5" width="3" height="3"/>
+    <rect x="10" width="3" height="3"/>
+    <rect y="5" width="3" height="3"/>
+    <rect x="10" y="5" width="3" height="3"/>
+    <rect width="3" height="3" y="10"/>
+    <rect x="5" y="10" width="3" height="3"/>
+    <rect x="10" y="10" width="3" height="3"/>
+  </g>
+</svg>
