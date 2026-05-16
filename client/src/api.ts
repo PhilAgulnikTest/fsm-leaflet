@@ -130,4 +130,10 @@ export const api = {
 
   acceptRewrite: (id: number) =>
     jsonFetch<{ ok: true }>(`/api/ai/rewrite/${id}/accept`, { method: 'POST' }),
+
+  saveTranslation: (slug: string, language: string, overrides: Record<string, string>) =>
+    jsonFetch<{ ok: true; language: string }>(
+      `/api/customizations/${slug}/translations/${language}`,
+      { method: 'PUT', body: JSON.stringify({ overrides }) }
+    ),
 };

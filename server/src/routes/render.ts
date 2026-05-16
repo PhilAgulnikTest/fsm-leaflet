@@ -78,17 +78,121 @@ renderRouter.get('/c/:slug', async (req, res, next) => {
       withEntitledtoCredit = true;
     }
 
-    const html = await renderLeaflet({
+    // Language overlay. If ?lang=xx is set AND a customization_translations row
+    // exists for that language, merge its overrides on top of the English
+    // overrides. Translation rows are partial — sections without a translation
+    // fall back to the English value.
+    const requestedLang = typeof req.query.lang === 'string' ? req.query.lang.toLowerCase() : 'en';
+    let mergedCustomization = customization;
+    if (requestedLang !== 'en') {
+      const tr = db
+        .prepare('SELECT overrides_json FROM customization_translations WHERE customization_id = ? AND language = ?')
+        .get(customization.id, requestedLang) as { overrides_json: string } | undefined;
+      if (tr) {
+        const englishOverrides = JSON.parse(customization.overrides_json || '{}') as Record<string, string>;
+        const translatedOverrides = JSON.parse(tr.overrides_json || '{}') as Record<string, string>;
+        mergedCustomization = {
+          ...customization,
+          overrides_json: JSON.stringify({ ...englishOverrides, ...translatedOverrides }),
+        };
+      }
+    }
+
+    // List of languages the customization has translations for — drives the
+    // language switcher rendered above the leaflet.
+    const availableLanguages = db
+      .prepare('SELECT language FROM customization_translations WHERE customization_id = ? ORDER BY language')
+      .all(customization.id) as Array<{ language: string }>;
+
+    const leafletHtml = await renderLeaflet({
       template,
-      customization,
+      customization: mergedCustomization,
       palette,
       withEntitledtoCredit,
+      language: requestedLang,
       qrTarget: `${config.publicBaseUrl}/c/${customization.public_slug}`,
       qr: { include: req.query.preview === '1', printable: false },
     });
-    res.type('html').send(html);
+
+    // If there are no translations, return the bare leaflet (preserves the
+    // current behaviour and the print-PDF path). Otherwise prepend a switcher.
+    if (availableLanguages.length === 0 || req.query.embed === '1') {
+      return res.type('html').send(leafletHtml);
+    }
+    res.type('html').send(renderLeafletWithSwitcher(leafletHtml, customization.public_slug, requestedLang, availableLanguages.map((l) => l.language)));
   } catch (e) { next(e); }
 });
+
+const LANGUAGE_LABELS: Record<string, { native: string; english: string; dir?: 'rtl' }> = {
+  en: { native: 'English', english: 'English' },
+  pl: { native: 'Polski', english: 'Polish' },
+  ur: { native: 'اردو', english: 'Urdu', dir: 'rtl' },
+  bn: { native: 'বাংলা', english: 'Bengali' },
+  ro: { native: 'Română', english: 'Romanian' },
+  so: { native: 'Soomaali', english: 'Somali' },
+  ar: { native: 'العربية', english: 'Arabic', dir: 'rtl' },
+};
+
+function renderLeafletWithSwitcher(leafletHtml: string, slug: string, current: string, available: string[]): string {
+  const all = ['en', ...available.filter((l) => l !== 'en')];
+  const switcher = all
+    .map((code) => {
+      const label = LANGUAGE_LABELS[code] ?? { native: code, english: code };
+      const active = code === current;
+      const href = code === 'en' ? `/c/${slug}` : `/c/${slug}?lang=${code}`;
+      return `<a href="${href}" lang="${code}"${label.dir ? ` dir="${label.dir}"` : ''} class="lang-switch__btn${active ? ' lang-switch__btn--active' : ''}">${label.native}</a>`;
+    })
+    .join('');
+
+  return `<!DOCTYPE html>
+<html lang="${current}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free school meals leaflet</title>
+  <style>
+    body { margin: 0; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #E5E7EB; }
+    .lang-switch {
+      background: #1B2A6B; color: #fff;
+      padding: 0.6rem 1rem;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    .lang-switch__label { opacity: 0.7; margin-right: 0.4rem; }
+    .lang-switch__btn {
+      color: #fff; text-decoration: none;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      transition: background 0.1s;
+    }
+    .lang-switch__btn:hover { background: rgba(255, 255, 255, 0.18); }
+    .lang-switch__btn--active { background: #E64A3C; }
+    .leaflet-frame {
+      display: block;
+      width: 210mm;
+      max-width: 100%;
+      margin: 1rem auto;
+      background: #fff;
+      border: none;
+      box-shadow: 0 10px 40px rgba(15, 23, 42, 0.12);
+    }
+    @media print {
+      .lang-switch { display: none; }
+      .leaflet-frame { box-shadow: none; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="lang-switch" aria-label="Choose language">
+    <span class="lang-switch__label">Read in:</span>
+    ${switcher}
+  </nav>
+  <iframe class="leaflet-frame" src="/c/${slug}?${current === 'en' ? '' : `lang=${current}&`}embed=1" style="height: 297mm;" title="Leaflet"></iframe>
+</body>
+</html>`;
+}
 
 /* "Viewer" page: leaflet rendered in an iframe with a prominent download bar
  * at the top. The Landing page's leaflet preview image opens this in a new

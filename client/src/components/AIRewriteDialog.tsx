@@ -22,7 +22,10 @@ type RewriteResult = {
 export type AIRewriteProps = {
   open: boolean;
   onClose: () => void;
-  onAccept: (rewrittenText: string) => void;
+  /** When mode='translate', the language ISO code accompanies the accepted text
+   *  so the caller can route it into a per-language translation store rather
+   *  than overwriting the English override. */
+  onAccept: (rewrittenText: string, language?: string) => void;
   mode: 'rewrite' | 'translate';
   templateSlug: string;
   sectionKey: string;
@@ -121,7 +124,7 @@ export function AIRewriteDialog(props: AIRewriteProps) {
     if (result) {
       try { await api.acceptRewrite(result.rewrite_id); } catch { /* non-fatal */ }
     }
-    props.onAccept(text);
+    props.onAccept(text, props.mode === 'translate' ? targetLanguage : undefined);
     props.onClose();
   }
 

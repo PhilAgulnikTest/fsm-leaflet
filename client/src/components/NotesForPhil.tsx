@@ -10,6 +10,14 @@ const WORKING: Item[] = [
     body: 'On /customize/la, each editable section now has "✨ Re-write with AI" and "🌐 Translate" buttons. The dialog shows current text on the left, source-URL input + result on the right. Two-pass pipeline: generate → verify against facts_json. Contradicted phrases highlighted in coral with rationale; you can still Accept (recorded as accepted_with_warnings). Needs ANTHROPIC_API_KEY in Render env vars to actually fire — without it the call errors with a clear message.',
   },
   {
+    title: '🆕 Multilingual publishing',
+    body: 'Accepted AI translations queue per-language. On publish, each language gets a customization_translations row. The public render at /c/{slug} shows a navy language-switcher bar above the leaflet ("Read in: English | Polski | اردو ..."), and ?lang=pl/ur/bn/ro/so/ar overlays the translated sections on top of the English ones. Right-to-left languages get dir="rtl" automatically.',
+  },
+  {
+    title: '🆕 LA dropdown filtered to England',
+    body: 'New `region` column on la_clients (\'england\' | \'scotland\' | \'wales\' | \'northern-ireland\'). Public /api/la-clients defaults to ?region=england. Boot-time tagger marks the ~30 known non-England councils from the sites CSV. Admin UI still sees all 149 (pass ?region=all). Add a row to NON_ENGLAND_LAS in server/src/db/tag-la-regions.ts if a new one slips through.',
+  },
+  {
     title: '🆕 One-click leaflet download',
     body: 'Click the entitledto leaflet preview on the landing page → opens /view/entitledto-la in a new tab with a sticky coral "Download PDF" button at the top. Same wrapper works for any template (/view/nawra, /view/housing-association).',
   },
@@ -83,10 +91,8 @@ const SETUP: Item[] = [
 
 const PASS_B_REMAINING: Item[] = [
   { title: '🔒 Re-enable admin password before sharing widely', body: 'The /admin area is currently ungated (yellow banner on every admin page makes this obvious). When ready, uncomment 2 lines — see admin.ts and AdminDashboard.tsx.' },
-  { title: 'Filter LA dropdown to England-only', body: 'The 149 imported LAs include Scotland (Aberdeen, Angus, South Ayrshire) and others. Brief says v1 is England-only. Either delete via /admin/la-clients or add a region tag + filter.' },
   { title: 'Template versioning UI on customize/edit flows', body: 'Schema records template_version_at_publish; need to surface the "Template updated — review changes" banner with a diff/adopt path. Admin can already bump versions in /admin/templates.' },
   { title: 'Rich-text body editor in the admin Templates tab', body: 'Currently you edit default_palette JSON directly. A WYSIWYG for the "content" sub-object would be cleaner.' },
-  { title: 'Translation publishing in the public render', body: 'AI translation is wired (the dialog produces translated text), but customization_translations rows + a language switcher on the public landing page aren\'t built yet.' },
   { title: 'Ops: Sentry, nightly backup, AI cost dashboard', body: 'Per-LA AI cost tracking data is captured (input_tokens, output_tokens on ai_rewrites); just needs a dashboard view. Plus Render-native logs are fine for now but Sentry would catch errors more reliably.' },
 ];
 

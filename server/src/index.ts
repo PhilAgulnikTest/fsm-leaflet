@@ -51,6 +51,17 @@ async function autoSeed() {
       console.log(`Sites CSV not found at ${sitesPath} — skipping LA import.`);
     }
   }
+
+  // Tag known non-England LAs so the customise dropdown can filter to England
+  // (brief: v1 is England-only). Idempotent — only re-tags rows still on the
+  // default 'england' value, so manual admin edits aren't trampled.
+  try {
+    const { tagLARegions } = await import('./db/tag-la-regions.js');
+    const { updated } = tagLARegions();
+    if (updated > 0) console.log(`Tagged ${updated} LAs as non-England.`);
+  } catch (err) {
+    console.error('LA region tagging failed:', err);
+  }
 }
 await autoSeed();
 

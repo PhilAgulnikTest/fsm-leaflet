@@ -473,6 +473,27 @@ a { color: var(--brand); }
   padding: 0 1px;
 }
 
+.translations-strip {
+  background: rgba(40, 88, 229, 0.06);
+  border: 1px solid rgba(40, 88, 229, 0.18);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+.lang-chip {
+  display: inline-block;
+  margin: 0 0.25rem;
+  padding: 2px 8px;
+  background: var(--brand-bright);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.lang-chip small { font-weight: 400; opacity: 0.85; margin-left: 0.2rem; }
+
 .modal__footer {
   display: flex; gap: 0.5rem;
   padding: 1rem 1.5rem;

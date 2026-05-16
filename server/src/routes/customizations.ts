@@ -119,7 +119,61 @@ customizationsRouter.patch('/:slug', (req, res) => {
 customizationsRouter.get('/:slug', (req, res) => {
   const row = db
     .prepare('SELECT * FROM customizations WHERE public_slug = ?')
-    .get(req.params.slug);
+    .get(req.params.slug) as { id: number } | undefined;
   if (!row) return res.status(404).json({ error: 'not_found' });
-  res.json({ customization: row });
+
+  // Include any saved translations so the editor can show what's been done.
+  const translations = db
+    .prepare(
+      `SELECT language, overrides_json, updated_at
+         FROM customization_translations
+        WHERE customization_id = ?`
+    )
+    .all(row.id) as Array<{ language: string; overrides_json: string; updated_at: string }>;
+
+  res.json({
+    customization: row,
+    translations: translations.map((t) => ({
+      language: t.language,
+      overrides: JSON.parse(t.overrides_json || '{}'),
+      updated_at: t.updated_at,
+    })),
+  });
+});
+
+/* Save (or replace) a translation for a specific language. */
+customizationsRouter.put('/:slug/translations/:lang', (req, res) => {
+  const slug = req.params.slug;
+  const lang = req.params.lang.toLowerCase();
+  if (!/^[a-z]{2}(-[a-z]{2})?$/.test(lang)) {
+    return res.status(400).json({ error: 'invalid_language_code', hint: 'Expected ISO code like pl, ur, bn, ro, so, ar.' });
+  }
+  const c = db
+    .prepare('SELECT id FROM customizations WHERE public_slug = ?')
+    .get(slug) as { id: number } | undefined;
+  if (!c) return res.status(404).json({ error: 'not_found' });
+
+  const { overrides } = (req.body ?? {}) as { overrides?: Record<string, string> };
+  if (!overrides || typeof overrides !== 'object') {
+    return res.status(400).json({ error: 'overrides_required' });
+  }
+
+  db.prepare(`
+    INSERT INTO customization_translations (customization_id, language, overrides_json, updated_at)
+    VALUES (?, ?, ?, datetime('now'))
+    ON CONFLICT(customization_id, language) DO UPDATE SET
+      overrides_json = excluded.overrides_json,
+      updated_at = datetime('now')
+  `).run(c.id, lang, JSON.stringify(overrides));
+
+  res.json({ ok: true, language: lang });
+});
+
+customizationsRouter.delete('/:slug/translations/:lang', (req, res) => {
+  const slug = req.params.slug;
+  const lang = req.params.lang.toLowerCase();
+  const c = db.prepare('SELECT id FROM customizations WHERE public_slug = ?').get(slug) as { id: number } | undefined;
+  if (!c) return res.status(404).json({ error: 'not_found' });
+  db.prepare('DELETE FROM customization_translations WHERE customization_id = ? AND language = ?').run(c.id, lang);
+  res.json({ ok: true });
 });

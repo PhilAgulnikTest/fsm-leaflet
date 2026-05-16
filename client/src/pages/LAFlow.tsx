@@ -28,6 +28,9 @@ export function LAFlow() {
   const [clients, setClients] = useState<LAClient[]>([]);
   const [slug, setSlug] = useState('');
   const [overrides, setOverrides] = useState<Record<string, string>>({});
+  /** Per-language overlay of overrides. Saved after the English customisation
+   *  is published so each row in customization_translations has a customization_id. */
+  const [translations, setTranslations] = useState<Record<string, Record<string, string>>>({});
 
   const [authEmail, setAuthEmail] = useState('');
   const [verified, setVerified] = useState(false);
@@ -91,12 +94,30 @@ export function LAFlow() {
     setError(null);
     try {
       const result = await api.createCustomization({ template_slug: 'entitledto-la', la_slug: slug, overrides });
+      // Save every translation we collected against the new customization.
+      // Failures here are non-fatal — the English customization is already
+      // saved; we surface translation errors in the success screen instead.
+      const translationLanguages = Object.keys(translations);
+      const translationErrors: string[] = [];
+      for (const lang of translationLanguages) {
+        const trOverrides = translations[lang];
+        if (!trOverrides || Object.keys(trOverrides).length === 0) continue;
+        try {
+          await api.saveTranslation(result.public_slug, lang, trOverrides);
+        } catch (e) {
+          translationErrors.push(`${lang}: ${(e as Error).message}`);
+        }
+      }
+      if (translationErrors.length > 0) {
+        setError('Customisation published, but some translations failed to save: ' + translationErrors.join('; '));
+      }
       setSaveResult(result);
       setStep('published');
     } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   }
 
   if (step === 'published' && saveResult) {
+    const publishedTranslations = Object.entries(translations).filter(([, m]) => Object.keys(m).length > 0);
     return (
       <>
         <Header />
@@ -105,11 +126,24 @@ export function LAFlow() {
             <strong>Published.</strong> Your LA-bespoke leaflet is live.
           </div>
           <p>Public URL: <a href={saveResult.public_url}>{saveResult.public_url}</a></p>
+          {publishedTranslations.length > 0 && (
+            <p>
+              Translations saved:{' '}
+              {publishedTranslations.map(([lang, m]) => (
+                <span key={lang} className="lang-chip">
+                  {lang.toUpperCase()} <small>({Object.keys(m).length} sections)</small>
+                </span>
+              ))}
+              <br />
+              <small className="muted">The public URL shows a language switcher above the leaflet so visitors can pick.</small>
+            </p>
+          )}
           <p>
             Edit URL (keep this — re-opening sends a fresh magic link to your verified email):
             <br /><a href={saveResult.edit_url}>{saveResult.edit_url}</a>
           </p>
           <p><a className="btn" href={saveResult.public_url}>Open your leaflet</a></p>
+          {error && <div className="alert">{error}</div>}
         </main>
       </>
     );
@@ -175,6 +209,18 @@ export function LAFlow() {
           <div className="split">
             <div>
               <h3 style={{ marginTop: 0 }}>Sections</h3>
+              {Object.entries(translations).some(([, m]) => Object.keys(m).length > 0) && (
+                <div className="translations-strip" aria-label="Translations in progress">
+                  Translations queued for save on publish:{' '}
+                  {Object.entries(translations)
+                    .filter(([, m]) => Object.keys(m).length > 0)
+                    .map(([lang, m]) => (
+                      <span key={lang} className="lang-chip">
+                        {lang.toUpperCase()} <small>({Object.keys(m).length})</small>
+                      </span>
+                    ))}
+                </div>
+              )}
               {EDITABLE_SECTIONS.map((s) => (
                 <div className="form-row form-row--with-ai" key={s.key}>
                   <label htmlFor={`fld-${s.key}`}>{s.label}</label>
@@ -270,7 +316,17 @@ export function LAFlow() {
           laSlug={selected.slug}
           laDefaultSourceUrl={selected.default_source_url}
           onClose={() => setAiDialog(null)}
-          onAccept={(newText) => setOverrides({ ...overrides, [aiDialog.key]: newText })}
+          onAccept={(newText, lang) => {
+            if (lang && lang !== 'en') {
+              // Translation: route into the per-language map, not the English override.
+              setTranslations((prev) => ({
+                ...prev,
+                [lang]: { ...(prev[lang] ?? {}), [aiDialog.key]: newText },
+              }));
+            } else {
+              setOverrides({ ...overrides, [aiDialog.key]: newText });
+            }
+          }}
         />
       )}
     </>
