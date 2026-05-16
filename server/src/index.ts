@@ -41,12 +41,14 @@ async function autoSeedIfEmpty() {
   try {
     const sitesPath = path.resolve(config.paths.repoRoot, 'reference', 'sites-csv.csv');
     if (fs.existsSync(sitesPath)) {
-      process.argv.push(`--file=${sitesPath}`);
-      await import('./db/import-entitledto-sites.js');
-      console.log('Sites CSV imported.');
+      const { importEntitledtoSites } = await import('./db/import-entitledto-sites.js');
+      const result = importEntitledtoSites(sitesPath);
+      console.log(`Sites CSV imported: ${result.imported} LAs (${result.placeholders} with placeholder URLs).`);
+    } else {
+      console.log(`Sites CSV not found at ${sitesPath} — skipping LA import.`);
     }
   } catch (err) {
-    console.error('Sites import skipped:', err);
+    console.error('Sites import failed:', err);
   }
 }
 await autoSeedIfEmpty();
