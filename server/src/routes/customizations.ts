@@ -118,8 +118,19 @@ customizationsRouter.patch('/:slug', (req, res) => {
 
 customizationsRouter.get('/:slug', (req, res) => {
   const row = db
-    .prepare('SELECT * FROM customizations WHERE public_slug = ?')
-    .get(req.params.slug) as { id: number } | undefined;
+    .prepare(
+      `SELECT c.id, c.template_id, c.template_version_at_publish,
+              c.school_urn, c.la_slug, c.overrides_json, c.public_slug,
+              c.owner_email, c.published_at, c.created_at, c.updated_at,
+              t.version AS current_template_version,
+              t.changelog AS template_changelog
+         FROM customizations c
+         JOIN templates t ON t.id = c.template_id
+        WHERE c.public_slug = ?`
+    )
+    .get(req.params.slug) as
+    | (Record<string, unknown> & { id: number; template_version_at_publish: number; current_template_version: number })
+    | undefined;
   if (!row) return res.status(404).json({ error: 'not_found' });
 
   // Include any saved translations so the editor can show what's been done.
@@ -131,14 +142,43 @@ customizationsRouter.get('/:slug', (req, res) => {
     )
     .all(row.id) as Array<{ language: string; overrides_json: string; updated_at: string }>;
 
+  const templateDrift = row.current_template_version > row.template_version_at_publish;
+
   res.json({
     customization: row,
+    template_drift: templateDrift,
     translations: translations.map((t) => ({
       language: t.language,
       overrides: JSON.parse(t.overrides_json || '{}'),
       updated_at: t.updated_at,
     })),
   });
+});
+
+/* Adopt the latest template version: bumps the customization's
+ * template_version_at_publish to the current template version, which clears
+ * the "Template updated" banner. Existing overrides are preserved. */
+customizationsRouter.post('/:slug/adopt-template-version', (req, res) => {
+  const row = db
+    .prepare(
+      `SELECT c.id, t.version AS current_version
+         FROM customizations c JOIN templates t ON t.id = c.template_id
+        WHERE c.public_slug = ?`
+    )
+    .get(req.params.slug) as { id: number; current_version: number } | undefined;
+  if (!row) return res.status(404).json({ error: 'not_found' });
+
+  if (req.session && req.session.customization_id !== row.id) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+
+  db.prepare(`
+    UPDATE customizations
+       SET template_version_at_publish = ?,
+           updated_at = datetime('now')
+     WHERE id = ?
+  `).run(row.current_version, row.id);
+  res.json({ ok: true, adopted_version: row.current_version });
 });
 
 /* Save (or replace) a translation for a specific language. */

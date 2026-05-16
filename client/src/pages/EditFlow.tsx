@@ -14,6 +14,9 @@ import { api } from '../api';
 type Customization = {
   id: number;
   template_id: number;
+  template_version_at_publish: number;
+  current_template_version: number;
+  template_changelog: string;
   school_urn: string | null;
   la_slug: string | null;
   overrides_json: string;
@@ -23,6 +26,7 @@ type Customization = {
 export function EditFlow() {
   const { slug = '' } = useParams();
   const [customization, setCustomization] = useState<Customization | null>(null);
+  const [templateDrift, setTemplateDrift] = useState(false);
   const [authorized, setAuthorized] = useState(false);
   const [email, setEmail] = useState('');
   const [requested, setRequested] = useState<{ sent_to: string; warning?: string; dev_link?: string } | null>(null);
@@ -31,26 +35,36 @@ export function EditFlow() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  async function reload() {
+    const [meRes, cRes] = await Promise.all([
+      api.me(),
+      fetch(`/api/customizations/${slug}`).then((r) => r.json()),
+    ]);
+    const c = cRes.customization as Customization;
+    setCustomization(c);
+    setTemplateDrift(!!cRes.template_drift);
+    setOverrides(JSON.parse(c.overrides_json || '{}'));
+    const session = meRes.session;
+    if (session && session.customization_id === c.id) setAuthorized(true);
+  }
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      try {
-        const [meRes, cRes] = await Promise.all([
-          api.me(),
-          fetch(`/api/customizations/${slug}`).then((r) => r.json()),
-        ]);
-        if (cancelled) return;
-        const c = cRes.customization as Customization;
-        setCustomization(c);
-        setOverrides(JSON.parse(c.overrides_json || '{}'));
-        const session = meRes.session;
-        if (session && session.customization_id === c.id) setAuthorized(true);
-      } catch (e) {
-        if (!cancelled) setError((e as Error).message);
-      }
+      try { if (!cancelled) await reload(); }
+      catch (e) { if (!cancelled) setError((e as Error).message); }
     })();
     return () => { cancelled = true; };
   }, [slug]);
+
+  async function adoptTemplateVersion() {
+    if (!customization) return;
+    try {
+      const res = await fetch(`/api/customizations/${slug}/adopt-template-version`, { method: 'POST' });
+      if (!res.ok) throw new Error('adopt_failed');
+      await reload();
+    } catch (e) { setError((e as Error).message); }
+  }
 
   async function requestLink() {
     if (!customization) return;
@@ -165,6 +179,25 @@ export function EditFlow() {
         {saved && (
           <div className="alert alert--success">
             Saved. <a href={`/c/${customization.public_slug}`}>Open the public URL</a>.
+          </div>
+        )}
+
+        {templateDrift && (
+          <div className="alert alert--template-drift">
+            <strong>Template updated since you published.</strong>
+            <p style={{ margin: '0.4rem 0 0' }}>
+              You published against v{customization.template_version_at_publish}. The current template is now v{customization.current_template_version}.
+              Your existing wording and branding stay in place; only template-level changes (default copy, palette, facts) move forward.
+            </p>
+            {customization.template_changelog && (
+              <details style={{ marginTop: '0.5rem' }}>
+                <summary>What changed</summary>
+                <pre style={{ whiteSpace: 'pre-wrap', fontSize: '0.85rem', margin: '0.4rem 0 0' }}>{customization.template_changelog}</pre>
+              </details>
+            )}
+            <button className="btn" style={{ marginTop: '0.5rem' }} onClick={adoptTemplateVersion}>
+              Adopt v{customization.current_template_version}
+            </button>
           </div>
         )}
 

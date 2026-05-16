@@ -345,3 +345,63 @@ adminRouter.delete('/trust-domain-allowlist/:domain', (req, res) => {
   if (result.changes === 0) return res.status(404).json({ error: 'not_found' });
   res.json({ ok: true });
 });
+
+// --- AI usage / cost --------------------------------------------------------
+
+adminRouter.get('/ai-usage', (_req, res) => {
+  const totals = db
+    .prepare(
+      `SELECT
+         COUNT(*) AS total_calls,
+         SUM(CASE WHEN accepted = 1 THEN 1 ELSE 0 END) AS accepted_calls,
+         SUM(CASE WHEN accepted_with_warnings = 1 THEN 1 ELSE 0 END) AS accepted_with_warnings,
+         SUM(json_array_length(warnings_json)) AS total_warnings,
+         SUM(COALESCE(input_tokens, 0)) AS input_tokens,
+         SUM(COALESCE(output_tokens, 0)) AS output_tokens
+       FROM ai_rewrites`
+    )
+    .get();
+
+  const perLa = db
+    .prepare(
+      `SELECT la_slug,
+              COUNT(*) AS calls,
+              SUM(COALESCE(input_tokens, 0)) AS input_tokens,
+              SUM(COALESCE(output_tokens, 0)) AS output_tokens
+         FROM ai_rewrites
+        WHERE la_slug IS NOT NULL
+        GROUP BY la_slug
+        ORDER BY calls DESC`
+    )
+    .all();
+
+  const last30 = db
+    .prepare(
+      `SELECT date(created_at) AS day,
+              COUNT(*) AS calls,
+              SUM(COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0)) AS tokens
+         FROM ai_rewrites
+        WHERE created_at > datetime('now', '-30 days')
+        GROUP BY date(created_at)
+        ORDER BY day DESC`
+    )
+    .all();
+
+  res.json({ totals, per_la: perLa, last_30_days: last30 });
+});
+
+adminRouter.get('/ai-usage/recent', (_req, res) => {
+  const rows = db
+    .prepare(
+      `SELECT id, customization_id, la_slug, section_key, mode, target_language,
+              substr(output, 1, 200) AS output_preview,
+              json_array_length(warnings_json) AS warning_count,
+              accepted, accepted_with_warnings,
+              input_tokens, output_tokens, created_at
+         FROM ai_rewrites
+        ORDER BY created_at DESC
+        LIMIT 50`
+    )
+    .all();
+  res.json({ recent: rows });
+});

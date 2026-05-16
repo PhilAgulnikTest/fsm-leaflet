@@ -249,6 +249,10 @@ a { color: var(--brand); }
 }
 .alert--success { background: #DCFCE7; border-color: #16A34A; }
 .alert--error { background: #FEE2E2; border-color: var(--danger); color: #7F1D1D; }
+.alert--template-drift {
+  background: #DBEAFE; border-color: var(--brand-bright);
+  color: #1E3A8A;
+}
 
 .school-list {
   list-style: none; padding: 0; margin: 0;
@@ -493,6 +497,21 @@ a { color: var(--brand); }
   font-weight: 600;
 }
 .lang-chip small { font-weight: 400; opacity: 0.85; margin-left: 0.2rem; }
+
+.stat-grid {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  margin: 1rem 0 2rem;
+}
+.stat {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+.stat__label { font-size: 0.8rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat__value { font-size: 1.6rem; font-weight: 700; margin-top: 0.25rem; color: var(--brand); }
+.stat__sub { font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.25rem; }
 
 .modal__footer {
   display: flex; gap: 0.5rem;

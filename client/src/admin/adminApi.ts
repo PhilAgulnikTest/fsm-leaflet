@@ -129,4 +129,37 @@ export const adminApi = {
     jsonFetch<{ ok: true }>(`/api/admin/trust-domain-allowlist/${encodeURIComponent(domain)}`, {
       method: 'DELETE',
     }),
+
+  // AI usage
+  aiUsage: () =>
+    jsonFetch<{
+      totals: {
+        total_calls: number;
+        accepted_calls: number;
+        accepted_with_warnings: number;
+        total_warnings: number;
+        input_tokens: number;
+        output_tokens: number;
+      };
+      per_la: Array<{ la_slug: string; calls: number; input_tokens: number; output_tokens: number }>;
+      last_30_days: Array<{ day: string; calls: number; tokens: number }>;
+    }>(`/api/admin/ai-usage`),
+  aiUsageRecent: () =>
+    jsonFetch<{
+      recent: Array<{
+        id: number;
+        customization_id: number | null;
+        la_slug: string | null;
+        section_key: string;
+        mode: 'rewrite' | 'translate';
+        target_language: string | null;
+        output_preview: string;
+        warning_count: number;
+        accepted: number;
+        accepted_with_warnings: number;
+        input_tokens: number | null;
+        output_tokens: number | null;
+        created_at: string;
+      }>;
+    }>(`/api/admin/ai-usage/recent`),
 };

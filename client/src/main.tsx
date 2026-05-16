@@ -10,6 +10,7 @@ import { AdminDashboard } from './admin/AdminDashboard';
 import { AdminTemplates } from './admin/AdminTemplates';
 import { AdminLAClients } from './admin/AdminLAClients';
 import { AdminTrustDomains } from './admin/AdminTrustDomains';
+import { AdminAIUsage } from './admin/AdminAIUsage';
 import './styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="templates" element={<AdminTemplates />} />
           <Route path="la-clients" element={<AdminLAClients />} />
           <Route path="trust-domains" element={<AdminTrustDomains />} />
+          <Route path="ai-usage" element={<AdminAIUsage />} />
         </Route>
       </Routes>
     </BrowserRouter>

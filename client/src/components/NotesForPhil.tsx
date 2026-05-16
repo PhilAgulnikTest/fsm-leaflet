@@ -18,6 +18,14 @@ const WORKING: Item[] = [
     body: 'New `region` column on la_clients (\'england\' | \'scotland\' | \'wales\' | \'northern-ireland\'). Public /api/la-clients defaults to ?region=england. Boot-time tagger marks the ~30 known non-England councils from the sites CSV. Admin UI still sees all 149 (pass ?region=all). Add a row to NON_ENGLAND_LAS in server/src/db/tag-la-regions.ts if a new one slips through.',
   },
   {
+    title: '🆕 Template versioning banner',
+    body: 'Bump a template version in /admin/templates (with mandatory ≥10-char changelog). On next visit to /edit/{slug} the owner sees a blue "Template updated since you published" banner with the changelog and an Adopt button. Adopting bumps template_version_at_publish; pinned overrides are preserved.',
+  },
+  {
+    title: '🆕 AI usage & cost dashboard',
+    body: '/admin/ai-usage shows total calls, accepted vs warnings, per-LA breakdown, last-30-days trend, recent calls with output preview. Cost estimates use Claude Sonnet 4.6 list pricing. Useful for spotting an LA hitting the 20/day rate limit before they call you.',
+  },
+  {
     title: '🆕 One-click leaflet download',
     body: 'Click the entitledto leaflet preview on the landing page → opens /view/entitledto-la in a new tab with a sticky coral "Download PDF" button at the top. Same wrapper works for any template (/view/nawra, /view/housing-association).',
   },
@@ -91,9 +99,8 @@ const SETUP: Item[] = [
 
 const PASS_B_REMAINING: Item[] = [
   { title: '🔒 Re-enable admin password before sharing widely', body: 'The /admin area is currently ungated (yellow banner on every admin page makes this obvious). When ready, uncomment 2 lines — see admin.ts and AdminDashboard.tsx.' },
-  { title: 'Template versioning UI on customize/edit flows', body: 'Schema records template_version_at_publish; need to surface the "Template updated — review changes" banner with a diff/adopt path. Admin can already bump versions in /admin/templates.' },
   { title: 'Rich-text body editor in the admin Templates tab', body: 'Currently you edit default_palette JSON directly. A WYSIWYG for the "content" sub-object would be cleaner.' },
-  { title: 'Ops: Sentry, nightly backup, AI cost dashboard', body: 'Per-LA AI cost tracking data is captured (input_tokens, output_tokens on ai_rewrites); just needs a dashboard view. Plus Render-native logs are fine for now but Sentry would catch errors more reliably.' },
+  { title: 'Ops: Sentry, nightly backup', body: 'Sentry would catch server errors more reliably than Render-native logs. SQLite backups are non-trivial on free tier (no persistent disk); upgrade to starter plan + add a daily WAL-snapshot cron.' },
 ];
 
 function Section({ title, items, tone }: { title: string; items: Item[]; tone: 'good' | 'warn' | 'setup' | 'todo' }) {
