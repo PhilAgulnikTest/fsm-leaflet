@@ -25,6 +25,10 @@ services:
         sync: false
       - key: PLATFORM_ADMIN_EMAILS
         value: phil@entitledto.co.uk
+      - key: ADMIN_PASSWORD
+        # Override in the Render dashboard if you want to rotate. Sync false
+        # so re-applying the blueprint doesn't trample a manual change.
+        sync: false
       - key: EMAIL_PROVIDER
         value: none
       - key: ANTHROPIC_API_KEY

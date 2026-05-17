@@ -21,18 +21,14 @@
 import { Router } from 'express';
 import { parse } from 'csv-parse/sync';
 import { db } from '../db/index.js';
-// import { requireSession } from '../auth/sessions.js';
+import { requireSession } from '../auth/sessions.js';
 import { checkBrandColour } from '../render/contrast.js';
 
 export const adminRouter = Router();
 
-// ⚠️ Admin password gate intentionally disabled while Phil demos the platform.
-// Re-enable BEFORE any deploy. The middleware + bcrypt machinery is fully
-// wired (server/src/routes/auth-platform.ts, server/src/auth/sessions.ts);
-// uncomment this single line and the client AdminDashboard's me() check to
-// turn it back on.
-//
-// adminRouter.use(requireSession('platform-admin'));
+// Gated by the platform-admin session cookie set by POST /api/auth/platform/login.
+// Password is the ADMIN_PASSWORD env var on Render (default '3ntitledto').
+adminRouter.use(requireSession('platform-admin'));
 
 // --- Templates -----------------------------------------------------------
 

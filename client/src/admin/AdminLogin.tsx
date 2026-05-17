@@ -21,9 +21,7 @@ export function AdminLogin() {
       const code = (err as Error).message;
       setError(
         code === 'wrong_password' ? 'Wrong password.' :
-        code === 'not_an_admin' ? 'That email isn\'t in the PLATFORM_ADMIN_EMAILS allowlist.' :
-        code === 'not_initialized' ? 'No password set for that email yet. Run `npm run admin:set-password -w server -- --email=... --password=...` first.' :
-        code === 'locked_out' ? 'Too many failed attempts. Try again in 15 minutes.' :
+        code === 'password_required' ? 'Enter the password.' :
         `Error: ${code}`
       );
     } finally { setBusy(false); }
@@ -33,39 +31,41 @@ export function AdminLogin() {
     <>
       <Header />
       <main className="page page--narrow">
-      <h2>Platform admin login</h2>
-      <p className="muted">
-        For NAWRA / entitledto staff. Manage templates, the LA client list, and trust-domain
-        allowlist approvals.
-      </p>
-      {error && <div className="alert alert--error">{error}</div>}
-      <form onSubmit={submit}>
-        <div className="form-row">
-          <label htmlFor="admin-email">Email</label>
-          <input
-            id="admin-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="username"
-            required
-          />
-        </div>
-        <div className="form-row">
-          <label htmlFor="admin-password">Password</label>
-          <input
-            id="admin-password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
-        </div>
-        <button className="btn" type="submit" disabled={busy || !email || !password}>
-          {busy ? 'Signing in…' : 'Sign in'}
-        </button>
-      </form>
+        <h2>Admin sign-in</h2>
+        <p className="muted">
+          Enter the admin password to manage templates, LA clients, customisations, and trust-domain approvals.
+        </p>
+        {error && <div className="alert alert--error">{error}</div>}
+        <form onSubmit={submit}>
+          <div className="form-row">
+            <label htmlFor="admin-email">
+              Your email <span className="muted" style={{ fontWeight: 400 }}>— optional, for audit trail</span>
+            </label>
+            <input
+              id="admin-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
+              placeholder="phil@entitledto.co.uk"
+            />
+          </div>
+          <div className="form-row">
+            <label htmlFor="admin-password">Password</label>
+            <input
+              id="admin-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+              autoFocus
+            />
+          </div>
+          <button className="btn btn--large btn--primary" type="submit" disabled={busy || !password}>
+            {busy ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
       </main>
     </>
   );
