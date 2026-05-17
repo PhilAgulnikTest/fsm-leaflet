@@ -40,16 +40,16 @@ export function Landing() {
 
         <div className="cta-grid">
           <a
-            href="/generic/entitledto-la?format=pdf"
+            href="/view/entitledto-la"
             className="cta-card cta-card--primary"
+            target="_blank"
             rel="noopener"
-            download
           >
             <span className="cta-card__chip cta-card__chip--accent">Default</span>
-            <h3>Download the entitledto edition</h3>
+            <h3>View &amp; download the entitledto edition</h3>
             <p>
-              The print-ready entitledto-branded leaflet. No sign-up, no customisation —
-              use it directly or share with a school.
+              Opens the print-ready entitledto-branded leaflet in a new tab,
+              with a Download PDF button at the top. No sign-up, no customisation.
             </p>
           </a>
 
