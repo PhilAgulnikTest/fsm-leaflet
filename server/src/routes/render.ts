@@ -332,9 +332,12 @@ renderRouter.get('/generic/:templateSlug', async (req, res, next) => {
         // localhost URL avoids public-domain round-trips and SSL gotchas.
         const internalUrl = `http://localhost:${config.port}/generic/${template.slug}`;
         const pdf = await urlToPdf(internalUrl);
+        // attachment (not inline) so the browser actually downloads instead of
+        // opening the PDF in-tab. The Landing page leaflet preview link uses
+        // download too, but the server-side header is the more reliable signal.
         res
           .type('application/pdf')
-          .set('Content-Disposition', `inline; filename="fsm-leaflet-${template.slug}.pdf"`)
+          .set('Content-Disposition', `attachment; filename="fsm-leaflet-${template.slug}.pdf"`)
           .send(pdf);
       } catch (err) {
         res
@@ -386,7 +389,7 @@ renderRouter.get('/c/:slug.pdf', async (req, res, next) => {
       const pdf = await urlToPdf(internalUrl);
       res
         .type('application/pdf')
-        .set('Content-Disposition', `inline; filename="${customization.public_slug}.pdf"`)
+        .set('Content-Disposition', `attachment; filename="${customization.public_slug}.pdf"`)
         .send(pdf);
     } catch (err) {
       res.status(503).type('text/plain').send(`PDF generation unavailable: ${(err as Error).message}`);
