@@ -162,6 +162,36 @@ export function AdminLAClients() {
 
       {error && <div className="alert alert--error">{error}</div>}
 
+      <section className="la-examples">
+        <h3>See an example before you build your own</h3>
+        <p className="muted">
+          Three published bespoke leaflets — open one to see the layout, branding, and copy
+          in context. Use the Download PDF buttons to grab a print-ready copy.
+        </p>
+        <div className="la-examples__grid">
+          {[
+            { slug: 'lambeth-demo', name: 'Lambeth', brand: '#0F6E5B', accent: '#C2185B' },
+            { slug: 'leeds-demo', name: 'Leeds', brand: '#0F2A52', accent: '#F0B92E' },
+            { slug: 'oxfordshire-demo', name: 'Oxfordshire', brand: '#8B1F1F', accent: '#F0B92E' },
+          ].map((ex) => (
+            <article key={ex.slug} className="la-example-card" style={{ borderTop: `5px solid ${ex.brand}` }}>
+              <h4 style={{ margin: '0.5rem 0 0.25rem', color: ex.brand }}>{ex.name}</h4>
+              <p className="muted" style={{ margin: '0 0 0.75rem', fontSize: '0.85rem' }}>
+                Bespoke leaflet for {ex.name} parents and carers.
+              </p>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <a className="btn btn--secondary" href={`/c/${ex.slug}`} target="_blank" rel="noopener">
+                  👁 View
+                </a>
+                <a className="btn btn--secondary" href={`/c/${ex.slug}.pdf`} download>
+                  ⬇ PDF
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <details style={{ marginBottom: '1rem' }}>
         <summary><strong>Bulk upload (CSV)</strong></summary>
         <p className="muted">
