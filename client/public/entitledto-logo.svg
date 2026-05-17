@@ -1,14 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" role="img" aria-label="entitledto">
-  <rect x="0" y="0" width="160" height="36" rx="6" fill="#ffffff"/>
-  <text x="10" y="25" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-weight="800" font-size="22" letter-spacing="-0.5" fill="#0F172A">entitled<tspan fill="#E64A3C">to</tspan></text>
-  <g transform="translate(124 11)" fill="#E64A3C">
-    <rect width="3" height="3"/>
-    <rect x="5" width="3" height="3"/>
-    <rect x="10" width="3" height="3"/>
-    <rect y="5" width="3" height="3"/>
-    <rect x="10" y="5" width="3" height="3"/>
-    <rect width="3" height="3" y="10"/>
-    <rect x="5" y="10" width="3" height="3"/>
-    <rect x="10" y="10" width="3" height="3"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 44" role="img" aria-label="entitledto">
+  <rect x="0" y="0" width="175" height="44" rx="8" fill="#ffffff"/>
+  <g font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" font-weight="800" letter-spacing="-0.6">
+    <text x="12" y="30" font-size="24" fill="#0F172A">entitled</text>
+    <text x="106" y="30" font-size="24" fill="#E64A3C">to</text>
+  </g>
+  <!-- Stylised mark to the right of the wordmark: stacked square + chevron -->
+  <g transform="translate(146 14)" fill="#E64A3C">
+    <rect x="0" y="0" width="7" height="7" rx="1"/>
+    <rect x="9" y="0" width="7" height="7" rx="1"/>
+    <rect x="0" y="9" width="7" height="7" rx="1"/>
+    <rect x="9" y="9" width="7" height="7" rx="1" fill="#0F172A"/>
   </g>
 </svg>

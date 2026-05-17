@@ -115,10 +115,33 @@ export function AdminTemplates() {
           <ul className="admin-list">
             {templates.map((t) => (
               <li key={t.id} className={selected?.id === t.id ? 'admin-list__item admin-list__item--active' : 'admin-list__item'}>
-                <button onClick={() => selectTemplate(t.id)}>
-                  <strong>{t.name}</strong>
-                  <span>v{t.version} · {t.audience} · {t.status}</span>
-                </button>
+                <div className="admin-list__row">
+                  <button className="admin-list__main" onClick={() => selectTemplate(t.id)} title="Edit template">
+                    <strong>{t.name}</strong>
+                    <span>v{t.version} · {t.audience} · {t.status}</span>
+                  </button>
+                  <div className="admin-list__actions">
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      onClick={() => selectTemplate(t.id)}
+                      title="Edit this template"
+                      aria-label={`Edit ${t.name}`}
+                    >
+                      ✏️
+                    </button>
+                    <a
+                      className="icon-btn"
+                      href={`/view/${t.slug}`}
+                      target="_blank"
+                      rel="noopener"
+                      title="Preview the rendered leaflet in a new tab"
+                      aria-label={`Preview ${t.name}`}
+                    >
+                      👁
+                    </a>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>

@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, Link } from 'react-router-dom';
 
 /* ⚠️ Auth check intentionally disabled while Phil demos the platform.
  * Re-enable by restoring the adminApi.me() + redirect-to-login logic
@@ -10,9 +10,13 @@ export function AdminDashboard() {
     <>
       <header className="app-header">
         <div className="app-header__inner">
-          <h1>FSM Leaflet — Platform admin</h1>
+          <Link to="/" className="app-header__brand" aria-label="entitledto FSM leaflet — home">
+            <img src="/entitledto-logo.svg" alt="entitledto" className="app-header__logo" />
+            <span className="app-header__product">FSM Leaflet · Admin</span>
+          </Link>
           <nav className="app-header__nav">
-            <span style={{ color: '#fff', opacity: 0.85 }}>Demo mode · no login</span>
+            <Link to="/">Public site</Link>
+            <span style={{ color: 'rgba(255,255,255,0.7)' }}>Demo mode · no login</span>
           </nav>
         </div>
       </header>
