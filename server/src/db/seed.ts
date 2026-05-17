@@ -5,17 +5,14 @@ runMigrations();
 
 // --- Attribution blocks ----------------------------------------------------
 //
-// Per Phil's explicit direction: the "Template by NAWRA — ..." line appears on
-// the NAWRA template only. All templates retain the "Free to copy, adapt and
-// share · CC BY 4.0" line.
+// Per Phil's direction: NAWRA reference text removed from both the school-
+// facing NAWRA template and the LA-bespoke template. All templates keep the
+// "Free to copy, adapt and share · CC BY 4.0" line.
 //
 // ⚠️ CC BY 4.0 licensing note: strictly the licence requires NAWRA attribution
-// on every derivative (the LA bespoke versions). This deviation should be
-// confirmed with NAWRA before public launch.
+// on every derivative. Confirm with NAWRA before any public launch.
 
 const NAWRA_ATTRIBUTION =
-  '<p><strong>Template by NAWRA</strong> — National Association of Welfare Rights Advisors · ' +
-  '<a href="https://nawra.org.uk">nawra.org.uk</a></p>' +
   '<p class="leaflet__credit-licence">Free to copy, adapt and share · ' +
   '<span class="leaflet__cc">CC BY 4.0</span></p>';
 
