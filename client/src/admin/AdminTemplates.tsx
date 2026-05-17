@@ -3,6 +3,7 @@ import { adminApi, type AdminTemplate, type AdminTemplateDetail } from './adminA
 
 export function AdminTemplates() {
   const [templates, setTemplates] = useState<AdminTemplate[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<AdminTemplateDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -19,10 +20,16 @@ export function AdminTemplates() {
   const [changelog, setChangelog] = useState('');
 
   async function refresh() {
+    setLoading(true);
+    setError(null);
     try {
       const r = await adminApi.listTemplates();
       setTemplates(r.templates);
-    } catch (e) { setError((e as Error).message); }
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { refresh(); }, []);
@@ -93,18 +100,29 @@ export function AdminTemplates() {
   return (
     <div className="split" style={{ gridTemplateColumns: '20rem 1fr' }}>
       <aside>
-        <h2>Templates</h2>
+        <h2>Templates {!loading && <small style={{ fontWeight: 400, color: 'var(--ink-muted)' }}>({templates.length})</small>}</h2>
         {error && <div className="alert alert--error">{error}</div>}
-        <ul className="admin-list">
-          {templates.map((t) => (
-            <li key={t.id} className={selected?.id === t.id ? 'admin-list__item admin-list__item--active' : 'admin-list__item'}>
-              <button onClick={() => selectTemplate(t.id)}>
-                <strong>{t.name}</strong>
-                <span>v{t.version} · {t.audience} · {t.status}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        {loading ? (
+          <p className="muted" style={{ padding: '0.75rem 0' }}>Loading templates…</p>
+        ) : templates.length === 0 ? (
+          <div className="alert">
+            <strong>No templates returned.</strong>
+            <p style={{ margin: '0.4rem 0 0', fontSize: '0.85rem' }}>
+              The API returned an empty list. If the database was just seeded, give it a few seconds and click <button className="btn-mini" onClick={refresh}>↻ Refresh</button>.
+            </p>
+          </div>
+        ) : (
+          <ul className="admin-list">
+            {templates.map((t) => (
+              <li key={t.id} className={selected?.id === t.id ? 'admin-list__item admin-list__item--active' : 'admin-list__item'}>
+                <button onClick={() => selectTemplate(t.id)}>
+                  <strong>{t.name}</strong>
+                  <span>v{t.version} · {t.audience} · {t.status}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </aside>
 
       <section>

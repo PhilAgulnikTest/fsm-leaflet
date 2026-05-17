@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Header } from '../components/Header';
-import { NotesForPhil } from '../components/NotesForPhil';
 
 export function Landing() {
   return (
@@ -76,8 +75,6 @@ export function Landing() {
         <p className="muted" style={{ marginTop: '2rem', fontSize: '0.85rem' }}>
           An entitledto product. Powered by <a href="https://entitledto.co.uk">entitledto.co.uk</a>.
         </p>
-
-        <NotesForPhil />
       </main>
     </>
   );

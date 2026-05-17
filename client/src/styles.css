@@ -286,6 +286,12 @@ a { color: var(--brand); }
   border: 1px dashed #F59E0B;
   border-radius: 0.75rem;
 }
+.notes-wrap--bare {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
 .notes-wrap > header { margin-bottom: 1rem; }
 .notes-wrap h2 { margin: 0.25rem 0; font-size: 1.25rem; }
 .notes__chip {
@@ -329,6 +335,8 @@ a { color: var(--brand); }
 }
 .admin-tab:hover { color: var(--ink); }
 .admin-tab--active { color: var(--brand); border-bottom-color: var(--brand); }
+.admin-tab--devnotes { margin-left: auto; color: var(--accent); }
+.admin-tab--devnotes.admin-tab--active { border-bottom-color: var(--accent); }
 
 .admin-list {
   list-style: none;

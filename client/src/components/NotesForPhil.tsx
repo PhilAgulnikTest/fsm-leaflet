@@ -127,22 +127,33 @@ function Section({ title, items, tone }: { title: string; items: Item[]; tone: '
   );
 }
 
-export function NotesForPhil() {
+export function NotesForPhil({ hideOuterChrome = false }: { hideOuterChrome?: boolean } = {}) {
+  const sections = (
+    <>
+      <Section title="Working now" items={WORKING} tone="good" />
+      <Section title="Needs your input / decision" items={NEEDS_INPUT} tone="warn" />
+      <Section title="One-off setup still to run" items={SETUP} tone="setup" />
+      <Section title="Pass B remaining" items={PASS_B_REMAINING} tone="todo" />
+    </>
+  );
+
+  if (hideOuterChrome) {
+    // Embedded in the admin tab — drop the yellow "dev panel" outer chrome
+    // since the admin page already signals context with its own banner.
+    return <div className="notes-wrap notes-wrap--bare">{sections}</div>;
+  }
+
   return (
     <aside className="notes-wrap" aria-label="Notes for Phil">
       <header>
         <span className="notes__chip">Dev panel</span>
         <h2>Notes for Phil — what's done, what's next</h2>
         <p className="muted">
-          This panel is dev-only. Pass A complete (foundation + render). Pass B:
-          magic-link auth + platform-admin UI + sites-CSV import done. AI re-write up next.
+          Punch-list of what's working, decisions you need to make, and what's still pending.
         </p>
       </header>
 
-      <Section title="Working now" items={WORKING} tone="good" />
-      <Section title="Needs your input / decision" items={NEEDS_INPUT} tone="warn" />
-      <Section title="One-off setup still to run" items={SETUP} tone="setup" />
-      <Section title="Pass B remaining" items={PASS_B_REMAINING} tone="todo" />
+      {sections}
     </aside>
   );
 }

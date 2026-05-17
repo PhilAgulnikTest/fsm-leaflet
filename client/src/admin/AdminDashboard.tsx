@@ -30,6 +30,7 @@ export function AdminDashboard() {
         <NavLink to="/admin/trust-domains" className={({ isActive }) => 'admin-tab' + (isActive ? ' admin-tab--active' : '')}>Trust domains</NavLink>
         <NavLink to="/admin/customizations" className={({ isActive }) => 'admin-tab' + (isActive ? ' admin-tab--active' : '')}>Customizations</NavLink>
         <NavLink to="/admin/ai-usage" className={({ isActive }) => 'admin-tab' + (isActive ? ' admin-tab--active' : '')}>AI usage</NavLink>
+        <NavLink to="/admin/dev-notes" className={({ isActive }) => 'admin-tab admin-tab--devnotes' + (isActive ? ' admin-tab--active' : '')}>📝 Dev notes</NavLink>
       </div>
       <main className="page"><Outlet /></main>
     </>
