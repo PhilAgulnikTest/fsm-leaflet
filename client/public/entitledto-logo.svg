@@ -1,14 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 44" role="img" aria-label="entitledto">
-  <rect x="0" y="0" width="175" height="44" rx="8" fill="#ffffff"/>
-  <g font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" font-weight="800" letter-spacing="-0.6">
-    <text x="12" y="30" font-size="24" fill="#0F172A">entitled</text>
-    <text x="106" y="30" font-size="24" fill="#E64A3C">to</text>
-  </g>
-  <!-- Stylised mark to the right of the wordmark: stacked square + chevron -->
-  <g transform="translate(146 14)" fill="#E64A3C">
-    <rect x="0" y="0" width="7" height="7" rx="1"/>
-    <rect x="9" y="0" width="7" height="7" rx="1"/>
-    <rect x="0" y="9" width="7" height="7" rx="1"/>
-    <rect x="9" y="9" width="7" height="7" rx="1" fill="#0F172A"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 56" role="img" aria-label="entitledto — independent, accurate, reliable">
+  <g font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif">
+    <!-- Wordmark: bright blue 'entitled' + dark navy 'to' -->
+    <text x="2" y="32" font-weight="900" font-size="34" letter-spacing="-1.4" fill="#1F76EC">entitled<tspan fill="#0E1B3D">to</tspan></text>
+    <!-- Tagline -->
+    <text x="3" y="50" font-weight="500" font-size="10.5" letter-spacing="0.1" fill="#0E1B3D">independent | accurate | reliable</text>
   </g>
 </svg>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Header } from '../components/Header';
 import { adminApi } from './adminApi';
 
 export function AdminLogin() {
@@ -29,7 +30,9 @@ export function AdminLogin() {
   }
 
   return (
-    <main className="page page--narrow">
+    <>
+      <Header />
+      <main className="page page--narrow">
       <h2>Platform admin login</h2>
       <p className="muted">
         For NAWRA / entitledto staff. Manage templates, the LA client list, and trust-domain
@@ -63,6 +66,7 @@ export function AdminLogin() {
           {busy ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
-    </main>
+      </main>
+    </>
   );
 }

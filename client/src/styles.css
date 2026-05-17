@@ -40,8 +40,11 @@ a { color: var(--brand); }
   color: #fff; text-decoration: none;
 }
 .app-header__logo {
-  height: 30px;
+  height: 40px;
   display: block;
+  background: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 .app-header__product {
   font-weight: 500;

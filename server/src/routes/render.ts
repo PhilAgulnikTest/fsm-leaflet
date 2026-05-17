@@ -229,12 +229,14 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
       position: sticky; top: 0; z-index: 10;
       background: linear-gradient(180deg, var(--brand-dark, #14215A) 0%, var(--brand) 100%);
       color: #fff;
-      padding: 1rem 1.5rem;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 0.75rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
       flex-wrap: wrap;
     }
-    .viewer-bar__title { font-weight: 600; font-size: 1rem; }
+    .viewer-bar__brand { display: block; line-height: 0; }
+    .viewer-bar__logo { height: 40px; display: block; background: #fff; padding: 4px 10px; border-radius: 6px; }
+    .viewer-bar__title { font-weight: 600; font-size: 1rem; flex: 1; }
     .viewer-bar__title small { opacity: 0.75; font-weight: 400; }
     .viewer-bar__actions { display: flex; gap: 0.5rem; align-items: center; }
     .btn-download {
@@ -284,6 +286,9 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
 </head>
 <body>
   <header class="viewer-bar">
+    <a href="/" class="viewer-bar__brand" aria-label="entitledto — home">
+      <img src="/entitledto-logo.svg" alt="entitledto" class="viewer-bar__logo">
+    </a>
     <div class="viewer-bar__title">
       ${escape(template.name)}
       <small>· Free school meals leaflet · A4 print-ready</small>
