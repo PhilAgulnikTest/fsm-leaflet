@@ -69,6 +69,22 @@ async function autoSeed() {
   } catch (err) {
     console.error('LA region tagging failed:', err);
   }
+
+  // GIAS bulk import: only the 3 demo schools means we haven't run it yet.
+  // 50+ schools indicates the real CSV has been imported at some point.
+  // The download is ~50 MB and the parse takes ~30 s, so we gate on count.
+  const schoolCount = (db.prepare('SELECT COUNT(*) AS n FROM schools').get() as { n: number }).n;
+  if (schoolCount < 50) {
+    try {
+      console.log(`Schools table has ${schoolCount} rows — running GIAS bulk import...`);
+      const { importGias } = await import('./gias/import.js');
+      const result = await importGias();
+      console.log(`GIAS import done: ${result.inserted} schools, ${result.skipped} filtered.`);
+    } catch (err) {
+      console.error('GIAS import failed:', err);
+      console.error('School search will only return the 3 demo schools until this is fixed.');
+    }
+  }
 }
 await autoSeed();
 

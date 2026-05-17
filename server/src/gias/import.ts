@@ -26,24 +26,22 @@ const STATE_FUNDED_TYPE_GROUPS = new Set([
 ]);
 
 /* GIAS publishes a dated all-establishments CSV at:
- *   https://get-information-schools.service.gov.uk/Downloads
- * The actual file URL is dated and changes each month, e.g.:
  *   https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/edubasealldata{YYYYMMDD}.csv
- * We attempt the first-of-this-month and first-of-last-month URLs as best
- * guesses; if neither works we tell the user to download manually. */
+ * The file is updated multiple times a week, so we walk backwards from today
+ * looking for the most recent snapshot we can fetch. 14 days of history
+ * comfortably covers any plausible publication gap. */
 
 function candidateUrls(): string[] {
+  const urls: string[] = [];
   const today = new Date();
-  const dates = [
-    new Date(today.getFullYear(), today.getMonth(), 1),
-    new Date(today.getFullYear(), today.getMonth() - 1, 1),
-  ];
-  return dates.map((d) => {
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today.getTime() - i * 86_400_000);
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
-    return `https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/edubasealldata${yyyy}${mm}${dd}.csv`;
-  });
+    urls.push(`https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/edubasealldata${yyyy}${mm}${dd}.csv`);
+  }
+  return urls;
 }
 
 type Row = Record<string, string>;
@@ -70,18 +68,17 @@ async function tryFetch(url: string): Promise<Buffer | null> {
   }
 }
 
-async function resolveCsvPath(): Promise<string> {
-  const fileArg = arg('file');
-  if (fileArg) return path.resolve(fileArg);
+async function resolveCsvPath(opts: { file?: string; url?: string; refresh?: boolean } = {}): Promise<string> {
+  if (opts.file) return path.resolve(opts.file);
 
   fs.mkdirSync(config.paths.giasData, { recursive: true });
   const cached = path.join(config.paths.giasData, 'edubase-latest.csv');
-  if (fs.existsSync(cached) && !arg('refresh')) {
-    console.log(`Using cached CSV at ${cached} (pass --refresh to re-download).`);
+  if (fs.existsSync(cached) && !opts.refresh) {
+    console.log(`Using cached GIAS CSV at ${cached} (pass --refresh to re-download).`);
     return cached;
   }
 
-  const urls = arg('url') ? [arg('url')!] : candidateUrls();
+  const urls = opts.url ? [opts.url] : candidateUrls();
   console.log('Trying GIAS download URLs:');
   for (const url of urls) {
     const buf = await tryFetch(url);
@@ -183,11 +180,22 @@ async function importCsv(csvPath: string): Promise<{ inserted: number; skipped: 
   return { inserted, skipped };
 }
 
+/* Top-level orchestrator. Exported so the server's auto-seed can call it on
+ * boot without going through the CLI. */
+export async function importGias(opts: { file?: string; url?: string } = {}): Promise<{ inserted: number; skipped: number }> {
+  const csvPath = await resolveCsvPath({ file: opts.file, url: opts.url });
+  return importCsv(csvPath);
+}
+
 const thisFile = fileURLToPath(import.meta.url);
 const entry = process.argv[1] ? path.resolve(process.argv[1]) : '';
 if (entry && (entry === thisFile || entry.endsWith('import.ts') || entry.endsWith('import.js'))) {
   const start = Date.now();
-  resolveCsvPath()
+  // CLI delegates straight to the orchestrator with argv-derived options.
+  const fileArg = arg('file');
+  const urlArg = arg('url');
+  const refresh = !!arg('refresh');
+  resolveCsvPath({ file: fileArg, url: urlArg, refresh })
     .then(importCsv)
     .then(({ inserted, skipped }) => {
       const ms = Date.now() - start;
@@ -198,3 +206,4 @@ if (entry && (entry === thisFile || entry.endsWith('import.ts') || entry.endsWit
       process.exit(1);
     });
 }
+
