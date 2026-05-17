@@ -3,7 +3,7 @@ import { Header } from '../components/Header';
 import { api, type School } from '../api';
 
 type SaveResult = { public_url: string; edit_url: string; public_slug: string } | null;
-type Step = 'search' | 'fill' | 'request_link' | 'link_sent' | 'allowlist' | 'allowlist_sent' | 'editor' | 'published';
+type Step = 'search' | 'fill' | 'published';
 
 export function SchoolFlow() {
   const [query, setQuery] = useState('');
@@ -15,32 +15,10 @@ export function SchoolFlow() {
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
 
-  // Auth state
-  const [authEmail, setAuthEmail] = useState('');
-  const [verified, setVerified] = useState(false);
-  const [expectedDomains, setExpectedDomains] = useState<string[]>([]);
-  const [requestableDomain, setRequestableDomain] = useState<string | null>(null);
-  const [devLink, setDevLink] = useState<string | null>(null);
-
   const [step, setStep] = useState<Step>('search');
   const [saveResult, setSaveResult] = useState<SaveResult>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  // On mount, check if we're returning from a magic-link verify
-  // (the redirect lands here with ?verified=1 and a session cookie).
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('verified') === '1') {
-      api.me().then((r) => {
-        if (r.session?.scope === 'school' && r.session.school_urn) {
-          setVerified(true);
-          // We don't auto-load the customization here; the user is mid-flow
-          // and will publish through the same form they already filled in.
-          setStep('editor');
-        }
-      });
-    }
-  }, []);
 
   useEffect(() => {
     if (query.trim().length < 2) { setResults([]); return; }
@@ -63,55 +41,7 @@ export function SchoolFlow() {
     setPhone(s.phone ?? '');
     setEmail(s.email ?? '');
     setWebsite(s.website ?? '');
-    setAuthEmail(s.email ?? '');
     setStep('fill');
-  }
-
-  async function requestLink() {
-    if (!selected) return;
-    setError(null);
-    setBusy(true);
-    try {
-      const r = await api.requestMagicLink({ scope: 'school', email: authEmail, school_urn: selected.urn });
-      setDevLink(r.dev_link ?? null);
-      setStep('link_sent');
-    } catch (e) {
-      const msg = (e as Error).message;
-      if (msg === 'domain_mismatch') {
-        // The server attached expected + requestable_domain on the 403, but our
-        // tiny api wrapper drops the body. Re-fetch with the raw fetch to recover.
-        try {
-          const r = await fetch('/api/auth/request', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ scope: 'school', email: authEmail, school_urn: selected.urn }),
-          });
-          const body = await r.json();
-          setExpectedDomains(body.expected ?? []);
-          setRequestableDomain(body.requestable_domain ?? null);
-          setStep('allowlist');
-        } catch {
-          setError(msg);
-        }
-      } else {
-        setError(msg);
-      }
-    } finally { setBusy(false); }
-  }
-
-  async function requestAllowlist() {
-    if (!selected || !requestableDomain) return;
-    setBusy(true);
-    setError(null);
-    try {
-      await api.requestTrustAllowlist({
-        domain: requestableDomain,
-        email: authEmail,
-        school_urn: selected.urn,
-        notes: `Requested via school customize flow for ${selected.name}.`,
-      });
-      setStep('allowlist_sent');
-    } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   }
 
   async function publish() {
@@ -136,90 +66,39 @@ export function SchoolFlow() {
     } finally { setBusy(false); }
   }
 
-  // ---------------------------- views ----------------------------
-
   if (step === 'published' && saveResult) {
+    const fullUrl = window.location.origin + saveResult.public_url;
     return (
       <>
         <Header />
         <main className="page page--narrow">
           <div className="alert alert--success">
-            <strong>Published.</strong> Your leaflet is live.
+            <strong>Your leaflet is ready.</strong>
           </div>
-          <p>Public URL: <a href={saveResult.public_url}>{saveResult.public_url}</a></p>
-          <p>
-            Edit URL (keep this somewhere safe — re-opening it sends a fresh magic link to your email):
-            <br /><a href={saveResult.edit_url}>{saveResult.edit_url}</a>
-          </p>
-          <p><a className="btn" href={saveResult.public_url}>Open your leaflet</a></p>
-        </main>
-      </>
-    );
-  }
 
-  if (step === 'link_sent') {
-    return (
-      <>
-        <Header />
-        <main className="page page--narrow">
-          <h2>Check your inbox</h2>
-          <div className="alert alert--success">
-            We sent a magic link to <strong>{authEmail}</strong>.
-            Open it within 15 minutes. The link returns you to this flow and lets you publish.
+          <div className="published-actions">
+            <a className="btn btn--large btn--primary" href={saveResult.public_url} target="_blank" rel="noopener">
+              👁 View your leaflet
+            </a>
+            <a className="btn btn--large btn--accent" href={`${saveResult.public_url}.pdf`} download>
+              ⬇ Download PDF
+            </a>
           </div>
-          {devLink && (
-            <div className="alert">
-              <strong>Dev mode shortcut.</strong> Email isn't wired up yet, so click below
-              to consume the link directly (production users would click it in their email).
-              <p style={{ marginTop: '0.5rem' }}>
-                <a className="btn" href={devLink}>Open magic link</a>
-              </p>
+
+          <div className="published-share">
+            <h3>Share your leaflet</h3>
+            <p className="muted">Send this link to staff, share on your website, or print and hand out.</p>
+            <div className="copy-row">
+              <input readOnly value={fullUrl} onFocus={(e) => e.currentTarget.select()} />
+              <button className="btn btn--secondary" onClick={() => navigator.clipboard?.writeText(fullUrl)}>
+                Copy link
+              </button>
             </div>
-          )}
-        </main>
-      </>
-    );
-  }
-
-  if (step === 'allowlist_sent') {
-    return (
-      <>
-        <Header />
-        <main className="page page--narrow">
-          <h2>Request submitted</h2>
-          <div className="alert alert--success">
-            We've asked a platform admin to approve <strong>{requestableDomain}</strong>.
-            Once approved, your magic-link request will work — typically within a working day.
           </div>
-        </main>
-      </>
-    );
-  }
 
-  if (step === 'allowlist') {
-    return (
-      <>
-        <Header />
-        <main className="page page--narrow">
-          <h2>Domain not recognised</h2>
-          <p>
-            We couldn't match <strong>{authEmail}</strong> against the official
-            email/website domain for <strong>{selected?.name}</strong>
-            {expectedDomains.length > 0 && (
-              <> (we expected one of: {expectedDomains.map((d) => <code key={d}>{d}</code>).reduce((a, b) => <>{a}, {b}</>)})</>
-            )}.
+          <p className="muted" style={{ marginTop: '2rem' }}>
+            Need to change the wording or contact details? <a href={saveResult.edit_url}>Edit your leaflet</a>.
           </p>
-          <p>
-            If <strong>{authEmail}</strong> is genuinely a school email — common for
-            academy trusts — you can request that a platform admin approves the domain
-            <strong> {requestableDomain}</strong>. Usually takes a working day.
-          </p>
-          <button className="btn" onClick={requestAllowlist} disabled={busy}>
-            Request approval for {requestableDomain}
-          </button>
-          <button className="btn btn--secondary" onClick={() => setStep('fill')} style={{ marginLeft: '0.5rem' }}>
-            Use a different email
-          </button>
         </main>
       </>
     );
@@ -231,8 +110,8 @@ export function SchoolFlow() {
       <main className="page page--narrow">
         <h2>Customise the leaflet for your school</h2>
         <p className="muted">
-          Search the DfE register for your school, then add the four footer fields
-          parents will see. The rest of the leaflet is the NAWRA standard text.
+          Search the DfE register for your school, add the four footer fields parents
+          will see, and publish — your print-ready leaflet is ready immediately.
         </p>
 
         {error && <div className="alert alert--error">Error: {error}</div>}
@@ -285,27 +164,9 @@ export function SchoolFlow() {
               <input id="school-website" value={website} onChange={(e) => setWebsite(e.target.value)} />
             </div>
 
-            {verified ? (
-              <button className="btn" onClick={publish} disabled={busy}>
-                {busy ? 'Publishing…' : 'Publish leaflet'}
-              </button>
-            ) : (
-              <>
-                <h3 style={{ marginTop: '1.5rem' }}>Verify ownership</h3>
-                <p className="muted">
-                  We'll send a one-time magic link to a school email address.
-                  The domain must match the school's GIAS record (or be an
-                  approved academy-trust domain).
-                </p>
-                <div className="form-row">
-                  <label htmlFor="auth-email">Your school email</label>
-                  <input id="auth-email" type="email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} />
-                </div>
-                <button className="btn" onClick={requestLink} disabled={!authEmail || busy}>
-                  {busy ? 'Sending…' : 'Send me a magic link'}
-                </button>
-              </>
-            )}
+            <button className="btn btn--large btn--primary" onClick={publish} disabled={busy}>
+              {busy ? 'Publishing…' : 'Publish leaflet'}
+            </button>
           </>
         )}
       </main>

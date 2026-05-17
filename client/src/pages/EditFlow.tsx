@@ -1,10 +1,7 @@
-/* /edit/:slug — the "edit URL" the user receives at publish time.
- *
- * If the user has a valid session scoped to this customization → load
- * overrides into an editor.
- * Otherwise → show a "request magic link" form. The link does NOT auth on its
- * own; possessing it just lets you trigger a fresh magic-link cycle to the
- * verified email. */
+/* /edit/:slug — the editor for a previously-published customization.
+ * Magic-link gating intentionally removed per Phil: no fraud concern, just
+ * let anyone with the URL edit and re-publish. The same edit URL is returned
+ * at publish time as a "save this somewhere" link. */
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -27,25 +24,17 @@ export function EditFlow() {
   const { slug = '' } = useParams();
   const [customization, setCustomization] = useState<Customization | null>(null);
   const [templateDrift, setTemplateDrift] = useState(false);
-  const [authorized, setAuthorized] = useState(false);
-  const [email, setEmail] = useState('');
-  const [requested, setRequested] = useState<{ sent_to: string; warning?: string; dev_link?: string } | null>(null);
   const [overrides, setOverrides] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   async function reload() {
-    const [meRes, cRes] = await Promise.all([
-      api.me(),
-      fetch(`/api/customizations/${slug}`).then((r) => r.json()),
-    ]);
+    const cRes = await fetch(`/api/customizations/${slug}`).then((r) => r.json());
     const c = cRes.customization as Customization;
     setCustomization(c);
     setTemplateDrift(!!cRes.template_drift);
     setOverrides(JSON.parse(c.overrides_json || '{}'));
-    const session = meRes.session;
-    if (session && session.customization_id === c.id) setAuthorized(true);
   }
 
   useEffect(() => {
@@ -66,26 +55,11 @@ export function EditFlow() {
     } catch (e) { setError((e as Error).message); }
   }
 
-  async function requestLink() {
-    if (!customization) return;
-    setError(null);
-    try {
-      const scope: 'school' | 'la' = customization.la_slug ? 'la' : 'school';
-      const result = await api.requestMagicLink({
-        scope,
-        email,
-        customization_id: customization.id,
-      });
-      setRequested({ sent_to: result.sent_to, warning: result.warning, dev_link: result.dev_link });
-    } catch (e) {
-      setError((e as Error).message);
-    }
-  }
-
   async function save() {
     if (!customization) return;
     setSaving(true);
     setError(null);
+    setSaved(false);
     try {
       await api.updateCustomization(customization.public_slug, overrides);
       setSaved(true);
@@ -116,55 +90,7 @@ export function EditFlow() {
     );
   }
 
-  if (!authorized) {
-    return (
-      <>
-        <Header />
-        <main className="page page--narrow">
-          <h2>Re-open your leaflet</h2>
-          <p className="muted">
-            For security, this edit URL doesn't grant access on its own.
-            Enter the email you used when you published the leaflet —
-            we'll send a one-time magic link that opens the editor.
-          </p>
-
-          {requested ? (
-            <div className="alert alert--success">
-              <strong>Magic link sent.</strong> Check {requested.sent_to} —
-              the link expires in 15 minutes.
-              {requested.warning && (
-                <p style={{ margin: '0.5rem 0 0' }}>
-                  <small>{requested.warning}</small>
-                </p>
-              )}
-              {requested.dev_link && (
-                <p style={{ margin: '0.5rem 0 0' }}>
-                  <a className="btn" href={requested.dev_link}>Open magic link (dev shortcut)</a>
-                </p>
-              )}
-            </div>
-          ) : (
-            <>
-              {error && <div className="alert alert--error">Error: {error}</div>}
-              <div className="form-row">
-                <label htmlFor="edit-email">Email</label>
-                <input
-                  id="edit-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={customization.la_slug ? 'you@council.gov.uk' : 'you@school.example'}
-                />
-              </div>
-              <button className="btn" onClick={requestLink} disabled={!email}>
-                Send magic link
-              </button>
-            </>
-          )}
-        </main>
-      </>
-    );
-  }
+  const fullUrl = window.location.origin + `/c/${customization.public_slug}`;
 
   return (
     <>
@@ -172,14 +98,31 @@ export function EditFlow() {
       <main className="page page--narrow">
         <h2>Edit your leaflet</h2>
         <p className="muted">
-          You're signed in. Changes update the same public URL — no new slug.
+          Changes update the same public URL. View or download anytime using the buttons below.
         </p>
+
+        <div className="published-actions" style={{ marginBottom: '1.5rem' }}>
+          <a className="btn btn--large btn--primary" href={`/c/${customization.public_slug}`} target="_blank" rel="noopener">
+            👁 View your leaflet
+          </a>
+          <a className="btn btn--large btn--accent" href={`/c/${customization.public_slug}.pdf`} download>
+            ⬇ Download PDF
+          </a>
+        </div>
+
+        <div className="published-share" style={{ marginBottom: '1.5rem' }}>
+          <h3 style={{ marginTop: 0 }}>Share link</h3>
+          <div className="copy-row">
+            <input readOnly value={fullUrl} onFocus={(e) => e.currentTarget.select()} />
+            <button className="btn btn--secondary" onClick={() => navigator.clipboard?.writeText(fullUrl)}>
+              Copy link
+            </button>
+          </div>
+        </div>
 
         {error && <div className="alert alert--error">Error: {error}</div>}
         {saved && (
-          <div className="alert alert--success">
-            Saved. <a href={`/c/${customization.public_slug}`}>Open the public URL</a>.
-          </div>
+          <div className="alert alert--success">Saved.</div>
         )}
 
         {templateDrift && (
@@ -202,9 +145,10 @@ export function EditFlow() {
         )}
 
         {Object.keys(overrides).length === 0 ? (
-          <p className="muted">This customization has no overrides yet — open it from one of the customize flows first.</p>
+          <p className="muted">This customization has no overrides yet.</p>
         ) : (
           <>
+            <h3>Sections</h3>
             {Object.entries(overrides).map(([key, value]) => (
               <div className="form-row" key={key}>
                 <label htmlFor={`edit-${key}`}>{key}</label>
@@ -216,7 +160,7 @@ export function EditFlow() {
                 />
               </div>
             ))}
-            <button className="btn" onClick={save} disabled={saving}>
+            <button className="btn btn--large btn--primary" onClick={save} disabled={saving}>
               {saving ? 'Saving…' : 'Save changes'}
             </button>
           </>

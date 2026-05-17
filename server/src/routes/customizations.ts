@@ -89,19 +89,16 @@ customizationsRouter.post('/', (req, res) => {
   });
 });
 
-/* PATCH endpoint for re-editing a customization after the owner has come
- * back via the edit URL + magic-link verify. Requires a session scoped to
- * the same customization. */
+/* PATCH endpoint for re-editing a customization. Auth intentionally
+ * removed per Phil — no fraud concern, anyone with the edit URL can save
+ * changes. The session-check code is left in sessions.ts for when the
+ * platform is ready to flip it back on. */
 customizationsRouter.patch('/:slug', (req, res) => {
   const slug = req.params.slug;
   const c = db
     .prepare('SELECT id, public_slug FROM customizations WHERE public_slug = ?')
     .get(slug) as { id: number; public_slug: string } | undefined;
   if (!c) return res.status(404).json({ error: 'not_found' });
-
-  if (!req.session || req.session.customization_id !== c.id) {
-    return res.status(401).json({ error: 'unauthorized' });
-  }
 
   const { overrides } = (req.body ?? {}) as { overrides?: Record<string, string> };
   if (!overrides) return res.status(400).json({ error: 'overrides_required' });
@@ -168,9 +165,7 @@ customizationsRouter.post('/:slug/adopt-template-version', (req, res) => {
     .get(req.params.slug) as { id: number; current_version: number } | undefined;
   if (!row) return res.status(404).json({ error: 'not_found' });
 
-  if (req.session && req.session.customization_id !== row.id) {
-    return res.status(401).json({ error: 'unauthorized' });
-  }
+  // Auth intentionally removed per Phil — anyone with the edit URL can adopt.
 
   db.prepare(`
     UPDATE customizations
