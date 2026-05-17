@@ -1,13 +1,11 @@
-/* LA customise flow — pen-only editing.
+/* LA customise flow — pen-only inline editing.
  *
- * UX shape (per Phil's rework):
- *   - Pick a local authority from the dropdown
- *   - Optional: show the LA's logo on the leaflet (defaults to off)
- *   - The leaflet preview renders live in an iframe; every edit re-renders it
- *   - Each editable section sits in a tidy list; each row is just a pen icon
- *     that opens a modal with a textarea for that section
- *   - No AI re-write / translate buttons — Phil dropped that path here
- */
+ * The editable leaflet renders in an iframe. The server's preview-render
+ * endpoint, when given `with_pens: true`, injects a small inline script
+ * that places a pen icon next to every `[data-edit-key]` element and
+ * postMessages back to this page when one is clicked. We listen, look up
+ * the section, open a modal with a textarea — save updates state and
+ * re-renders the iframe. */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Header } from '../components/Header';
@@ -15,22 +13,26 @@ import { api, type LAClient } from '../api';
 
 type SaveResult = { public_url: string; edit_url: string; public_slug: string } | null;
 
-const EDITABLE_SECTIONS: Array<{ key: string; label: string; description?: string; multiline?: boolean }> = [
+type EditableSection = { key: string; label: string; multiline?: boolean };
+
+const EDITABLE_SECTIONS: EditableSection[] = [
   { key: 'hero_title', label: 'Headline' },
   { key: 'hero_subtitle', label: 'Subtitle' },
   { key: 'hero_date', label: 'Hero date line' },
   { key: 'intro_html', label: 'Intro paragraph', multiline: true },
   { key: 'cta_primary_title', label: 'Primary CTA title' },
   { key: 'cta_primary_body_html', label: 'Primary CTA body', multiline: true },
-  { key: 'box1_title', label: '"What this means" — Box 1 title' },
+  { key: 'box1_title', label: 'Box 1 title' },
   { key: 'box1_body_html', label: 'Box 1 body', multiline: true },
   { key: 'box2_title', label: 'Box 2 title' },
   { key: 'box2_body_html', label: 'Box 2 body', multiline: true },
   { key: 'cta_secondary_title', label: 'Yellow box title' },
   { key: 'cta_secondary_body_html', label: 'Yellow box body', multiline: true },
-  { key: 'contact_name', label: 'Contact block — team name' },
+  { key: 'contact_name', label: 'Contact team name' },
+  { key: 'contact_phone', label: 'Contact phone' },
   { key: 'contact_email', label: 'Contact email' },
   { key: 'contact_website', label: 'Contact website' },
+  { key: 'how_to_steps_html', label: 'How-to-claim steps', multiline: true },
 ];
 
 export function LAFlow() {
@@ -40,7 +42,7 @@ export function LAFlow() {
   const [showLogo, setShowLogo] = useState(false);
   const [previewHtml, setPreviewHtml] = useState<string>('');
 
-  const [editing, setEditing] = useState<{ key: string; label: string; multiline?: boolean } | null>(null);
+  const [editing, setEditing] = useState<EditableSection | null>(null);
   const [draft, setDraft] = useState('');
 
   const [busy, setBusy] = useState(false);
@@ -67,8 +69,6 @@ export function LAFlow() {
     setShowLogo(false);
   }
 
-  // Combined overrides include the logo flag + logo URL when the toggle is on.
-  // Server-side render reads these from content.show_logo / content.logo_url.
   const effectiveOverrides = useMemo(() => {
     const o = { ...overrides };
     if (showLogo && selected?.logo_url) {
@@ -78,7 +78,7 @@ export function LAFlow() {
     return o;
   }, [overrides, showLogo, selected]);
 
-  // Live preview: POST overrides to /preview-render, set iframe srcDoc.
+  // Re-fetch the leaflet HTML whenever the slug, overrides, or logo flag changes.
   useEffect(() => {
     if (!slug) { setPreviewHtml(''); return; }
     let cancelled = false;
@@ -91,6 +91,7 @@ export function LAFlow() {
             template_slug: 'entitledto-la',
             la_slug: slug,
             overrides: effectiveOverrides,
+            with_pens: true,
           }),
         });
         const html = await res.text();
@@ -102,10 +103,19 @@ export function LAFlow() {
     return () => { cancelled = true; };
   }, [slug, effectiveOverrides]);
 
-  function openEditor(section: typeof EDITABLE_SECTIONS[number]) {
-    setEditing(section);
-    setDraft(overrides[section.key] ?? '');
-  }
+  // Listen for pen clicks bubbling up from inside the iframe.
+  useEffect(() => {
+    const handler = (e: MessageEvent) => {
+      const data = e.data as { type?: string; key?: string } | null;
+      if (data?.type !== 'leaflet-edit' || !data.key) return;
+      const section = EDITABLE_SECTIONS.find((s) => s.key === data.key);
+      if (!section) return;
+      setEditing(section);
+      setDraft(overrides[section.key] ?? '');
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, [overrides]);
 
   function saveEditor() {
     if (!editing) return;
@@ -174,86 +184,73 @@ export function LAFlow() {
       <Header />
       <main className="page">
         <h2>Customise the leaflet for your local authority</h2>
-        <p className="muted">
-          Pick your LA, then use the pen icons to edit any section. The leaflet
-          on the right updates as you go.
+
+        <p className="muted la-examples-line">
+          Want to see what a finished one looks like? View the
+          {' '}<a href="/c/lambeth-demo" target="_blank" rel="noopener">Lambeth</a>
+          {' '}or
+          {' '}<a href="/c/oxfordshire-demo" target="_blank" rel="noopener">Oxfordshire</a>
+          {' '}example
+          {' '}(<a href="/c/lambeth-demo.pdf" download>Lambeth PDF</a>,
+          {' '}<a href="/c/oxfordshire-demo.pdf" download>Oxfordshire PDF</a>).
         </p>
 
         {error && <div className="alert alert--error">{error}</div>}
 
-        <div className="la-controls">
-          <div className="form-row" style={{ flex: 1, marginBottom: 0 }}>
-            <label htmlFor="la-select">Choose a local authority</label>
-            <select
-              id="la-select"
-              value={slug}
-              onChange={(e) => {
-                const next = e.target.value;
-                setSlug(next);
-                const la = clients.find((c) => c.slug === next);
-                if (la) applyDefaults(la);
-              }}
-            >
-              <option value="">— pick one —</option>
-              {clients.map((c) => (
-                <option key={c.slug} value={c.slug}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-
-          <label className="la-logo-toggle">
-            <input
-              type="checkbox"
-              checked={showLogo}
-              onChange={(e) => setShowLogo(e.target.checked)}
-              disabled={!selected?.logo_url}
-            />
-            <span>
-              Show LA logo on the leaflet
-              {selected && !selected.logo_url && (
-                <span className="muted"> &nbsp;— no logo URL on file for {selected.name}; add one in /admin/la-clients</span>
-              )}
-            </span>
-          </label>
+        <div className="form-row" style={{ maxWidth: '32rem' }}>
+          <label htmlFor="la-select">Choose a local authority</label>
+          <select
+            id="la-select"
+            value={slug}
+            onChange={(e) => {
+              const next = e.target.value;
+              setSlug(next);
+              const la = clients.find((c) => c.slug === next);
+              if (la) applyDefaults(la);
+            }}
+          >
+            <option value="">— pick one —</option>
+            {clients.map((c) => (
+              <option key={c.slug} value={c.slug}>{c.name}</option>
+            ))}
+          </select>
         </div>
 
         {selected && (
-          <div className="split la-editor-split">
-            <div>
-              <h3 style={{ marginTop: 0 }}>Edit sections</h3>
-              <p className="muted" style={{ marginTop: 0 }}>
-                Click ✏️ on any row to edit. Blank rows show the template default.
-              </p>
-              <ul className="pen-list">
-                {EDITABLE_SECTIONS.map((s) => {
-                  const hasOverride = overrides[s.key] != null && overrides[s.key] !== '';
-                  return (
-                    <li key={s.key} className={hasOverride ? 'pen-list__item pen-list__item--edited' : 'pen-list__item'}>
-                      <button type="button" className="pen-list__row" onClick={() => openEditor(s)}>
-                        <span className="pen-list__label">{s.label}</span>
-                        {hasOverride && <span className="pen-list__edited-chip">edited</span>}
-                        <span className="pen-list__pen" aria-label={`Edit ${s.label}`}>✏️</span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
+          <>
+            <label className="la-logo-toggle">
+              <input
+                type="checkbox"
+                checked={showLogo}
+                onChange={(e) => setShowLogo(e.target.checked)}
+                disabled={!selected.logo_url}
+              />
+              <span>
+                Show LA logo on the leaflet
+                {!selected.logo_url && (
+                  <span className="muted"> &nbsp;— no logo URL on file for {selected.name}; add one in /admin/la-clients</span>
+                )}
+              </span>
+            </label>
 
-              <button className="btn btn--large btn--primary" onClick={publish} disabled={busy} style={{ marginTop: '1rem' }}>
+            <p className="muted" style={{ margin: '0.5rem 0 1rem' }}>
+              Hover over any section of the leaflet below and click the
+              <strong> ✏️ pen</strong> to edit that text. Changes appear as you save.
+            </p>
+
+            <iframe
+              ref={iframeRef}
+              title="Leaflet live preview — click pen icons to edit"
+              srcDoc={previewHtml}
+              className="preview-frame preview-frame--xtall"
+            />
+
+            <div style={{ marginTop: '1rem' }}>
+              <button className="btn btn--large btn--primary" onClick={publish} disabled={busy}>
                 {busy ? 'Publishing…' : 'Publish leaflet'}
               </button>
             </div>
-
-            <div>
-              <h3 style={{ marginTop: 0 }}>Live preview</h3>
-              <iframe
-                ref={iframeRef}
-                title="Leaflet live preview"
-                srcDoc={previewHtml}
-                className="preview-frame preview-frame--tall"
-              />
-            </div>
-          </div>
+          </>
         )}
       </main>
 
@@ -268,8 +265,7 @@ export function LAFlow() {
               <div className="modal__pane">
                 <p className="muted" style={{ marginTop: 0 }}>
                   Edit the text below. Simple HTML works for emphasis
-                  (<code>&lt;strong&gt;</code>, <code>&lt;u&gt;</code>); plain
-                  text is fine too. The leaflet preview updates when you save.
+                  (<code>&lt;strong&gt;</code>, <code>&lt;u&gt;</code>). Save updates the leaflet preview.
                 </p>
                 <textarea
                   value={draft}

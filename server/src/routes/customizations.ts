@@ -15,10 +15,11 @@ export const customizationsRouter = Router();
  *   → HTML body */
 customizationsRouter.post('/preview-render', async (req, res, next) => {
   try {
-    const { template_slug, la_slug, overrides } = (req.body ?? {}) as {
+    const { template_slug, la_slug, overrides, with_pens } = (req.body ?? {}) as {
       template_slug?: string;
       la_slug?: string;
       overrides?: Record<string, string>;
+      with_pens?: boolean;
     };
     if (!template_slug) return res.status(400).type('text/plain').send('template_slug required');
 
@@ -65,6 +66,52 @@ customizationsRouter.post('/preview-render', async (req, res, next) => {
       withEntitledtoCredit,
       qr: { include: false },
     });
+
+    // When the LA editor asks for pens, inject a small in-page script that
+    // adds a pen icon next to every element with a data-edit-key attribute.
+    // Clicking a pen postMessages back to the parent window so the React
+    // editor can open the relevant modal.
+    if (with_pens) {
+      const penScript = `
+<style>
+  [data-edit-key] { position: relative; transition: outline-color 0.1s, background 0.1s; outline: 2px dashed transparent; outline-offset: 2px; }
+  [data-edit-key]:hover { outline-color: rgba(40, 88, 229, 0.45); }
+  .__editpen {
+    position: absolute; top: -10px; right: -10px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #fff; border: 2px solid #2858E5;
+    color: #2858E5; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    z-index: 50; padding: 0;
+  }
+  .__editpen:hover { background: #2858E5; color: #fff; transform: scale(1.1); }
+  [data-edit-key] > .__editpen { pointer-events: auto; }
+</style>
+<script>
+(function () {
+  document.querySelectorAll('[data-edit-key]').forEach(function (el) {
+    var key = el.getAttribute('data-edit-key');
+    var pen = document.createElement('button');
+    pen.type = 'button';
+    pen.className = '__editpen';
+    pen.title = 'Edit this section';
+    pen.setAttribute('aria-label', 'Edit ' + key);
+    pen.textContent = '✏️';
+    pen.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      try {
+        window.parent.postMessage({ type: 'leaflet-edit', key: key }, '*');
+      } catch (err) { console.warn(err); }
+    });
+    el.appendChild(pen);
+  });
+})();
+</script>`;
+      const withPensHtml = html.replace('</body>', penScript + '</body>');
+      return res.type('html').send(withPensHtml);
+    }
+
     res.type('html').send(html);
   } catch (e) { next(e); }
 });

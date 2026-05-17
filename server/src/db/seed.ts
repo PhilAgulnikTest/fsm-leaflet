@@ -76,7 +76,7 @@ const ENTITLEDTO_BODY = {
     'From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals.',
   cta_primary_title: 'Free school meals are expanding',
   cta_primary_body_html:
-    'From September 2026 every child whose family receives Universal Credit can get free school meals. <strong><u>Apply before the Autumn term starts</u></strong> so your child doesn\'t miss out.',
+    '<strong><u>Apply before the Autumn term starts</u></strong> so your child doesn\'t miss out.',
   cta_primary_bg: '#2858E5',
   box2_body_html:
     '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September. You may also qualify for other benefits you\'re not claiming — check the calculator while you\'re at it.</p>',

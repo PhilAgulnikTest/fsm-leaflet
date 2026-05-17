@@ -318,16 +318,50 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
     </div>
     <div class="viewer-bar__actions">
       <a href="/" class="btn-secondary">← Back</a>
-      <a href="/generic/${escape(template.slug)}?format=pdf" class="btn-download" download>
+      <button id="dl-btn" class="btn-download" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
           <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
-        Download PDF
-      </a>
+        <span class="dl-btn__label">Download PDF</span>
+      </button>
     </div>
   </header>
+  <script>
+    // Explicit fetch + blob download gives clear progress feedback. The plain
+    // <a download> approach was firing silently — file appeared in Downloads
+    // but the page gave no signal that anything happened.
+    (function () {
+      var btn = document.getElementById('dl-btn');
+      var label = btn.querySelector('.dl-btn__label');
+      var slug = ${JSON.stringify(template.slug)};
+      btn.addEventListener('click', async function () {
+        var original = label.textContent;
+        label.textContent = 'Generating PDF…';
+        btn.disabled = true;
+        try {
+          var res = await fetch('/generic/' + slug + '?format=pdf');
+          if (!res.ok) throw new Error('HTTP ' + res.status + ' from server');
+          var blob = await res.blob();
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'fsm-leaflet-' + slug + '.pdf';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+          label.textContent = '✓ Downloaded';
+          setTimeout(function () { label.textContent = original; btn.disabled = false; }, 2000);
+        } catch (err) {
+          label.textContent = original;
+          btn.disabled = false;
+          alert('Could not generate PDF: ' + err.message);
+        }
+      });
+    })();
+  </script>
 
   <div class="viewer-frame-wrap">
     <iframe class="viewer-frame" src="/generic/${escape(template.slug)}" title="${escape(template.name)} preview"></iframe>
