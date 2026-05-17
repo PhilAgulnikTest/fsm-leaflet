@@ -74,6 +74,23 @@ html, body {
   right: 8mm;
 }
 
+.leaflet__hero-logo {
+  position: absolute;
+  top: 6mm;
+  left: 8mm;
+  background: #fff;
+  padding: 2mm 3mm;
+  border-radius: 2mm;
+  max-width: 50mm;
+}
+.leaflet__hero-logo-img {
+  display: block;
+  max-height: 11mm;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
 .leaflet__hero-badge {
   font-size: 9pt;
   font-weight: 600;

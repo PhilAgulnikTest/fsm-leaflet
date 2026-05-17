@@ -2,7 +2,72 @@ import { Router } from 'express';
 import { randomBytes } from 'node:crypto';
 import { db } from '../db/index.js';
 
+import { renderLeaflet } from '../render/leaflet.js';
+
 export const customizationsRouter = Router();
+
+/* Preview render — given a template + overrides + optional LA, returns the
+ * leaflet HTML. Used by the LA customise flow's live iframe so edits show
+ * up instantly without persisting a draft customisation.
+ *
+ * POST /api/customizations/preview-render
+ *   { template_slug, la_slug?, overrides? }
+ *   → HTML body */
+customizationsRouter.post('/preview-render', async (req, res, next) => {
+  try {
+    const { template_slug, la_slug, overrides } = (req.body ?? {}) as {
+      template_slug?: string;
+      la_slug?: string;
+      overrides?: Record<string, string>;
+    };
+    if (!template_slug) return res.status(400).type('text/plain').send('template_slug required');
+
+    const template = db
+      .prepare(
+        `SELECT id, slug, name, audience, body_path, default_palette_json,
+                facts_json, version FROM templates WHERE slug = ?`
+      )
+      .get(template_slug) as
+      | {
+          id: number; slug: string; name: string; audience: string; body_path: string;
+          default_palette_json: string; facts_json: string; version: number;
+        }
+      | undefined;
+    if (!template) return res.status(404).type('text/plain').send('template_not_found');
+
+    let palette: { brand?: string; accent?: string } | undefined;
+    let withEntitledtoCredit = false;
+    if (la_slug) {
+      const la = db
+        .prepare('SELECT default_brand_colour, default_accent_colour FROM la_clients WHERE slug = ?')
+        .get(la_slug) as
+        | { default_brand_colour: string; default_accent_colour: string }
+        | undefined;
+      if (la) palette = { brand: la.default_brand_colour, accent: la.default_accent_colour };
+      withEntitledtoCredit = true;
+    }
+
+    // Synthesize a customization-shaped object for the renderer.
+    const fakeCustomization = {
+      id: 0,
+      template_id: template.id,
+      template_version_at_publish: template.version,
+      school_urn: null,
+      la_slug: la_slug ?? null,
+      overrides_json: JSON.stringify(overrides ?? {}),
+      public_slug: '__preview__',
+    };
+
+    const html = await renderLeaflet({
+      template,
+      customization: fakeCustomization,
+      palette,
+      withEntitledtoCredit,
+      qr: { include: false },
+    });
+    res.type('html').send(html);
+  } catch (e) { next(e); }
+});
 
 type Body = {
   template_slug: string;

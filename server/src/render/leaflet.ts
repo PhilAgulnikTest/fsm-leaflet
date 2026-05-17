@@ -93,6 +93,17 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     ? ' · <strong>Powered by entitledto.co.uk</strong>'
     : '';
 
+  // Optional LA logo in the hero. Off by default. Three knobs:
+  //   content.show_logo === 'true'  → render the logo block
+  //   content.logo_url              → explicit override URL
+  //   palette.logo_url              → falls back to the LA's default logo URL
+  //                                   (passed by the route handler)
+  const showLogo = content.show_logo === 'true' || content.show_logo === '1';
+  const logoUrl = content.logo_url || (defaults as { logo_url?: string }).logo_url || '';
+  const logoHtml = showLogo && logoUrl
+    ? `<div class="leaflet__hero-logo"><img src="${logoUrl}" alt="" class="leaflet__hero-logo-img"></div>`
+    : '';
+
   // Per-template attribution block. Falls back to a NAWRA-only credit if a
   // template hasn't set its own (keeps CC BY 4.0 attribution intact).
   const defaultAttribution =
@@ -133,6 +144,7 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     ENTITLEDTO_CREDIT_HTML: entitledtoCredit,
     ATTRIBUTION_HTML: attributionHtml,
     QR_BLOCK_HTML: qrBlockHtml,
+    LOGO_HTML: logoHtml,
   };
 
   // Inline CTA-primary background colour — overrides the CSS default
