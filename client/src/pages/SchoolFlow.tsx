@@ -179,8 +179,19 @@ export function SchoolFlow() {
               <input id="school-phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
             </div>
             <div className="form-row">
-              <label htmlFor="school-email">Email (shown on the leaflet)</label>
-              <input id="school-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <label htmlFor="school-email">
+                Email <span className="muted" style={{ fontWeight: 400 }}>— optional</span>
+              </label>
+              <input
+                id="school-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Only if you want parents to be able to email you"
+              />
+              <small className="muted">
+                Leave blank unless you want parents to contact the school by email about FSM.
+              </small>
             </div>
             <div className="form-row">
               <label htmlFor="school-website">Website</label>

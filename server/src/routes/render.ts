@@ -53,13 +53,36 @@ function loadTemplateBySlug(slug: string): TemplateRow | undefined {
 
 renderRouter.get('/c/:slug', async (req, res, next) => {
   try {
+    // Express's :slug greedy-matches the literal '.pdf' suffix, so registering
+    // a separate '/c/:slug.pdf' route after this one never gets hit. Detect
+    // the suffix here and branch to PDF generation.
+    const rawSlug = req.params.slug;
+    const wantsPdf = rawSlug.endsWith('.pdf');
+    const slug = wantsPdf ? rawSlug.slice(0, -4) : rawSlug;
+
     const customization = db
       .prepare(
         `SELECT id, template_id, template_version_at_publish, school_urn, la_slug,
                 overrides_json, public_slug FROM customizations WHERE public_slug = ?`
       )
-      .get(req.params.slug) as CustomizationRow | undefined;
+      .get(slug) as CustomizationRow | undefined;
     if (!customization) return res.status(404).type('text/plain').send('Customization not found.');
+
+    if (wantsPdf) {
+      try {
+        const internalUrl = `http://localhost:${config.port}/c/${customization.public_slug}?embed=1`;
+        const pdf = await urlToPdf(internalUrl);
+        return res
+          .type('application/pdf')
+          .set('Content-Disposition', `attachment; filename="${customization.public_slug}.pdf"`)
+          .send(pdf);
+      } catch (err) {
+        return res
+          .status(503)
+          .type('text/plain')
+          .send(`PDF generation unavailable: ${(err as Error).message}`);
+      }
+    }
 
     const template = loadTemplate(customization.template_id);
     if (!template) return res.status(500).type('text/plain').send('Template missing.');
@@ -351,48 +374,7 @@ renderRouter.get('/generic/:templateSlug', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-/** Same idea for a published customization. */
-renderRouter.get('/c/:slug.pdf', async (req, res, next) => {
-  try {
-    const customization = db
-      .prepare(
-        `SELECT id, template_id, template_version_at_publish, school_urn, la_slug,
-                overrides_json, public_slug FROM customizations WHERE public_slug = ?`
-      )
-      .get(req.params.slug) as CustomizationRow | undefined;
-    if (!customization) return res.status(404).type('text/plain').send('Not found.');
-    const template = loadTemplate(customization.template_id);
-    if (!template) return res.status(500).type('text/plain').send('Template missing.');
-    let palette: { brand?: string; accent?: string } | undefined;
-    let withEntitledtoCredit = false;
-    if (customization.la_slug) {
-      const la = db
-        .prepare('SELECT default_brand_colour, default_accent_colour FROM la_clients WHERE slug = ?')
-        .get(customization.la_slug) as
-        | { default_brand_colour: string; default_accent_colour: string }
-        | undefined;
-      if (la) palette = { brand: la.default_brand_colour, accent: la.default_accent_colour };
-      withEntitledtoCredit = true;
-    }
-    const html = await renderLeaflet({
-      template,
-      customization,
-      palette,
-      withEntitledtoCredit,
-      qrTarget: `${config.publicBaseUrl}/c/${customization.public_slug}`,
-      qr: { include: false },
-    });
-    try {
-      // ?embed=1 strips the language switcher wrapper if present so the PDF
-      // is just the leaflet itself.
-      const internalUrl = `http://localhost:${config.port}/c/${customization.public_slug}?embed=1`;
-      const pdf = await urlToPdf(internalUrl);
-      res
-        .type('application/pdf')
-        .set('Content-Disposition', `attachment; filename="${customization.public_slug}.pdf"`)
-        .send(pdf);
-    } catch (err) {
-      res.status(503).type('text/plain').send(`PDF generation unavailable: ${(err as Error).message}`);
-    }
-  } catch (e) { next(e); }
-});
+// (PDF route for customizations is handled inline in /c/:slug above by
+// branching on the '.pdf' suffix — Express's greedy :slug match would
+// otherwise consume the suffix before a separate '/c/:slug.pdf' route
+// could catch it.)
