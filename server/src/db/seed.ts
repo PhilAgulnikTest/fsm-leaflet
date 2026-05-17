@@ -3,6 +3,29 @@ import { runMigrations } from './migrate.js';
 
 runMigrations();
 
+// --- Attribution blocks ----------------------------------------------------
+//
+// Per Phil's explicit direction: the "Template by NAWRA — ..." line appears on
+// the NAWRA template only. All templates retain the "Free to copy, adapt and
+// share · CC BY 4.0" line.
+//
+// ⚠️ CC BY 4.0 licensing note: strictly the licence requires NAWRA attribution
+// on every derivative (the LA bespoke versions). This deviation should be
+// confirmed with NAWRA before public launch.
+
+const NAWRA_ATTRIBUTION =
+  '<p><strong>Template by NAWRA</strong> — National Association of Welfare Rights Advisors · ' +
+  '<a href="https://nawra.org.uk">nawra.org.uk</a></p>' +
+  '<p class="leaflet__credit-licence">Free to copy, adapt and share · ' +
+  '<span class="leaflet__cc">CC BY 4.0</span></p>';
+
+const LA_BESPOKE_ATTRIBUTION =
+  '<p><strong>Powered by <a href="https://entitledto.co.uk">entitledto.co.uk</a></strong></p>' +
+  '<p class="leaflet__credit-licence">Free to copy, adapt and share · ' +
+  '<span class="leaflet__cc">CC BY 4.0</span></p>';
+
+// --- Template defaults -----------------------------------------------------
+
 const NAWRA_BODY = {
   hero_title: 'Free school meals are changing',
   hero_subtitle: 'Important news for parents and carers',
@@ -31,6 +54,7 @@ const NAWRA_BODY = {
   contact_phone: '[Telephone]',
   contact_email: '[Email]',
   contact_website: '[Website]',
+  attribution_html: NAWRA_ATTRIBUTION,
 };
 
 const NAWRA_PALETTE = {
@@ -49,17 +73,13 @@ const NAWRA_FACTS = {
   benefit_calculator_url: 'https://www.gov.uk/benefits-calculators',
 };
 
-// Entitledto-branded version. Copy aligned with the canonical entitledto PNG:
-// hero kept generic; primary CTA reframed as "Check what you're entitled to"
-// pointing at the calculator; secondary CTA mentions the 30+ other benefits
-// the calculator surfaces.
 const ENTITLEDTO_BODY = {
   ...NAWRA_BODY,
   intro_html:
-    'From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals — but you may be entitled to much more.',
-  cta_primary_title: 'Check what you\'re entitled to',
+    'From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals.',
+  cta_primary_title: 'Free school meals are expanding',
   cta_primary_body_html:
-    'Free school meals are just one of many benefits Universal Credit families can claim. <strong><u>Use our free calculator</u></strong> to check in under 10 minutes.',
+    'From September 2026 every child whose family receives Universal Credit can get free school meals. <strong><u>Apply before the Autumn term starts</u></strong> so your child doesn\'t miss out.',
   cta_primary_bg: '#2858E5',
   box2_body_html:
     '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September. You may also qualify for other benefits you\'re not claiming — check the calculator while you\'re at it.</p>',
@@ -71,11 +91,12 @@ const ENTITLEDTO_BODY = {
   contact_phone: '',
   contact_email: '',
   contact_website: 'Used by Local Authorities, Housing Associations and Citizens Advice · entitledto.co.uk',
+  attribution_html: LA_BESPOKE_ATTRIBUTION,
 };
 
 const ENTITLEDTO_PALETTE = {
   brand: '#1B2A6B',          // navy
-  accent: '#E64A3C',         // coral
+  accent: '#E64A3C',
   cta_primary_bg: '#2858E5', // bright blue CTA
 };
 
@@ -84,6 +105,7 @@ const HOUSING_BODY = {
   hero_title: 'Free school meals — for tenant families',
   hero_subtitle: 'Information from your housing association',
   contact_name: '[Housing association name]',
+  attribution_html: LA_BESPOKE_ATTRIBUTION,
 };
 
 type TemplateSeed = {
@@ -169,7 +191,12 @@ const seedTemplates = db.transaction(() => {
 });
 seedTemplates();
 
-// Seed LA client list — Lambeth as the single MVP client.
+// --- LA clients ------------------------------------------------------------
+//
+// Three named LAs from the brief, each with their own brand palette. These
+// match the colours seen in the reference bespoke PNGs (Lambeth=teal+magenta,
+// Leeds=navy+yellow, Oxfordshire=red+yellow).
+
 const insertLA = db.prepare(`
   INSERT INTO la_clients
     (slug, name, calculator_subdomain, default_brand_colour, default_accent_colour,
@@ -189,23 +216,170 @@ const insertLA = db.prepare(`
     updated_at = datetime('now')
 `);
 
-insertLA.run({
-  slug: 'lambeth',
-  name: 'Lambeth Council',
-  calculator_subdomain: 'lambeth.entitledto.co.uk',
-  default_brand_colour: '#1F4F5C',
-  default_accent_colour: '#C2185B',
-  logo_url: null,
-  default_source_url: 'https://lambeth.gov.uk/freeschoolmeals',
-  enabled_languages: JSON.stringify(['en', 'pl', 'ur']),
-  notes:
-    'Seed LA for MVP. Pioneering FSM auto-enrolment via the LIFT platform across Lambeth, Lewisham and Wandsworth.',
-});
+const NAMED_LAS: Array<Parameters<typeof insertLA.run>[0]> = [
+  {
+    slug: 'lambeth',
+    name: 'Lambeth Council',
+    calculator_subdomain: 'lambeth.entitledto.co.uk',
+    default_brand_colour: '#0F6E5B',
+    default_accent_colour: '#C2185B',
+    logo_url: null,
+    default_source_url: 'https://lambeth.gov.uk/freeschoolmeals',
+    enabled_languages: JSON.stringify(['en', 'pl', 'ur']),
+    notes:
+      'Pioneering FSM auto-enrolment via the LIFT platform across Lambeth, Lewisham and Wandsworth.',
+  },
+  {
+    slug: 'leeds',
+    name: 'Leeds City Council',
+    calculator_subdomain: 'leeds.entitledto.co.uk',
+    default_brand_colour: '#0F2A52',
+    default_accent_colour: '#F0B92E',
+    logo_url: null,
+    default_source_url: 'https://leeds.gov.uk/freeschoolmeals',
+    enabled_languages: JSON.stringify(['en']),
+    notes: 'Reference render in the brief bundle.',
+  },
+  {
+    slug: 'oxfordshire',
+    name: 'Oxfordshire County Council',
+    calculator_subdomain: 'oxfordshire.entitledto.co.uk',
+    default_brand_colour: '#8B1F1F',
+    default_accent_colour: '#F0B92E',
+    logo_url: null,
+    default_source_url:
+      'https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes',
+    enabled_languages: JSON.stringify(['en']),
+    notes: 'Reference render in the brief bundle.',
+  },
+];
+for (const la of NAMED_LAS) insertLA.run(la);
 
-// Demo schools. These are real Lambeth primaries but with synthetic URNs in the
-// 9xxxxxx range — clearly outside the real GIAS allocation, so they won't collide
-// once the real CSV is imported. Lets the school flow demo end-to-end before
-// gias:import has been run.
+// --- Demo customisations (publish the three reference renders) -------------
+
+const upsertCustomization = db.prepare(`
+  INSERT INTO customizations
+    (template_id, template_version_at_publish, la_slug, overrides_json, public_slug,
+     owner_email, published_at)
+  VALUES
+    ((SELECT id FROM templates WHERE slug = @template_slug),
+     1, @la_slug, @overrides_json, @public_slug, @owner_email, datetime('now'))
+  ON CONFLICT(public_slug) DO UPDATE SET
+    overrides_json = excluded.overrides_json,
+    updated_at = datetime('now')
+`);
+
+type DemoCustomization = {
+  public_slug: string;
+  la_slug: string;
+  overrides: Record<string, string>;
+};
+
+const DEMOS: DemoCustomization[] = [
+  {
+    public_slug: 'lambeth-demo',
+    la_slug: 'lambeth',
+    overrides: {
+      hero_title: 'Free school meals: Lambeth\'s expanded offer',
+      hero_subtitle: 'Important news for parents and carers',
+      hero_date: 'From September 2026',
+      intro_html:
+        'From September 2026, every Lambeth child whose family receives <strong>Universal Credit</strong> can get free school meals.',
+      cta_primary_title: 'We may auto-enrol your child',
+      cta_primary_body_html:
+        'Lambeth has been auto-enrolling children for years. <strong><u>Most eligible children will be signed up automatically</u></strong> — but contact your school if you don\'t hear from us by September.',
+      cta_primary_bg: '#C2185B',
+      box1_title: 'If your child currently gets free school meals',
+      box1_body_html:
+        '<p>Lambeth checks eligibility every year and <strong>auto-enrols most eligible children</strong>. If your circumstances have changed, contact your school or the Lambeth Welfare team to make sure your child stays signed up.</p>',
+      box2_title: 'If you receive Universal Credit but haven\'t claimed before',
+      box2_body_html:
+        '<p>Your child is now eligible. <strong>Lambeth may auto-enrol you from 1 June</strong> — or apply directly through your school for the start of September.</p>',
+      cta_secondary_title: 'Not on Universal Credit yet?',
+      cta_secondary_body_html:
+        'You may still be entitled. Use Lambeth\'s free benefit calculator to check if you could qualify for Universal Credit and free school meals.',
+      calculator_url: 'https://lambeth.entitledto.co.uk',
+      calculator_url_display: 'lambeth.entitledto.co.uk',
+      contact_name: 'Lambeth Welfare and Benefits Team',
+      contact_phone: '',
+      contact_email: 'fsm@lambeth.gov.uk',
+      contact_website: 'lambeth.gov.uk/freeschoolmeals',
+    },
+  },
+  {
+    public_slug: 'leeds-demo',
+    la_slug: 'leeds',
+    overrides: {
+      hero_title: 'Free school meals: what\'s changing in Leeds',
+      hero_subtitle: 'Important news for parents and carers',
+      hero_date: 'From September 2026',
+      intro_html:
+        'From September 2026, every Leeds child whose family receives <strong>Universal Credit</strong> can get free school meals.',
+      cta_primary_title: 'Apply now for September',
+      cta_primary_body_html:
+        'Leeds processes applications over the summer. <strong><u>Apply online or through your school</u></strong> so your child is signed up before the Autumn term starts.',
+      cta_primary_bg: '#F0B92E',
+      box1_title: 'If your child currently gets free school meals',
+      box1_body_html:
+        '<p>From <strong>7 September 2026</strong>, the current rules and £7,400 earnings limit end. Eligibility will be checked every year — if your situation has changed, contact Welfare and Benefits to make sure your child keeps their free meals.</p>',
+      box2_title: 'If you receive Universal Credit but haven\'t claimed before',
+      box2_body_html:
+        '<p>Your child is now eligible. <strong>Apply online from 1 June</strong> or download the form — Leeds will process applications over the summer.</p>',
+      cta_secondary_title: 'Not on Universal Credit yet?',
+      cta_secondary_body_html:
+        'You may still be entitled. Use Leeds\' free benefit calculator to check if you could qualify for Universal Credit and free school meals.',
+      calculator_url: 'https://leeds.entitledto.co.uk',
+      calculator_url_display: 'leeds.entitledto.co.uk',
+      contact_name: 'Leeds Welfare and Benefits (FSM Claims)',
+      contact_phone: '',
+      contact_email: 'lcc.benefits@leeds.gov.uk',
+      contact_website: 'leeds.gov.uk/freeschoolmeals',
+    },
+  },
+  {
+    public_slug: 'oxfordshire-demo',
+    la_slug: 'oxfordshire',
+    overrides: {
+      hero_title: 'Free school meals: what\'s changing in Oxfordshire',
+      hero_subtitle: 'Important news for parents and carers',
+      hero_date: 'From September 2026',
+      intro_html:
+        'From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals.',
+      cta_primary_title: 'Apply by end of summer term',
+      cta_primary_body_html:
+        'Oxfordshire processes applications <strong><u>over the summer</u></strong> so your child is ready for free meals on the first day of the Autumn term.',
+      cta_primary_bg: '#E8951A',
+      box1_title: 'If your child currently gets free school meals',
+      box1_body_html:
+        '<p>From the <strong>2026/27 school year</strong>, eligibility will be checked every year. Oxfordshire is <strong>exploring auto-enrolment</strong> — look out for a letter from us, and contact your school if you don\'t hear by the start of term.</p>',
+      box2_title: 'If you receive Universal Credit but haven\'t claimed before',
+      box2_body_html:
+        '<p>Your child is now eligible. <strong>Apply through your school by the end of the summer term</strong>.</p>',
+      cta_secondary_title: 'Not on Universal Credit yet?',
+      cta_secondary_body_html:
+        'You may still be entitled. Use Oxfordshire\'s free benefit calculator to check if you could qualify for Universal Credit and free school meals.',
+      calculator_url: 'https://oxfordshire.entitledto.co.uk',
+      calculator_url_display: 'oxfordshire.entitledto.co.uk',
+      contact_name: 'Oxfordshire Free School Meals Team',
+      contact_phone: '',
+      contact_email: 'Free.SchoolMeals@Oxfordshire.gov.uk',
+      contact_website: 'schools.oxfordshire.gov.uk',
+    },
+  },
+];
+
+for (const d of DEMOS) {
+  upsertCustomization.run({
+    template_slug: 'entitledto-la',
+    la_slug: d.la_slug,
+    overrides_json: JSON.stringify(d.overrides),
+    public_slug: d.public_slug,
+    owner_email: 'demo@entitledto.co.uk',
+  });
+}
+
+// --- Demo schools (Lambeth primaries with synthetic URNs) -----------------
+
 const DEMO_SCHOOLS: Array<Record<string, string | null>> = [
   {
     urn: '9900001',
@@ -268,4 +442,7 @@ const insertSchool = db.prepare(`
 `);
 for (const s of DEMO_SCHOOLS) insertSchool.run(s);
 
-console.log(`Seeded ${templates.length} templates, 1 LA client (Lambeth), and ${DEMO_SCHOOLS.length} demo schools.`);
+console.log(
+  `Seeded ${templates.length} templates, ${NAMED_LAS.length} LA clients, ` +
+    `${DEMOS.length} demo customisations, and ${DEMO_SCHOOLS.length} demo schools.`
+);

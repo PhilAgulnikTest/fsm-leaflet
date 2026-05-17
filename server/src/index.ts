@@ -28,15 +28,16 @@ if (migrationResult.applied.length > 0) {
   console.log(`Applied migrations: ${migrationResult.applied.join(', ')}`);
 }
 
-// Self-seed on every boot. Independent checks per data type — so re-runs don't
-// need to be "all or nothing". All upserts are idempotent.
+// Self-seed on every boot. seed.ts is idempotent (UPSERT semantics by slug /
+// public_slug), so re-running is safe and keeps template defaults + demo
+// customisations + named LAs in sync with whatever's in the code. Caveat: an
+// admin edit via the UI to one of the seeded templates/LAs/customisations
+// gets overridden on the next redeploy. Acceptable for now since edits
+// happen via code changes, not the UI.
 async function autoSeed() {
-  const templateCount = (db.prepare('SELECT COUNT(*) AS n FROM templates').get() as { n: number }).n;
-  if (templateCount === 0) {
-    console.log('Templates table empty — running seed.ts...');
-    try { await import('./db/seed.js'); console.log('Templates + Lambeth seeded.'); }
-    catch (err) { console.error('Template seed failed:', err); }
-  }
+  console.log('Running seed.ts (idempotent UPSERTs)...');
+  try { await import('./db/seed.js'); console.log('Seed complete.'); }
+  catch (err) { console.error('Seed failed:', err); }
 
   // Sites CSV: run when LA count is below the CSV's row count. Idempotent via
   // upsert-by-slug, so re-importing on every boot is safe — but checking lets

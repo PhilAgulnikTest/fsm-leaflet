@@ -93,6 +93,15 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     ? ' · <strong>Powered by entitledto.co.uk</strong>'
     : '';
 
+  // Per-template attribution block. Falls back to a NAWRA-only credit if a
+  // template hasn't set its own (keeps CC BY 4.0 attribution intact).
+  const defaultAttribution =
+    '<p><strong>Template by NAWRA</strong> — National Association of Welfare Rights Advisors · ' +
+    '<a href="https://nawra.org.uk">nawra.org.uk</a></p>' +
+    '<p class="leaflet__credit-licence">Free to copy, adapt and share · ' +
+    '<span class="leaflet__cc">CC BY 4.0</span></p>';
+  const attributionHtml = content.attribution_html ?? defaultAttribution;
+
   const substitutions: Record<string, string> = {
     LANG: lang,
     DIR: dir,
@@ -122,6 +131,7 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     CONTACT_EMAIL: content.contact_email ?? '',
     CONTACT_WEBSITE: content.contact_website ?? '',
     ENTITLEDTO_CREDIT_HTML: entitledtoCredit,
+    ATTRIBUTION_HTML: attributionHtml,
     QR_BLOCK_HTML: qrBlockHtml,
   };
 

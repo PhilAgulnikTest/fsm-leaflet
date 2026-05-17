@@ -48,8 +48,13 @@ export function AdminTemplates() {
       setFactsText(JSON.stringify(t.facts, null, 2));
       setPaletteText(JSON.stringify(t.default_palette, null, 2));
       setChangelog('');
-    } catch (e) { setError((e as Error).message); }
-    finally { setBusy(false); }
+    } catch (e) {
+      const msg = (e as Error).message;
+      setError(`Could not load template ${id}: ${msg}`);
+      // Also log so it's discoverable in devtools — Phil reported the pen
+      // button "doesn't work" when the API was probably erroring silently.
+      console.error('selectTemplate failed', e);
+    } finally { setBusy(false); }
   }
 
   async function saveMetadata() {

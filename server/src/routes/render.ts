@@ -8,7 +8,7 @@ import { Router } from 'express';
 import { db } from '../db/index.js';
 import { config } from '../config.js';
 import { renderLeaflet } from '../render/leaflet.js';
-import { htmlToPdf } from '../render/pdf.js';
+import { urlToPdf } from '../render/pdf.js';
 
 export const renderRouter = Router();
 
@@ -328,7 +328,10 @@ renderRouter.get('/generic/:templateSlug', async (req, res, next) => {
     });
     if (req.query.format === 'pdf') {
       try {
-        const pdf = await htmlToPdf(html, config.publicBaseUrl);
+        // Hit our own server with Playwright so CSS / images resolve. Internal
+        // localhost URL avoids public-domain round-trips and SSL gotchas.
+        const internalUrl = `http://localhost:${config.port}/generic/${template.slug}`;
+        const pdf = await urlToPdf(internalUrl);
         res
           .type('application/pdf')
           .set('Content-Disposition', `inline; filename="fsm-leaflet-${template.slug}.pdf"`)
@@ -377,7 +380,10 @@ renderRouter.get('/c/:slug.pdf', async (req, res, next) => {
       qr: { include: false },
     });
     try {
-      const pdf = await htmlToPdf(html, config.publicBaseUrl);
+      // ?embed=1 strips the language switcher wrapper if present so the PDF
+      // is just the leaflet itself.
+      const internalUrl = `http://localhost:${config.port}/c/${customization.public_slug}?embed=1`;
+      const pdf = await urlToPdf(internalUrl);
       res
         .type('application/pdf')
         .set('Content-Disposition', `inline; filename="${customization.public_slug}.pdf"`)
