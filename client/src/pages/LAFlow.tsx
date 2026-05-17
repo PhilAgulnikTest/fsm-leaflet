@@ -185,6 +185,16 @@ export function LAFlow() {
       <main className="page">
         <h2>Customise the leaflet for your local authority</h2>
 
+        <div className="la-customer-note" role="note">
+          <strong>For entitledto LA customers only.</strong>
+          <span> This page customises the bespoke version of the leaflet for local authorities
+            that subscribe to the entitledto benefit calculator. Schools can use the
+            {' '}<a href="/customize/school">schools customise flow</a> instead; everyone
+            else can download the
+            {' '}<a href="/view/entitledto-la" target="_blank" rel="noopener">generic entitledto edition</a>.
+          </span>
+        </div>
+
         <p className="muted la-examples-line">
           Want to see what a finished one looks like? View the
           {' '}<a href="/c/lambeth-demo" target="_blank" rel="noopener">Lambeth</a>
