@@ -74,7 +74,7 @@ const ENTITLEDTO_BODY = {
   ...NAWRA_BODY,
   intro_html:
     'From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals.',
-  cta_primary_title: 'Free school meals are expanding',
+  cta_primary_title: 'The government are expanding free school meals and getting everyone to register annually.',
   cta_primary_body_html:
     '<strong><u>Apply before the Autumn term starts</u></strong> so your child doesn\'t miss out.',
   cta_primary_bg: '#2858E5',

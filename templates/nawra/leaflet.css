@@ -56,6 +56,14 @@ html, body {
     box-sizing: border-box;
   }
   .leaflet__page * { page-break-inside: avoid; }
+
+  /* PDF-only: hide the screen-only PRINT-READY badge and the footer credit
+     strip. Phil's call — the on-screen view keeps both. NB: the credit
+     line carries the CC BY 4.0 licence notice, which strictly should be
+     retained on derivatives. Confirm with NAWRA before mass distribution. */
+  .leaflet__hero-badge,
+  .leaflet__hero-meta,
+  .leaflet__credit { display: none !important; }
 }
 
 /* Hero ------------------------------------------------------------------- */
@@ -141,16 +149,17 @@ html, body {
 }
 
 .leaflet__cta-primary-title {
-  font-size: 20pt;
-  font-weight: 800;
+  font-size: 14pt;
+  font-weight: 700;
   margin: 0 0 2mm;
-  line-height: 1.1;
+  line-height: 1.3;
 }
 
 .leaflet__cta-primary-body {
-  font-size: 11pt;
+  font-size: 14pt;
+  font-weight: 400;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 /* Section heading -------------------------------------------------------- */
