@@ -17,9 +17,11 @@ const NAWRA_ATTRIBUTION =
   '<span class="leaflet__cc">CC BY 4.0</span></p>';
 
 const LA_BESPOKE_ATTRIBUTION =
-  '<p><strong>Powered by <a href="https://entitledto.co.uk">entitledto.co.uk</a></strong></p>' +
-  '<p class="leaflet__credit-licence">Free to copy, adapt and share · ' +
-  '<span class="leaflet__cc">CC BY 4.0</span></p>';
+  '<p class="leaflet__credit-licence">' +
+  'Published by <a href="https://entitledto.co.uk">entitledto.co.uk</a>' +
+  ' · Free to copy, adapt and share' +
+  ' · <span class="leaflet__cc">CC BY 4.0</span>' +
+  '</p>';
 
 // --- Template defaults -----------------------------------------------------
 
@@ -87,7 +89,7 @@ const ENTITLEDTO_BODY = {
   contact_name: 'independent | accurate | reliable',
   contact_phone: '',
   contact_email: '',
-  contact_website: 'Used by Local Authorities, Housing Associations and Citizens Advice · entitledto.co.uk',
+  contact_website: 'Used by Local Authorities, Housing Associations and Citizens Advice',
   attribution_html: LA_BESPOKE_ATTRIBUTION,
 };
 
