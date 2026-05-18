@@ -131,7 +131,35 @@ a { color: var(--brand); }
     0 12px 32px rgba(15, 23, 42, 0.18);
   transition: box-shadow 0.15s;
 }
-.hero__leaflet-link:hover .hero__leaflet {
+
+/* Iframe-based live thumbnail of the entitledto-LA leaflet.
+   The leaflet renders at A4 width (210mm ≈ 793px @ 96dpi); we scale
+   that down to fit the 280px hero column. The wrapper sets the visible
+   box size + clips, the iframe holds the full-size leaflet and is
+   transform-scaled inside. pointer-events: none lets clicks fall
+   through to the wrapping <a>. */
+.hero__leaflet-iframe {
+  display: block;
+  width: 793px;       /* 210mm */
+  height: 1122px;     /* 297mm */
+  border: none;
+  background: #fff;
+  pointer-events: none;
+  transform: scale(0.353);   /* 280 / 793 */
+  transform-origin: top left;
+}
+.hero__leaflet-link {
+  /* override default block sizing — wrapper height must match the
+     scaled iframe so the layout flows correctly. */
+  height: calc(280px * (297 / 210));
+  overflow: hidden;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 12px 32px rgba(15, 23, 42, 0.18);
+  transition: box-shadow 0.15s;
+  background: #fff;
+}
+.hero__leaflet-link:hover {
   box-shadow:
     0 1px 3px rgba(15, 23, 42, 0.08),
     0 20px 48px rgba(15, 23, 42, 0.28);

@@ -25,10 +25,12 @@ export function Landing() {
               className="hero__leaflet-link"
               aria-label="Open the entitledto leaflet to download"
             >
-              <img
-                src="/leaflet-preview.png"
-                alt="Preview of the entitledto-branded free school meals leaflet"
-                className="hero__leaflet"
+              <iframe
+                src="/generic/entitledto-la"
+                title="Preview of the entitledto-branded free school meals leaflet"
+                className="hero__leaflet-iframe"
+                tabIndex={-1}
+                loading="lazy"
               />
               <span className="hero__leaflet-overlay">
                 <span className="hero__leaflet-overlay-text">Click to download &nbsp;→</span>
