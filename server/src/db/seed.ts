@@ -220,7 +220,7 @@ const NAMED_LAS: Array<Parameters<typeof insertLA.run>[0]> = [
     calculator_subdomain: 'lambeth.entitledto.co.uk',
     default_brand_colour: '#0F6E5B',
     default_accent_colour: '#C2185B',
-    logo_url: null,
+    logo_url: '/logos/lambeth.svg',
     default_source_url: 'https://lambeth.gov.uk/freeschoolmeals',
     enabled_languages: JSON.stringify(['en', 'pl', 'ur']),
     notes:
@@ -243,7 +243,7 @@ const NAMED_LAS: Array<Parameters<typeof insertLA.run>[0]> = [
     calculator_subdomain: 'oxfordshire.entitledto.co.uk',
     default_brand_colour: '#8B1F1F',
     default_accent_colour: '#F0B92E',
-    logo_url: null,
+    logo_url: '/logos/oxfordshire.svg',
     default_source_url:
       'https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes',
     enabled_languages: JSON.stringify(['en']),
@@ -277,6 +277,8 @@ const DEMOS: DemoCustomization[] = [
     public_slug: 'lambeth-demo',
     la_slug: 'lambeth',
     overrides: {
+      show_logo: 'true',
+      logo_url: '/logos/lambeth.svg',
       hero_title: 'Free school meals: Lambeth\'s expanded offer',
       hero_subtitle: 'Important news for parents and carers',
       hero_date: 'From September 2026',
@@ -337,6 +339,8 @@ const DEMOS: DemoCustomization[] = [
     public_slug: 'oxfordshire-demo',
     la_slug: 'oxfordshire',
     overrides: {
+      show_logo: 'true',
+      logo_url: '/logos/oxfordshire.svg',
       hero_title: 'Free school meals: what\'s changing in Oxfordshire',
       hero_subtitle: 'Important news for parents and carers',
       hero_date: 'From September 2026',
