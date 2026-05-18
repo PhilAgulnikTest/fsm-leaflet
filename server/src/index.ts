@@ -70,6 +70,21 @@ async function autoSeed() {
     console.error('LA region tagging failed:', err);
   }
 
+  // Template translations: import any JSON files in server/data/translations/.
+  // Idempotent (upserts by (template_id, language)) — translator can add/edit
+  // files and a redeploy picks them up.
+  try {
+    const { importTranslations } = await import('./db/import-translations.js');
+    const result = importTranslations();
+    if (result.imported > 0 || result.pending > 0) {
+      console.log(
+        `Translations: ${result.imported} imported, ${result.pending} fields pending (still __TODO__).`
+      );
+    }
+  } catch (err) {
+    console.error('Translation import failed:', err);
+  }
+
   // GIAS bulk import: only the 3 demo schools means we haven't run it yet.
   // 50+ schools indicates the real CSV has been imported at some point.
   // The download is ~50 MB and the parse takes ~30 s, so we gate on count.

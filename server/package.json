@@ -12,6 +12,8 @@
     "gias:import": "tsx src/gias/import.ts",
     "la:import-sites": "tsx src/db/import-entitledto-sites.ts",
     "translate:templates": "tsx src/db/translate-templates.ts",
+    "translate:scaffold": "tsx src/db/scaffold-translations.ts",
+    "translate:import": "tsx src/db/import-translations.ts",
     "admin:set-password": "tsx src/db/admin-set-password.ts",
     "typecheck": "tsc --noEmit"
   },

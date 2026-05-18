@@ -1,0 +1,36 @@
+{
+  "_language": "বাংলা (Bengali, bn)",
+  "_instructions": "Replace every value below with the Bengali translation. Strip the \"__TODO__ \" prefix when you're done with that string (the importer skips values that still have it). Keep HTML tags exactly (<strong>, <u>, <li>, <p>). Don't translate URLs or proper nouns (Universal Credit, NAWRA, entitledto). Right-to-left languages don't need any special markup — the renderer sets dir=\"rtl\" automatically based on the file's language code.",
+  "nawra": {
+    "hero_title": "__TODO__ Free school meals are changing",
+    "hero_subtitle": "__TODO__ Important news for parents and carers",
+    "hero_date": "__TODO__ From September 2026",
+    "intro_html": "__TODO__ <strong>Every child whose family receives Universal Credit</strong> can get free school meals.",
+    "cta_primary_title": "__TODO__ Register from 1 June",
+    "cta_primary_body_html": "__TODO__ Sign up <strong><u>before the Autumn term starts</u></strong> so your child gets every free meal they're entitled to.",
+    "box1_title": "__TODO__ If your child currently gets free school meals",
+    "box1_body_html": "__TODO__ <p>From the <strong>2026/27 school year</strong>, eligibility will be checked every year. In some areas your local authority will auto-enrol your child — otherwise make sure you claim again so your child keeps their free meals.</p>",
+    "box2_title": "__TODO__ If you receive Universal Credit but haven't claimed before",
+    "box2_body_html": "__TODO__ <p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September.</p>",
+    "how_to_intro": "__TODO__ For both situations above:",
+    "how_to_steps_html": "__TODO__ <li>Download the form from your school's website</li><li>Or pick up a paper copy from the school office</li>",
+    "cta_secondary_title": "__TODO__ Not on Universal Credit yet?",
+    "cta_secondary_body_html": "__TODO__ You may still be entitled. A free benefit calculator will tell you if you could qualify for Universal Credit and free school meals."
+  },
+  "entitledto-la": {
+    "hero_title": "__TODO__ Free school meals are changing",
+    "hero_subtitle": "__TODO__ Important news for parents and carers",
+    "hero_date": "__TODO__ From September 2026",
+    "intro_html": "__TODO__ From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals.",
+    "cta_primary_title": "__TODO__ The government are expanding free school meals and getting everyone to register annually.",
+    "cta_primary_body_html": "__TODO__ <strong><u>Apply before the Autumn term starts</u></strong> so your child doesn't miss out.",
+    "box1_title": "__TODO__ If your child currently gets free school meals",
+    "box1_body_html": "__TODO__ <p>From the <strong>2026/27 school year</strong>, eligibility will be checked every year. In some areas your local authority will auto-enrol your child — otherwise make sure you claim again so your child keeps their free meals.</p>",
+    "box2_title": "__TODO__ If you receive Universal Credit but haven't claimed before",
+    "box2_body_html": "__TODO__ <p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September.</p>",
+    "how_to_intro": "__TODO__ For both situations above:",
+    "how_to_steps_html": "__TODO__ <li>Download the form from your school's website</li><li>Or pick up a paper copy from the school office</li>",
+    "cta_secondary_title": "__TODO__ Not on Universal Credit yet?",
+    "cta_secondary_body_html": "__TODO__ You may still be entitled. Use the free, independent entitledto calculator to check Universal Credit, free school meals, and 30+ other benefits in under 10 minutes."
+  }
+}
