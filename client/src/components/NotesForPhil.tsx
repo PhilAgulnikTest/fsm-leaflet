@@ -46,11 +46,19 @@ const WORKING: Item[] = [
     title: 'Sentry + hourly maintenance cron',
     body: 'Sentry no-op until SENTRY_DSN env set. Hourly job clears expired sessions, stale magic_links, and source PII on ai_rewrites past 30 days.',
   },
+  {
+    title: '🌐 Other languages dropdown on the public leaflet',
+    body: 'A "🌐 Other languages" pill appears top-right of /c/{slug} when at least one translation row exists for the template. Dropdown lists English plus all 10 target languages with their native + English names. Clicking sets ?lang=xx; the renderer overlays the template translation as a base layer under any English customisation overrides under any per-customisation translation. Right-to-left (Urdu) gets dir="rtl" automatically. Hidden in print so PDFs stay clean.',
+  },
 ];
 
 // ---------------------------------------------------------------------------
 
 const NEEDS_INPUT: Item[] = [
+  {
+    title: '⚠️ Translations are AI-generated — native-speaker review required',
+    body: 'All 10 language files at server/data/translations/ have first-pass translations I produced from English. European languages (Polish, Romanian, Spanish, Italian, Portuguese, Welsh) are reasonable starting points but should still be eyeballed. Urdu, Punjabi, Bengali, Gujarati: my proficiency is meaningfully lower — accuracy is not guaranteed, errors in eligibility wording or grammar are likely. Native review essential before any leaflet is printed and distributed. Edit the JSON files in the repo (or via GitHub web editor) and redeploy.',
+  },
   {
     title: 'LA brand colours — 146 of 149 are still placeholder navy',
     body: 'Lambeth, Leeds and Oxfordshire have real brand palettes. Every other LA imported from your sites CSV is on the default entitledto teal. Use /admin/la-clients to colour-correct the top ~10 you actually expect to use, or paste a CSV with brand columns to bulk-update.',
@@ -68,10 +76,6 @@ const NEEDS_INPUT: Item[] = [
 // ---------------------------------------------------------------------------
 
 const NEW_TODO: Item[] = [
-  {
-    title: '🆕 "Other languages" header link — 10 UK languages incl. Welsh',
-    body: 'Per your latest instruction. Plan: top-right link in the leaflet header that opens a small panel listing translated versions of the standard leaflet copy (intro, CTAs, info boxes) in: Polish, Romanian, Punjabi, Urdu, Portuguese, Spanish, Bengali, Gujarati, Italian, Welsh. LA-specific overrides (school/council names, addresses, URLs) stay in English. Open question: where do the translations come from? Cheapest = one-off pass with the (dormant) Anthropic SDK to generate static seed data, reviewed before going live. Tell me to proceed and I\'ll wire it.',
-  },
   {
     title: 'Rich-text body editor on /admin/templates',
     body: 'Right now template default-text edits go through the default_palette JSON blob (textarea). The LA flow already has pen-based section editing; the same component could be reused for template-level defaults.',
