@@ -275,6 +275,18 @@ html, body {
   word-break: break-all;
 }
 
+/* Inline links inside body sections (info boxes, how-to-claim steps,
+   contact block). Picks up the LA's brand colour automatically so each
+   leaflet's links match its hero. */
+.leaflet__info-box-body a,
+.leaflet__how-to-list a,
+.leaflet__contact-website a {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: underline;
+  word-break: break-word;
+}
+
 /* Contact ---------------------------------------------------------------- */
 
 .leaflet__contact {

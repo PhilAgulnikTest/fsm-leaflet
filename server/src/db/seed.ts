@@ -293,7 +293,12 @@ const DEMOS: DemoCustomization[] = [
         '<p>Lambeth checks eligibility every year and <strong>auto-enrols most eligible children</strong>. If your circumstances have changed, contact your school or the Lambeth Welfare team to make sure your child stays signed up.</p>',
       box2_title: 'If you receive Universal Credit but haven\'t claimed before',
       box2_body_html:
-        '<p>Your child is now eligible. <strong>Lambeth may auto-enrol you from 1 June</strong> — or apply directly through your school for the start of September.</p>',
+        '<p>Your child is now eligible. <strong>Lambeth may auto-enrol you from 1 June</strong> — or apply directly through your school for the start of September. ' +
+        'Full details: <a href="https://lambeth.gov.uk/freeschoolmeals">lambeth.gov.uk/freeschoolmeals</a>.</p>',
+      how_to_steps_html:
+        '<li>Apply at <a href="https://lambeth.gov.uk/freeschoolmeals">lambeth.gov.uk/freeschoolmeals</a></li>' +
+        '<li>Or via your school\'s website</li>' +
+        '<li>Or pick up a paper copy from the school office</li>',
       cta_secondary_title: 'Not on Universal Credit yet?',
       cta_secondary_body_html:
         'You may still be entitled. Use Lambeth\'s free benefit calculator to check if you could qualify for Universal Credit and free school meals.',
@@ -302,7 +307,7 @@ const DEMOS: DemoCustomization[] = [
       contact_name: 'Lambeth Welfare and Benefits Team',
       contact_phone: '',
       contact_email: 'fsm@lambeth.gov.uk',
-      contact_website: 'lambeth.gov.uk/freeschoolmeals',
+      contact_website: '<a href="https://lambeth.gov.uk/freeschoolmeals">lambeth.gov.uk/freeschoolmeals</a>',
     },
   },
   {
@@ -355,7 +360,12 @@ const DEMOS: DemoCustomization[] = [
         '<p>From the <strong>2026/27 school year</strong>, eligibility will be checked every year. Oxfordshire is <strong>exploring auto-enrolment</strong> — look out for a letter from us, and contact your school if you don\'t hear by the start of term.</p>',
       box2_title: 'If you receive Universal Credit but haven\'t claimed before',
       box2_body_html:
-        '<p>Your child is now eligible. <strong>Apply through your school by the end of the summer term</strong>.</p>',
+        '<p>Your child is now eligible. <strong>Apply through your school by the end of the summer term</strong>. ' +
+        'Full details: <a href="https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes">schools.oxfordshire.gov.uk</a>.</p>',
+      how_to_steps_html:
+        '<li>Apply at <a href="https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes">schools.oxfordshire.gov.uk</a></li>' +
+        '<li>Or download the form from your school\'s website</li>' +
+        '<li>Or pick up a paper copy from the school office</li>',
       cta_secondary_title: 'Not on Universal Credit yet?',
       cta_secondary_body_html:
         'You may still be entitled. Use Oxfordshire\'s free benefit calculator to check if you could qualify for Universal Credit and free school meals.',
@@ -364,7 +374,7 @@ const DEMOS: DemoCustomization[] = [
       contact_name: 'Oxfordshire Free School Meals Team',
       contact_phone: '',
       contact_email: 'Free.SchoolMeals@Oxfordshire.gov.uk',
-      contact_website: 'schools.oxfordshire.gov.uk',
+      contact_website: '<a href="https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes">schools.oxfordshire.gov.uk</a>',
     },
   },
 ];
