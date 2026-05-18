@@ -79,7 +79,7 @@ const ENTITLEDTO_BODY = {
     '<strong><u>Apply before the Autumn term starts</u></strong> so your child doesn\'t miss out.',
   cta_primary_bg: '#2858E5',
   box2_body_html:
-    '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September. You may also qualify for other benefits you\'re not claiming — check the calculator while you\'re at it.</p>',
+    '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September.</p>',
   cta_secondary_body_html:
     'You may still be entitled. Use the free, independent entitledto calculator to check Universal Credit, free school meals, and 30+ other benefits in under 10 minutes.',
   calculator_url: 'https://entitledto.co.uk',
