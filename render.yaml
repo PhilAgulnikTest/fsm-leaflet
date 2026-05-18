@@ -1,23 +1,27 @@
 # Render.com blueprint.
 #
-# Free tier configuration. NOTE: free plan does NOT support persistent disks,
-# so SQLite lives on ephemeral storage that resets on every deploy/restart.
-# Fine for a demo (the seed scripts re-populate templates, LA clients, and
-# demo schools on boot) but published customisations won't survive a restart.
-# Upgrade to "starter" plan ($7/mo) and add a disk block to keep state.
+# Starter plan ($7/mo) with a 1 GB persistent disk mounted at /data so
+# SQLite survives deploys and restarts. Published customisations now stick.
+#
+# To downgrade back to free tier for cost reasons: change plan to "free",
+# delete the disk block, and flip DATABASE_PATH back to /tmp/fsm.db.
 
 services:
   - type: web
     name: fsm-leaflet
     runtime: docker
-    plan: free
+    plan: starter
     healthCheckPath: /healthz
+    disk:
+      name: fsm-data
+      mountPath: /data
+      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: DATABASE_PATH
-        # /tmp is writable on Render free tier (ephemeral).
-        value: /tmp/fsm.db
+        # Lives on the persistent disk above so customisations survive deploys.
+        value: /data/fsm.db
       - key: PUBLIC_BASE_URL
         # Render injects RENDER_EXTERNAL_URL at runtime; the server will read
         # this if PUBLIC_BASE_URL is unset. Override in the Render dashboard

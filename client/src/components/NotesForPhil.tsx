@@ -85,8 +85,8 @@ const NEW_TODO: Item[] = [
     body: 'Right now template default-text edits go through the default_palette JSON blob (textarea). The LA flow already has pen-based section editing; the same component could be reused for template-level defaults.',
   },
   {
-    title: 'Nightly DB backup',
-    body: 'Render free tier has ephemeral disk — /tmp/fsm.db resets on every deploy. Customisations published in production go away on the next redeploy. To fix: upgrade to Render Starter ($7/mo), add a persistent disk, set DATABASE_PATH=/data/fsm.db, and (optionally) add a nightly WAL-snapshot to S3 or similar.',
+    title: 'Off-Render nightly DB backup',
+    body: 'render.yaml is now configured for Render Starter ($7/mo) with a 1 GB persistent disk mounted at /data — once that blueprint is applied (or the dashboard flipped to Starter + disk), /data/fsm.db survives deploys and restarts. Still worth adding a nightly off-host backup (WAL snapshot → S3 / R2 / Backblaze) so a single Render-side disk loss can\'t take all customisations with it. Tiny job — sqlite3 .backup once a day plus an upload step.',
   },
 ];
 
