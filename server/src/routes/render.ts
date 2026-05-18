@@ -448,13 +448,16 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
       var label = btn.querySelector('.dl-btn__label');
       var slug = ${JSON.stringify(template.slug)};
       var picker = document.getElementById('lang-picker');
-      var frame = document.getElementById('preview-frame');
       var currentLang = ${JSON.stringify(initialLang)};
 
       function setLang(code) {
         currentLang = code;
         var qs = code === 'en' ? '' : '?lang=' + encodeURIComponent(code);
-        frame.src = '/generic/' + slug + qs;
+        // Look up the iframe lazily — this script runs in <head> before the
+        // iframe is parsed, so caching the reference at module-load returns
+        // null and the picker silently no-ops.
+        var frame = document.getElementById('preview-frame');
+        if (frame) frame.src = '/generic/' + slug + qs;
         // Keep the page URL in sync so refresh / share / back-forward work.
         var pageUrl = code === 'en' ? window.location.pathname : window.location.pathname + '?lang=' + encodeURIComponent(code);
         window.history.replaceState({}, '', pageUrl);
