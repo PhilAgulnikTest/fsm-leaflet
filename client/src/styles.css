@@ -369,6 +369,8 @@ a { color: var(--brand); }
 .notes--setup h3 { color: #1E3A8A; }
 .notes--todo { border-left: 4px solid #94A3B8; }
 .notes--todo h3 { color: #334155; }
+.notes--dormant { border-left: 4px solid #CBD5E1; opacity: 0.85; }
+.notes--dormant h3 { color: #64748B; }
 
 /* Admin --------------------------------------------------------------- */
 
