@@ -73,6 +73,19 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     if (v != null && v !== '') content[k] = v;
   }
 
+  // School flow lets parents leave the email blank; the template default is
+  // the editable "[Email]" placeholder, so without explicit suppression that
+  // placeholder leaks through to the published leaflet. When the override key
+  // is present but empty, drop the corresponding contact span entirely after
+  // substitution.
+  const explicitEmpty = (key: string) =>
+    Object.prototype.hasOwnProperty.call(overrides, key) &&
+    typeof overrides[key] === 'string' &&
+    overrides[key].trim() === '';
+  const dropEmail = explicitEmpty('contact_email');
+  const dropPhone = explicitEmpty('contact_phone');
+  const dropWebsite = explicitEmpty('contact_website');
+
   const palette = {
     brand: input.palette?.brand ?? defaults.brand ?? '#1F4F5C',
     accent: input.palette?.accent ?? defaults.accent ?? '#16A34A',
@@ -154,6 +167,16 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
 
   for (const [key, value] of Object.entries(substitutions)) {
     out = out.split(`{{${key}}}`).join(value);
+  }
+
+  if (dropEmail) {
+    out = out.replace(/\s*<span class="leaflet__contact-email"[^>]*>[\s\S]*?<\/span>/i, '');
+  }
+  if (dropPhone) {
+    out = out.replace(/\s*<span class="leaflet__contact-phone"[^>]*>[\s\S]*?<\/span>/i, '');
+  }
+  if (dropWebsite) {
+    out = out.replace(/\s*<span class="leaflet__contact-website"[^>]*>[\s\S]*?<\/span>/i, '');
   }
   return out;
 }

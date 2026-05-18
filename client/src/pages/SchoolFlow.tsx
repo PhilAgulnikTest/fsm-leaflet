@@ -53,16 +53,23 @@ export function SchoolFlow() {
   }
 
   function buildHowToStepsHtml(): string {
-    // Step 1 wraps the user's text in an <a> pointing at the school website
-    // when one is set, so the leaflet's "Download the form..." step links
-    // directly to the school's site. Step 2 stays plain text.
+    // Step 1: show the user's wording AND the actual website URL on the leaflet
+    // — Phil wants parents to be able to read the URL, not just click it. The
+    // displayed URL is the clickable target; the protocol prefix is stripped
+    // for readability.
     const safe1 = escapeHtml(howToStep1.trim() || 'Download the form from your school\'s website');
     const safe2 = escapeHtml(howToStep2.trim() || 'Or pick up a paper copy from the school office');
     const url = website.trim();
     const isHttpUrl = /^https?:\/\//i.test(url);
-    const step1 = isHttpUrl
-      ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${safe1}</a>`
-      : safe1;
+    let step1: string;
+    if (isHttpUrl) {
+      const display = url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
+      step1 = `${safe1} — <a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(display)}</a>`;
+    } else if (url) {
+      step1 = `${safe1} — ${escapeHtml(url)}`;
+    } else {
+      step1 = safe1;
+    }
     return `<li>${step1}</li><li>${safe2}</li>`;
   }
 
