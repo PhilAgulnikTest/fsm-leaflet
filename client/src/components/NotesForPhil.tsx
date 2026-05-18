@@ -77,6 +77,10 @@ const NEEDS_INPUT: Item[] = [
 
 const NEW_TODO: Item[] = [
   {
+    title: 'Finish the Lambeth + Oxfordshire (+ Leeds) demo leaflets',
+    body: 'The three demo customisations under /admin/la-clients → "See an example" are still rough — Lambeth and Oxfordshire have brand colours, logos and FSM URLs, but the body copy is still mostly the default entitledto wording. Tighten each one so they read like the finished, polished bespoke leaflets a sales conversation can point to. Public LA flow now points prospects at fiona@entitledto.co.uk rather than these demos, so finishing them is internal-sales-tool work, not blocking.',
+  },
+  {
     title: 'Rich-text body editor on /admin/templates',
     body: 'Right now template default-text edits go through the default_palette JSON blob (textarea). The LA flow already has pen-based section editing; the same component could be reused for template-level defaults.',
   },

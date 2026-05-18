@@ -196,13 +196,8 @@ export function LAFlow() {
         </div>
 
         <p className="muted la-examples-line">
-          Want to see what a finished one looks like? View the
-          {' '}<a href="/c/lambeth-demo" target="_blank" rel="noopener">Lambeth</a>
-          {' '}or
-          {' '}<a href="/c/oxfordshire-demo" target="_blank" rel="noopener">Oxfordshire</a>
-          {' '}example
-          {' '}(<a href="/c/lambeth-demo.pdf" download>Lambeth PDF</a>,
-          {' '}<a href="/c/oxfordshire-demo.pdf" download>Oxfordshire PDF</a>).
+          For help in producing a leaflet for your local authority please contact your
+          client manager or email <a href="mailto:fiona@entitledto.co.uk">fiona@entitledto.co.uk</a>.
         </p>
 
         {error && <div className="alert alert--error">{error}</div>}
