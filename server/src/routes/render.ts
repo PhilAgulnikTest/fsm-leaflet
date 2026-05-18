@@ -286,6 +286,17 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
       { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>
     )[c]!);
 
+    // Languages that have a translation row for this template — drives the
+    // "Other languages" dropdown in the viewer bar.
+    const availableLangs = (db
+      .prepare('SELECT language FROM template_translations WHERE template_id = ? ORDER BY language')
+      .all(template.id) as Array<{ language: string }>).map((r) => r.language);
+    const langOptions = ['en', ...availableLangs.filter((l) => l !== 'en')]
+      .map((code) => {
+        const label = LANGUAGE_LABELS[code] ?? { native: code, english: code };
+        return { code, native: label.native, english: label.english };
+      });
+
     res.type('html').send(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -342,6 +353,31 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
     }
     .btn-secondary:hover { background: rgba(255, 255, 255, 0.22); }
 
+    .viewer-lang {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 0.5rem;
+      padding: 0.35rem 0.6rem 0.35rem 0.75rem;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .viewer-lang:hover { background: rgba(255, 255, 255, 0.22); }
+    .viewer-lang__icon { font-size: 1rem; line-height: 1; }
+    .viewer-lang__sr {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .viewer-lang select {
+      background: transparent;
+      color: #fff;
+      border: 0;
+      font: inherit;
+      padding: 0.2rem 0;
+      cursor: pointer;
+      outline: none;
+    }
+    .viewer-lang select option { color: #0F172A; background: #fff; }
+
     .viewer-frame-wrap {
       max-width: 230mm;
       margin: 1.5rem auto;
@@ -374,6 +410,19 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
     </div>
     <div class="viewer-bar__actions">
       <a href="/" class="btn-secondary">← Back</a>
+      ${
+        langOptions.length > 1
+          ? `<label class="viewer-lang">
+              <span class="viewer-lang__icon" aria-hidden="true">🌐</span>
+              <span class="viewer-lang__sr">Other languages</span>
+              <select id="lang-picker" aria-label="Choose language">
+                ${langOptions
+                  .map((o) => `<option value="${o.code}">${o.native} · ${o.english}</option>`)
+                  .join('')}
+              </select>
+            </label>`
+          : ''
+      }
       <button id="dl-btn" class="btn-download" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -385,25 +434,37 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
     </div>
   </header>
   <script>
-    // Explicit fetch + blob download gives clear progress feedback. The plain
-    // <a download> approach was firing silently — file appeared in Downloads
-    // but the page gave no signal that anything happened.
     (function () {
       var btn = document.getElementById('dl-btn');
       var label = btn.querySelector('.dl-btn__label');
       var slug = ${JSON.stringify(template.slug)};
+      var picker = document.getElementById('lang-picker');
+      var frame = document.getElementById('preview-frame');
+      var currentLang = 'en';
+
+      function setLang(code) {
+        currentLang = code;
+        var qs = code === 'en' ? '' : '?lang=' + encodeURIComponent(code);
+        frame.src = '/generic/' + slug + qs;
+      }
+      if (picker) {
+        picker.addEventListener('change', function (e) { setLang(e.target.value); });
+      }
+
       btn.addEventListener('click', async function () {
         var original = label.textContent;
         label.textContent = 'Generating PDF…';
         btn.disabled = true;
         try {
-          var res = await fetch('/generic/' + slug + '?format=pdf');
+          var qs = '?format=pdf' + (currentLang !== 'en' ? '&lang=' + encodeURIComponent(currentLang) : '');
+          var res = await fetch('/generic/' + slug + qs);
           if (!res.ok) throw new Error('HTTP ' + res.status + ' from server');
           var blob = await res.blob();
           var url = URL.createObjectURL(blob);
           var a = document.createElement('a');
           a.href = url;
-          a.download = 'fsm-leaflet-' + slug + '.pdf';
+          var suffix = currentLang !== 'en' ? '-' + currentLang : '';
+          a.download = 'fsm-leaflet-' + slug + suffix + '.pdf';
           document.body.appendChild(a);
           a.click();
           a.remove();
@@ -420,7 +481,7 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
   </script>
 
   <div class="viewer-frame-wrap">
-    <iframe class="viewer-frame" src="/generic/${escape(template.slug)}" title="${escape(template.name)} preview"></iframe>
+    <iframe id="preview-frame" class="viewer-frame" src="/generic/${escape(template.slug)}" title="${escape(template.name)} preview"></iframe>
   </div>
 </body>
 </html>`);
@@ -434,8 +495,34 @@ renderRouter.get('/generic/:templateSlug', async (req, res, next) => {
   try {
     const template = loadTemplateBySlug(req.params.templateSlug);
     if (!template) return res.status(404).type('text/plain').send('Template not found.');
+
+    // Translation overlay — when ?lang=xx is set AND a template_translations
+    // row exists, render with those values instead of the English defaults.
+    // No customisation here (generic == bare template), so the merge is just
+    // translation-over-defaults; no per-customisation overrides to compete.
+    const requestedLang = typeof req.query.lang === 'string' ? req.query.lang.toLowerCase() : 'en';
+    let synthCustomization;
+    if (requestedLang !== 'en') {
+      const tpl = db
+        .prepare('SELECT content_json FROM template_translations WHERE template_id = ? AND language = ?')
+        .get(template.id, requestedLang) as { content_json: string } | undefined;
+      if (tpl) {
+        synthCustomization = {
+          id: 0,
+          template_id: template.id,
+          template_version_at_publish: template.version,
+          school_urn: null,
+          la_slug: null,
+          overrides_json: tpl.content_json,
+          public_slug: '__preview__',
+        };
+      }
+    }
+
     const html = await renderLeaflet({
       template,
+      customization: synthCustomization,
+      language: requestedLang,
       qrTarget: config.publicBaseUrl,
       qr: { include: req.query.preview === '1', printable: false },
     });
@@ -443,7 +530,8 @@ renderRouter.get('/generic/:templateSlug', async (req, res, next) => {
       try {
         // Hit our own server with Playwright so CSS / images resolve. Internal
         // localhost URL avoids public-domain round-trips and SSL gotchas.
-        const internalUrl = `http://localhost:${config.port}/generic/${template.slug}`;
+        const langSuffix = requestedLang !== 'en' ? `?lang=${requestedLang}` : '';
+        const internalUrl = `http://localhost:${config.port}/generic/${template.slug}${langSuffix}`;
         const pdf = await urlToPdf(internalUrl);
         // attachment (not inline) so the browser actually downloads instead of
         // opening the PDF in-tab. The Landing page leaflet preview link uses
