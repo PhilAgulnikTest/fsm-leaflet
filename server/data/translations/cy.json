@@ -15,7 +15,10 @@
     "how_to_intro": "Yn y ddwy sefyllfa uchod:",
     "how_to_steps_html": "<li>Lawrlwythwch y ffurflen oddi ar wefan eich ysgol</li><li>Neu codwch gopi papur o swyddfa'r ysgol</li>",
     "cta_secondary_title": "Heb fod ar Gredyd Cynhwysol eto?",
-    "cta_secondary_body_html": "Efallai bod gennych hawl o hyd. Bydd cyfrifiannell budd-daliadau am ddim yn dweud wrthych a allech chi gymhwyso ar gyfer Credyd Cynhwysol a phrydau ysgol am ddim."
+    "cta_secondary_body_html": "Efallai bod gennych hawl o hyd. Bydd cyfrifiannell budd-daliadau am ddim yn dweud wrthych a allech chi gymhwyso ar gyfer Credyd Cynhwysol a phrydau ysgol am ddim.",
+    "label_what_this_means": "BETH MAE HYN YN EI OLYGU I CHI",
+    "label_how_to_claim": "SUT I HAWLIO",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Rhydd i'w gopïo, ei addasu a'i rannu · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "Mae prydau ysgol am ddim yn newid",
@@ -31,6 +34,9 @@
     "how_to_intro": "Yn y ddwy sefyllfa uchod:",
     "how_to_steps_html": "<li>Lawrlwythwch y ffurflen oddi ar wefan eich ysgol</li><li>Neu codwch gopi papur o swyddfa'r ysgol</li>",
     "cta_secondary_title": "Heb fod ar Gredyd Cynhwysol eto?",
-    "cta_secondary_body_html": "Efallai bod gennych hawl o hyd. Defnyddiwch gyfrifiannell entitledto, sy'n annibynnol ac am ddim, i wirio Credyd Cynhwysol, prydau ysgol am ddim, a mwy na 30 o fudd-daliadau eraill mewn llai na 10 munud."
+    "cta_secondary_body_html": "Efallai bod gennych hawl o hyd. Defnyddiwch gyfrifiannell entitledto, sy'n annibynnol ac am ddim, i wirio Credyd Cynhwysol, prydau ysgol am ddim, a mwy na 30 o fudd-daliadau eraill mewn llai na 10 munud.",
+    "label_what_this_means": "BETH MAE HYN YN EI OLYGU I CHI",
+    "label_how_to_claim": "SUT I HAWLIO",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Wedi'i gyhoeddi gan <a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> · Rhydd i'w gopïo, ei addasu a'i rannu · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

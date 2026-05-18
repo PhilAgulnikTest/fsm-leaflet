@@ -15,7 +15,10 @@
     "how_to_intro": "Em ambas as situações acima:",
     "how_to_steps_html": "<li>Descarregue o formulário no site da escola</li><li>Ou levante uma cópia em papel na secretaria</li>",
     "cta_secondary_title": "Ainda não recebe o Universal Credit?",
-    "cta_secondary_body_html": "Pode mesmo assim ter direito. Uma calculadora gratuita de prestações dir-lhe-á se pode qualificar-se para o Universal Credit e para refeições escolares gratuitas."
+    "cta_secondary_body_html": "Pode mesmo assim ter direito. Uma calculadora gratuita de prestações dir-lhe-á se pode qualificar-se para o Universal Credit e para refeições escolares gratuitas.",
+    "label_what_this_means": "O QUE ISTO SIGNIFICA PARA SI",
+    "label_how_to_claim": "COMO PEDIR",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Livre para copiar, adaptar e partilhar · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "As refeições escolares gratuitas estão a mudar",
@@ -31,6 +34,9 @@
     "how_to_intro": "Em ambas as situações acima:",
     "how_to_steps_html": "<li>Descarregue o formulário no site da escola</li><li>Ou levante uma cópia em papel na secretaria</li>",
     "cta_secondary_title": "Ainda não recebe o Universal Credit?",
-    "cta_secondary_body_html": "Pode mesmo assim ter direito. Use a calculadora gratuita e independente entitledto para verificar Universal Credit, refeições escolares gratuitas e mais de 30 outras prestações em menos de 10 minutos."
+    "cta_secondary_body_html": "Pode mesmo assim ter direito. Use a calculadora gratuita e independente entitledto para verificar Universal Credit, refeições escolares gratuitas e mais de 30 outras prestações em menos de 10 minutos.",
+    "label_what_this_means": "O QUE ISTO SIGNIFICA PARA SI",
+    "label_how_to_claim": "COMO PEDIR",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Publicado por <a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> · Livre para copiar, adaptar e partilhar · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

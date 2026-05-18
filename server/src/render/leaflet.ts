@@ -154,6 +154,8 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     CONTACT_PHONE: content.contact_phone ?? '',
     CONTACT_EMAIL: content.contact_email ?? '',
     CONTACT_WEBSITE: content.contact_website ?? '',
+    LABEL_WHAT_THIS_MEANS: content.label_what_this_means ?? 'WHAT THIS MEANS FOR YOU',
+    LABEL_HOW_TO_CLAIM: content.label_how_to_claim ?? 'HOW TO CLAIM',
     ENTITLEDTO_CREDIT_HTML: entitledtoCredit,
     ATTRIBUTION_HTML: attributionHtml,
     QR_BLOCK_HTML: qrBlockHtml,

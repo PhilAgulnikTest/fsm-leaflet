@@ -15,7 +15,10 @@
     "how_to_intro": "উপরের উভয় ক্ষেত্রেই:",
     "how_to_steps_html": "<li>আপনার স্কুলের ওয়েবসাইট থেকে ফর্ম ডাউনলোড করুন</li><li>অথবা স্কুল অফিস থেকে কাগজের কপি নিন</li>",
     "cta_secondary_title": "এখনও Universal Credit পাচ্ছেন না?",
-    "cta_secondary_body_html": "আপনি তবুও যোগ্য হতে পারেন। একটি বিনামূল্যের বেনিফিট ক্যালকুলেটর আপনাকে বলবে আপনি Universal Credit এবং বিনামূল্যে স্কুলের খাবারের জন্য যোগ্য কিনা।"
+    "cta_secondary_body_html": "আপনি তবুও যোগ্য হতে পারেন। একটি বিনামূল্যের বেনিফিট ক্যালকুলেটর আপনাকে বলবে আপনি Universal Credit এবং বিনামূল্যে স্কুলের খাবারের জন্য যোগ্য কিনা।",
+    "label_what_this_means": "আপনার জন্য এর অর্থ কী",
+    "label_how_to_claim": "কীভাবে আবেদন করবেন",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">কপি, পরিবর্তন ও শেয়ার করার জন্য মুক্ত · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "বিনামূল্যে স্কুলের খাবার পরিবর্তন হচ্ছে",
@@ -31,6 +34,9 @@
     "how_to_intro": "উপরের উভয় ক্ষেত্রেই:",
     "how_to_steps_html": "<li>আপনার স্কুলের ওয়েবসাইট থেকে ফর্ম ডাউনলোড করুন</li><li>অথবা স্কুল অফিস থেকে কাগজের কপি নিন</li>",
     "cta_secondary_title": "এখনও Universal Credit পাচ্ছেন না?",
-    "cta_secondary_body_html": "আপনি তবুও যোগ্য হতে পারেন। Universal Credit, বিনামূল্যে স্কুলের খাবার, এবং আরও ৩০টিরও বেশি সুবিধা ১০ মিনিটেরও কম সময়ে যাচাই করতে বিনামূল্যের, স্বাধীন entitledto ক্যালকুলেটর ব্যবহার করুন।"
+    "cta_secondary_body_html": "আপনি তবুও যোগ্য হতে পারেন। Universal Credit, বিনামূল্যে স্কুলের খাবার, এবং আরও ৩০টিরও বেশি সুবিধা ১০ মিনিটেরও কম সময়ে যাচাই করতে বিনামূল্যের, স্বাধীন entitledto ক্যালকুলেটর ব্যবহার করুন।",
+    "label_what_this_means": "আপনার জন্য এর অর্থ কী",
+    "label_how_to_claim": "কীভাবে আবেদন করবেন",
+    "attribution_html": "<p class=\"leaflet__credit-licence\"><a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> দ্বারা প্রকাশিত · কপি, পরিবর্তন ও শেয়ার করার জন্য মুক্ত · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

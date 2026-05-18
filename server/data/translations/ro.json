@@ -15,7 +15,10 @@
     "how_to_intro": "În ambele situații de mai sus:",
     "how_to_steps_html": "<li>Descarcă formularul de pe site-ul școlii</li><li>Sau ia un exemplar pe hârtie de la secretariat</li>",
     "cta_secondary_title": "Nu primești încă Universal Credit?",
-    "cta_secondary_body_html": "Este posibil să ai totuși dreptul. Un calculator gratuit de beneficii îți va spune dacă te-ai putea califica pentru Universal Credit și mese școlare gratuite."
+    "cta_secondary_body_html": "Este posibil să ai totuși dreptul. Un calculator gratuit de beneficii îți va spune dacă te-ai putea califica pentru Universal Credit și mese școlare gratuite.",
+    "label_what_this_means": "CE ÎNSEAMNĂ ASTA PENTRU TINE",
+    "label_how_to_claim": "CUM SĂ DEPUI CEREREA",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Liber de copiat, adaptat și partajat · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "Mesele școlare gratuite se schimbă",
@@ -31,6 +34,9 @@
     "how_to_intro": "În ambele situații de mai sus:",
     "how_to_steps_html": "<li>Descarcă formularul de pe site-ul școlii</li><li>Sau ia un exemplar pe hârtie de la secretariat</li>",
     "cta_secondary_title": "Nu primești încă Universal Credit?",
-    "cta_secondary_body_html": "Este posibil să ai totuși dreptul. Folosește calculatorul gratuit și independent entitledto pentru a verifica Universal Credit, mesele școlare gratuite și peste 30 de alte beneficii în mai puțin de 10 minute."
+    "cta_secondary_body_html": "Este posibil să ai totuși dreptul. Folosește calculatorul gratuit și independent entitledto pentru a verifica Universal Credit, mesele școlare gratuite și peste 30 de alte beneficii în mai puțin de 10 minute.",
+    "label_what_this_means": "CE ÎNSEAMNĂ ASTA PENTRU TINE",
+    "label_how_to_claim": "CUM SĂ DEPUI CEREREA",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Publicat de <a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> · Liber de copiat, adaptat și partajat · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

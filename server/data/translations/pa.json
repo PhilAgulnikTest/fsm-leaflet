@@ -15,7 +15,10 @@
     "how_to_intro": "ਉੱਪਰ ਦਿੱਤੀਆਂ ਦੋਵੇਂ ਸਥਿਤੀਆਂ ਵਿੱਚ:",
     "how_to_steps_html": "<li>ਆਪਣੇ ਸਕੂਲ ਦੀ ਵੈੱਬਸਾਈਟ ਤੋਂ ਫਾਰਮ ਡਾਊਨਲੋਡ ਕਰੋ</li><li>ਜਾਂ ਸਕੂਲ ਦੇ ਦਫ਼ਤਰ ਤੋਂ ਕਾਗਜ਼ੀ ਨਕਲ ਲਓ</li>",
     "cta_secondary_title": "ਅਜੇ Universal Credit ਨਹੀਂ ਮਿਲ ਰਿਹਾ?",
-    "cta_secondary_body_html": "ਹੋ ਸਕਦਾ ਹੈ ਫਿਰ ਵੀ ਤੁਸੀਂ ਹੱਕਦਾਰ ਹੋਵੋ। ਇੱਕ ਮੁਫ਼ਤ ਬੇਨੇਫਿਟ ਕੈਲਕੁਲੇਟਰ ਤੁਹਾਨੂੰ ਦੱਸੇਗਾ ਕਿ ਕੀ ਤੁਸੀਂ Universal Credit ਅਤੇ ਮੁਫ਼ਤ ਸਕੂਲ ਖਾਣਿਆਂ ਲਈ ਯੋਗ ਹੋ ਸਕਦੇ ਹੋ।"
+    "cta_secondary_body_html": "ਹੋ ਸਕਦਾ ਹੈ ਫਿਰ ਵੀ ਤੁਸੀਂ ਹੱਕਦਾਰ ਹੋਵੋ। ਇੱਕ ਮੁਫ਼ਤ ਬੇਨੇਫਿਟ ਕੈਲਕੁਲੇਟਰ ਤੁਹਾਨੂੰ ਦੱਸੇਗਾ ਕਿ ਕੀ ਤੁਸੀਂ Universal Credit ਅਤੇ ਮੁਫ਼ਤ ਸਕੂਲ ਖਾਣਿਆਂ ਲਈ ਯੋਗ ਹੋ ਸਕਦੇ ਹੋ।",
+    "label_what_this_means": "ਇਸ ਦਾ ਤੁਹਾਡੇ ਲਈ ਕੀ ਮਤਲਬ ਹੈ",
+    "label_how_to_claim": "ਅਰਜ਼ੀ ਕਿਵੇਂ ਦਿਓ",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">ਕਾਪੀ ਕਰਨ, ਢਾਲਣ ਅਤੇ ਸਾਂਝਾ ਕਰਨ ਲਈ ਖੁੱਲ੍ਹਾ · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "ਮੁਫ਼ਤ ਸਕੂਲ ਖਾਣੇ ਬਦਲ ਰਹੇ ਹਨ",
@@ -31,6 +34,9 @@
     "how_to_intro": "ਉੱਪਰ ਦਿੱਤੀਆਂ ਦੋਵੇਂ ਸਥਿਤੀਆਂ ਵਿੱਚ:",
     "how_to_steps_html": "<li>ਆਪਣੇ ਸਕੂਲ ਦੀ ਵੈੱਬਸਾਈਟ ਤੋਂ ਫਾਰਮ ਡਾਊਨਲੋਡ ਕਰੋ</li><li>ਜਾਂ ਸਕੂਲ ਦੇ ਦਫ਼ਤਰ ਤੋਂ ਕਾਗਜ਼ੀ ਨਕਲ ਲਓ</li>",
     "cta_secondary_title": "ਅਜੇ Universal Credit ਨਹੀਂ ਮਿਲ ਰਿਹਾ?",
-    "cta_secondary_body_html": "ਹੋ ਸਕਦਾ ਹੈ ਫਿਰ ਵੀ ਤੁਸੀਂ ਹੱਕਦਾਰ ਹੋਵੋ। Universal Credit, ਮੁਫ਼ਤ ਸਕੂਲ ਖਾਣੇ ਅਤੇ 30 ਤੋਂ ਵੱਧ ਹੋਰ ਲਾਭਾਂ ਨੂੰ 10 ਮਿੰਟਾਂ ਤੋਂ ਘੱਟ ਸਮੇਂ ਵਿੱਚ ਪਰਖਣ ਲਈ ਮੁਫ਼ਤ, ਆਜ਼ਾਦ entitledto ਕੈਲਕੁਲੇਟਰ ਵਰਤੋ।"
+    "cta_secondary_body_html": "ਹੋ ਸਕਦਾ ਹੈ ਫਿਰ ਵੀ ਤੁਸੀਂ ਹੱਕਦਾਰ ਹੋਵੋ। Universal Credit, ਮੁਫ਼ਤ ਸਕੂਲ ਖਾਣੇ ਅਤੇ 30 ਤੋਂ ਵੱਧ ਹੋਰ ਲਾਭਾਂ ਨੂੰ 10 ਮਿੰਟਾਂ ਤੋਂ ਘੱਟ ਸਮੇਂ ਵਿੱਚ ਪਰਖਣ ਲਈ ਮੁਫ਼ਤ, ਆਜ਼ਾਦ entitledto ਕੈਲਕੁਲੇਟਰ ਵਰਤੋ।",
+    "label_what_this_means": "ਇਸ ਦਾ ਤੁਹਾਡੇ ਲਈ ਕੀ ਮਤਲਬ ਹੈ",
+    "label_how_to_claim": "ਅਰਜ਼ੀ ਕਿਵੇਂ ਦਿਓ",
+    "attribution_html": "<p class=\"leaflet__credit-licence\"><a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> ਵੱਲੋਂ ਪ੍ਰਕਾਸ਼ਿਤ · ਕਾਪੀ ਕਰਨ, ਢਾਲਣ ਅਤੇ ਸਾਂਝਾ ਕਰਨ ਲਈ ਖੁੱਲ੍ਹਾ · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

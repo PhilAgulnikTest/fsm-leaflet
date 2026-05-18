@@ -15,7 +15,10 @@
     "how_to_intro": "ઉપરની બંને પરિસ્થિતિઓમાં:",
     "how_to_steps_html": "<li>તમારી શાળાની વેબસાઇટ પરથી ફોર્મ ડાઉનલોડ કરો</li><li>અથવા શાળાની ઑફિસેથી કાગળની નકલ લો</li>",
     "cta_secondary_title": "હજુ Universal Credit નથી મળી રહ્યું?",
-    "cta_secondary_body_html": "તમે હજુ પણ પાત્ર બની શકો છો. એક મફત બેનિફિટ કેલ્ક્યુલેટર તમને જણાવશે કે તમે Universal Credit અને મફત શાળાનાં ભોજન માટે પાત્ર બની શકો છો કે કેમ."
+    "cta_secondary_body_html": "તમે હજુ પણ પાત્ર બની શકો છો. એક મફત બેનિફિટ કેલ્ક્યુલેટર તમને જણાવશે કે તમે Universal Credit અને મફત શાળાનાં ભોજન માટે પાત્ર બની શકો છો કે કેમ.",
+    "label_what_this_means": "આનો તમારા માટે શું અર્થ છે",
+    "label_how_to_claim": "અરજી કેવી રીતે કરવી",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">નકલ કરવા, અનુકૂલન કરવા અને શેર કરવા માટે મુક્ત · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "મફત શાળાનાં ભોજનમાં ફેરફાર થઈ રહ્યો છે",
@@ -31,6 +34,9 @@
     "how_to_intro": "ઉપરની બંને પરિસ્થિતિઓમાં:",
     "how_to_steps_html": "<li>તમારી શાળાની વેબસાઇટ પરથી ફોર્મ ડાઉનલોડ કરો</li><li>અથવા શાળાની ઑફિસેથી કાગળની નકલ લો</li>",
     "cta_secondary_title": "હજુ Universal Credit નથી મળી રહ્યું?",
-    "cta_secondary_body_html": "તમે હજુ પણ પાત્ર બની શકો છો. Universal Credit, મફત શાળાનાં ભોજન અને 30+ અન્ય લાભો 10 મિનિટ કરતા ઓછા સમયમાં તપાસવા માટે મફત, સ્વતંત્ર entitledto કેલ્ક્યુલેટર વાપરો."
+    "cta_secondary_body_html": "તમે હજુ પણ પાત્ર બની શકો છો. Universal Credit, મફત શાળાનાં ભોજન અને 30+ અન્ય લાભો 10 મિનિટ કરતા ઓછા સમયમાં તપાસવા માટે મફત, સ્વતંત્ર entitledto કેલ્ક્યુલેટર વાપરો.",
+    "label_what_this_means": "આનો તમારા માટે શું અર્થ છે",
+    "label_how_to_claim": "અરજી કેવી રીતે કરવી",
+    "attribution_html": "<p class=\"leaflet__credit-licence\"><a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> દ્વારા પ્રકાશિત · નકલ કરવા, અનુકૂલન કરવા અને શેર કરવા માટે મુક્ત · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

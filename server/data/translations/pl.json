@@ -15,7 +15,10 @@
     "how_to_intro": "W obu powyższych sytuacjach:",
     "how_to_steps_html": "<li>Pobierz formularz ze strony internetowej szkoły</li><li>Lub odbierz papierową wersję w sekretariacie szkoły</li>",
     "cta_secondary_title": "Nie otrzymujesz jeszcze Universal Credit?",
-    "cta_secondary_body_html": "Możesz nadal mieć do tego prawo. Bezpłatny kalkulator zasiłków powie Ci, czy możesz kwalifikować się do Universal Credit i bezpłatnych posiłków szkolnych."
+    "cta_secondary_body_html": "Możesz nadal mieć do tego prawo. Bezpłatny kalkulator zasiłków powie Ci, czy możesz kwalifikować się do Universal Credit i bezpłatnych posiłków szkolnych.",
+    "label_what_this_means": "CO TO OZNACZA DLA CIEBIE",
+    "label_how_to_claim": "JAK ZŁOŻYĆ WNIOSEK",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Wolno kopiować, modyfikować i udostępniać · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "Bezpłatne posiłki szkolne się zmieniają",
@@ -31,6 +34,9 @@
     "how_to_intro": "W obu powyższych sytuacjach:",
     "how_to_steps_html": "<li>Pobierz formularz ze strony internetowej szkoły</li><li>Lub odbierz papierową wersję w sekretariacie szkoły</li>",
     "cta_secondary_title": "Nie otrzymujesz jeszcze Universal Credit?",
-    "cta_secondary_body_html": "Możesz nadal mieć do tego prawo. Skorzystaj z bezpłatnego, niezależnego kalkulatora entitledto, aby sprawdzić Universal Credit, bezpłatne posiłki szkolne i ponad 30 innych świadczeń w mniej niż 10 minut."
+    "cta_secondary_body_html": "Możesz nadal mieć do tego prawo. Skorzystaj z bezpłatnego, niezależnego kalkulatora entitledto, aby sprawdzić Universal Credit, bezpłatne posiłki szkolne i ponad 30 innych świadczeń w mniej niż 10 minut.",
+    "label_what_this_means": "CO TO OZNACZA DLA CIEBIE",
+    "label_how_to_claim": "JAK ZŁOŻYĆ WNIOSEK",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Opublikowane przez <a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> · Wolno kopiować, modyfikować i udostępniać · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

@@ -15,7 +15,10 @@
     "how_to_intro": "En ambas situaciones anteriores:",
     "how_to_steps_html": "<li>Descarga el formulario desde la web de tu colegio</li><li>O recoge una copia en papel en la secretaría</li>",
     "cta_secondary_title": "¿Aún no recibes Universal Credit?",
-    "cta_secondary_body_html": "Puede que aún tengas derecho. Una calculadora gratuita de prestaciones te indicará si podrías reunir los requisitos para Universal Credit y comidas escolares gratuitas."
+    "cta_secondary_body_html": "Puede que aún tengas derecho. Una calculadora gratuita de prestaciones te indicará si podrías reunir los requisitos para Universal Credit y comidas escolares gratuitas.",
+    "label_what_this_means": "QUÉ SIGNIFICA ESTO PARA TI",
+    "label_how_to_claim": "CÓMO SOLICITARLO",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Libre para copiar, adaptar y compartir · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "Las comidas escolares gratuitas están cambiando",
@@ -31,6 +34,9 @@
     "how_to_intro": "En ambas situaciones anteriores:",
     "how_to_steps_html": "<li>Descarga el formulario desde la web de tu colegio</li><li>O recoge una copia en papel en la secretaría</li>",
     "cta_secondary_title": "¿Aún no recibes Universal Credit?",
-    "cta_secondary_body_html": "Puede que aún tengas derecho. Usa la calculadora gratuita e independiente de entitledto para comprobar Universal Credit, comidas escolares gratuitas y más de 30 prestaciones adicionales en menos de 10 minutos."
+    "cta_secondary_body_html": "Puede que aún tengas derecho. Usa la calculadora gratuita e independiente de entitledto para comprobar Universal Credit, comidas escolares gratuitas y más de 30 prestaciones adicionales en menos de 10 minutos.",
+    "label_what_this_means": "QUÉ SIGNIFICA ESTO PARA TI",
+    "label_how_to_claim": "CÓMO SOLICITARLO",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Publicado por <a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> · Libre para copiar, adaptar y compartir · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }

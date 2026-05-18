@@ -15,7 +15,10 @@
     "how_to_intro": "In entrambe le situazioni qui sopra:",
     "how_to_steps_html": "<li>Scarica il modulo dal sito web della scuola</li><li>Oppure ritira una copia cartacea in segreteria</li>",
     "cta_secondary_title": "Non ricevi ancora l'Universal Credit?",
-    "cta_secondary_body_html": "Potresti comunque averne diritto. Un calcolatore gratuito di prestazioni ti dirà se puoi qualificarti per l'Universal Credit e per i pasti scolastici gratuiti."
+    "cta_secondary_body_html": "Potresti comunque averne diritto. Un calcolatore gratuito di prestazioni ti dirà se puoi qualificarti per l'Universal Credit e per i pasti scolastici gratuiti.",
+    "label_what_this_means": "COSA SIGNIFICA PER TE",
+    "label_how_to_claim": "COME FARE DOMANDA",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Libero di copiare, adattare e condividere · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   },
   "entitledto-la": {
     "hero_title": "I pasti scolastici gratuiti stanno cambiando",
@@ -31,6 +34,9 @@
     "how_to_intro": "In entrambe le situazioni qui sopra:",
     "how_to_steps_html": "<li>Scarica il modulo dal sito web della scuola</li><li>Oppure ritira una copia cartacea in segreteria</li>",
     "cta_secondary_title": "Non ricevi ancora l'Universal Credit?",
-    "cta_secondary_body_html": "Potresti comunque averne diritto. Usa il calcolatore gratuito e indipendente entitledto per verificare Universal Credit, pasti scolastici gratuiti e oltre 30 altre prestazioni in meno di 10 minuti."
+    "cta_secondary_body_html": "Potresti comunque averne diritto. Usa il calcolatore gratuito e indipendente entitledto per verificare Universal Credit, pasti scolastici gratuiti e oltre 30 altre prestazioni in meno di 10 minuti.",
+    "label_what_this_means": "COSA SIGNIFICA PER TE",
+    "label_how_to_claim": "COME FARE DOMANDA",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Pubblicato da <a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> · Libero di copiare, adattare e condividere · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
   }
 }
