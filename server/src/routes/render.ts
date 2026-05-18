@@ -297,6 +297,15 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
         return { code, native: label.native, english: label.english };
       });
 
+    // Initial language: respect ?lang=xx from the URL (header dropdown links
+    // arrive with this set). Falls back to English. Must be a known language
+    // for this template, otherwise we silently ignore it.
+    const rawLang = typeof req.query.lang === 'string' ? req.query.lang.toLowerCase() : 'en';
+    const initialLang = langOptions.some((o) => o.code === rawLang) ? rawLang : 'en';
+    const initialIframeSrc = initialLang === 'en'
+      ? `/generic/${escape(template.slug)}`
+      : `/generic/${escape(template.slug)}?lang=${encodeURIComponent(initialLang)}`;
+
     res.type('html').send(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -417,7 +426,7 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
               <span class="viewer-lang__sr">Other languages</span>
               <select id="lang-picker" aria-label="Choose language">
                 ${langOptions
-                  .map((o) => `<option value="${o.code}">${o.native} · ${o.english}</option>`)
+                  .map((o) => `<option value="${o.code}"${o.code === initialLang ? ' selected' : ''}>${o.native} · ${o.english}</option>`)
                   .join('')}
               </select>
             </label>`
@@ -440,12 +449,15 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
       var slug = ${JSON.stringify(template.slug)};
       var picker = document.getElementById('lang-picker');
       var frame = document.getElementById('preview-frame');
-      var currentLang = 'en';
+      var currentLang = ${JSON.stringify(initialLang)};
 
       function setLang(code) {
         currentLang = code;
         var qs = code === 'en' ? '' : '?lang=' + encodeURIComponent(code);
         frame.src = '/generic/' + slug + qs;
+        // Keep the page URL in sync so refresh / share / back-forward work.
+        var pageUrl = code === 'en' ? window.location.pathname : window.location.pathname + '?lang=' + encodeURIComponent(code);
+        window.history.replaceState({}, '', pageUrl);
       }
       if (picker) {
         picker.addEventListener('change', function (e) { setLang(e.target.value); });
@@ -481,7 +493,7 @@ renderRouter.get('/view/:templateSlug', (req, res, next) => {
   </script>
 
   <div class="viewer-frame-wrap">
-    <iframe id="preview-frame" class="viewer-frame" src="/generic/${escape(template.slug)}" title="${escape(template.name)} preview"></iframe>
+    <iframe id="preview-frame" class="viewer-frame" src="${initialIframeSrc}" title="${escape(template.name)} preview"></iframe>
   </div>
 </body>
 </html>`);
