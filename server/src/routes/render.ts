@@ -101,31 +101,45 @@ renderRouter.get('/c/:slug', async (req, res, next) => {
       withEntitledtoCredit = true;
     }
 
-    // Language overlay. If ?lang=xx is set AND a customization_translations row
-    // exists for that language, merge its overrides on top of the English
-    // overrides. Translation rows are partial — sections without a translation
-    // fall back to the English value.
+    // Language overlay. Precedence (highest wins):
+    //   1. customization_translations[lang]  — bespoke translated text
+    //   2. customization.overrides            — bespoke English text
+    //   3. template_translations[lang]        — translated standard text
+    //   4. template defaults                  — English standard text
     const requestedLang = typeof req.query.lang === 'string' ? req.query.lang.toLowerCase() : 'en';
     let mergedCustomization = customization;
     if (requestedLang !== 'en') {
-      const tr = db
+      const tpl = db
+        .prepare('SELECT content_json FROM template_translations WHERE template_id = ? AND language = ?')
+        .get(customization.template_id, requestedLang) as { content_json: string } | undefined;
+      const cust = db
         .prepare('SELECT overrides_json FROM customization_translations WHERE customization_id = ? AND language = ?')
         .get(customization.id, requestedLang) as { overrides_json: string } | undefined;
-      if (tr) {
+      if (tpl || cust) {
         const englishOverrides = JSON.parse(customization.overrides_json || '{}') as Record<string, string>;
-        const translatedOverrides = JSON.parse(tr.overrides_json || '{}') as Record<string, string>;
+        const templateTr = tpl ? (JSON.parse(tpl.content_json || '{}') as Record<string, string>) : {};
+        const customTr = cust ? (JSON.parse(cust.overrides_json || '{}') as Record<string, string>) : {};
+        // template translation goes UNDER the English overrides — those
+        // bespoke values are LA-specific and we don't translate them
+        // automatically — then customization translation goes on top.
         mergedCustomization = {
           ...customization,
-          overrides_json: JSON.stringify({ ...englishOverrides, ...translatedOverrides }),
+          overrides_json: JSON.stringify({ ...templateTr, ...englishOverrides, ...customTr }),
         };
       }
     }
 
-    // List of languages the customization has translations for — drives the
-    // language switcher rendered above the leaflet.
-    const availableLanguages = db
+    // Union of available languages: template-level + customization-level.
+    const templateLangs = db
+      .prepare('SELECT language FROM template_translations WHERE template_id = ? ORDER BY language')
+      .all(customization.template_id) as Array<{ language: string }>;
+    const customLangs = db
       .prepare('SELECT language FROM customization_translations WHERE customization_id = ? ORDER BY language')
       .all(customization.id) as Array<{ language: string }>;
+    const availableLanguages = [...new Set([
+      ...templateLangs.map((l) => l.language),
+      ...customLangs.map((l) => l.language),
+    ])].sort().map((language) => ({ language }));
 
     const leafletHtml = await renderLeaflet({
       template,
@@ -146,24 +160,33 @@ renderRouter.get('/c/:slug', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// The 10 non-English UK languages targeted by the 'Other languages' feature
+// (per Phil's brief: top 10 UK non-English, includes Welsh).
 const LANGUAGE_LABELS: Record<string, { native: string; english: string; dir?: 'rtl' }> = {
   en: { native: 'English', english: 'English' },
   pl: { native: 'Polski', english: 'Polish' },
-  ur: { native: 'اردو', english: 'Urdu', dir: 'rtl' },
-  bn: { native: 'বাংলা', english: 'Bengali' },
   ro: { native: 'Română', english: 'Romanian' },
-  so: { native: 'Soomaali', english: 'Somali' },
-  ar: { native: 'العربية', english: 'Arabic', dir: 'rtl' },
+  pa: { native: 'ਪੰਜਾਬੀ', english: 'Punjabi' },
+  ur: { native: 'اردو', english: 'Urdu', dir: 'rtl' },
+  pt: { native: 'Português', english: 'Portuguese' },
+  es: { native: 'Español', english: 'Spanish' },
+  bn: { native: 'বাংলা', english: 'Bengali' },
+  gu: { native: 'ગુજરાતી', english: 'Gujarati' },
+  it: { native: 'Italiano', english: 'Italian' },
+  cy: { native: 'Cymraeg', english: 'Welsh' },
 };
 
 function renderLeafletWithSwitcher(leafletHtml: string, slug: string, current: string, available: string[]): string {
+  // Always include English in the dropdown so users can switch back.
   const all = ['en', ...available.filter((l) => l !== 'en')];
-  const switcher = all
+  const currentLabel = LANGUAGE_LABELS[current] ?? { native: current, english: current };
+
+  const links = all
     .map((code) => {
       const label = LANGUAGE_LABELS[code] ?? { native: code, english: code };
       const active = code === current;
       const href = code === 'en' ? `/c/${slug}` : `/c/${slug}?lang=${code}`;
-      return `<a href="${href}" lang="${code}"${label.dir ? ` dir="${label.dir}"` : ''} class="lang-switch__btn${active ? ' lang-switch__btn--active' : ''}">${label.native}</a>`;
+      return `<li><a href="${href}" lang="${code}"${label.dir ? ` dir="${label.dir}"` : ''} class="lang-switch__link${active ? ' lang-switch__link--active' : ''}">${label.native}<span class="lang-switch__english"> · ${label.english}</span></a></li>`;
     })
     .join('');
 
@@ -177,21 +200,49 @@ function renderLeafletWithSwitcher(leafletHtml: string, slug: string, current: s
     body { margin: 0; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #E5E7EB; }
     .lang-switch {
       background: #1B2A6B; color: #fff;
-      padding: 0.6rem 1rem;
-      display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
-      justify-content: center;
+      padding: 0.4rem 1.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      justify-content: flex-end;
       font-size: 0.9rem;
     }
-    .lang-switch__label { opacity: 0.7; margin-right: 0.4rem; }
-    .lang-switch__btn {
-      color: #fff; text-decoration: none;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      transition: background 0.1s;
+    .lang-switch__current {
+      margin-right: auto;
+      opacity: 0.85;
+      font-size: 0.85rem;
     }
-    .lang-switch__btn:hover { background: rgba(255, 255, 255, 0.18); }
-    .lang-switch__btn--active { background: #E64A3C; }
+    .lang-switch__details { position: relative; }
+    .lang-switch__details summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.4rem 0.9rem;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .lang-switch__details summary::-webkit-details-marker { display: none; }
+    .lang-switch__details summary:hover { background: rgba(255, 255, 255, 0.22); }
+    .lang-switch__details[open] summary { background: rgba(255, 255, 255, 0.22); }
+    .lang-switch__panel {
+      position: absolute; top: calc(100% + 0.4rem); right: 0;
+      min-width: 14rem;
+      background: #fff; color: #0F172A;
+      border-radius: 0.5rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+      padding: 0.4rem 0;
+      list-style: none; margin: 0;
+      z-index: 20;
+    }
+    .lang-switch__panel li { margin: 0; }
+    .lang-switch__link {
+      display: block;
+      padding: 0.5rem 0.9rem;
+      color: #0F172A;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .lang-switch__link:hover { background: #F1F5F9; }
+    .lang-switch__link--active { background: rgba(40, 88, 229, 0.1); font-weight: 600; }
+    .lang-switch__english { color: #94A3B8; font-size: 0.78rem; font-weight: 400; margin-left: 0.25rem; }
     .leaflet-frame {
       display: block;
       width: 210mm;
@@ -209,8 +260,13 @@ function renderLeafletWithSwitcher(leafletHtml: string, slug: string, current: s
 </head>
 <body>
   <nav class="lang-switch" aria-label="Choose language">
-    <span class="lang-switch__label">Read in:</span>
-    ${switcher}
+    <span class="lang-switch__current">${
+      current === 'en' ? '' : `Viewing in <strong>${currentLabel.native} · ${currentLabel.english}</strong>`
+    }</span>
+    <details class="lang-switch__details">
+      <summary>🌐 Other languages</summary>
+      <ul class="lang-switch__panel">${links}</ul>
+    </details>
   </nav>
   <iframe class="leaflet-frame" src="/c/${slug}?${current === 'en' ? '' : `lang=${current}&`}embed=1" style="height: 297mm;" title="Leaflet"></iframe>
 </body>

@@ -11,6 +11,7 @@
     "seed": "tsx src/db/seed.ts",
     "gias:import": "tsx src/gias/import.ts",
     "la:import-sites": "tsx src/db/import-entitledto-sites.ts",
+    "translate:templates": "tsx src/db/translate-templates.ts",
     "admin:set-password": "tsx src/db/admin-set-password.ts",
     "typecheck": "tsc --noEmit"
   },
