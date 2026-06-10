@@ -117,9 +117,19 @@ const CAB_BODY = {
     'funding</strong>.</p>',
   box2_body_html:
     '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for ' +
-    'the start of September. Claiming also unlocks <strong>Pupil Premium' +
-    '</strong> funding for the school — extra money used for catch-up ' +
-    'tutoring, extra teaching support, and educational visits.</p>',
+    'the start of September.</p>',
+  // Third info-box — a targeted reminder for infant pupils. Pupil Premium
+  // only attaches to *registered* (benefits-based) FSM, not the universal
+  // infant free meals that reception/Y1/Y2 children get automatically, so the
+  // PP point lives here. Dropped automatically when content.is_secondary is set
+  // (secondary schools have no infant pupils). See render/leaflet.ts.
+  box3_eyebrow: 'Reception · Year 1 · Year 2',
+  box3_title: 'If your child is in reception, Year 1 or Year 2',
+  box3_body_html:
+    '<p>All children in reception, Year 1 and Year 2 get free school meals ' +
+    'automatically, whatever the family income. If you receive Universal ' +
+    'Credit, <strong>still tell the school office and register</strong> — ' +
+    "it's what brings the school its <strong>Pupil Premium funding</strong>.</p>",
   how_to_intro: 'About an hour of your time — and two things worth doing:',
   how_to_steps_html:
     '<li><strong>Apply for free school meals</strong> through your school ' +
@@ -133,10 +143,15 @@ const CAB_BODY = {
     'fully clawed back by the High Income Child Benefit Charge, register ' +
     'anyway and tick the box to opt out of payment — it protects the ' +
     "at-home parent's National Insurance record.</li>",
-  contact_name: '[Citizens Advice office name]',
-  contact_phone: '[Telephone]',
-  contact_email: '[Email]',
-  contact_website: '[Website]',
+  // Badged to Citizens Advice Wokingham. Contact details from their public
+  // site (citizensadvicewokingham.org.uk) — verify before any real use.
+  contact_name: 'Citizens Advice Wokingham',
+  contact_phone: '0808 278 7958',
+  contact_email: 'admin@citizensadvicewokingham.org.uk',
+  contact_website:
+    '<a href="https://citizensadvicewokingham.org.uk">citizensadvicewokingham.org.uk</a>',
+  show_logo: 'true',
+  logo_url: '/logos/wokingham-cab.png',
 };
 
 const CAB_FACTS = {

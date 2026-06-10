@@ -201,6 +201,23 @@ html, body {
 .leaflet__info-box-body p { margin: 0 0 1mm; }
 .leaflet__info-box-body p:last-child { margin: 0; }
 
+/* Notice variant — a targeted reminder for a specific group (e.g. the
+   reception/Year 1/Year 2 box on the CAB leaflet). Distinct from the blue
+   scenario boxes: warm tint + accent-coloured left bar + a small eyebrow. */
+.leaflet__info-box--notice {
+  background: #FFF4E5;
+  border-left-color: var(--accent);
+}
+.leaflet__info-box--notice .leaflet__info-box-title { color: var(--accent); }
+.leaflet__info-box-eyebrow {
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 1mm;
+}
+
 /* How to claim ----------------------------------------------------------- */
 
 .leaflet__how-to-claim {
@@ -378,6 +395,10 @@ html, body {
   border-left: none;
   border-right: 4mm solid var(--brand);
   border-radius: 2mm 0 0 2mm;
+}
+
+[dir="rtl"] .leaflet__info-box--notice {
+  border-right-color: var(--accent);
 }
 
 [dir="rtl"] .leaflet__cta-secondary {

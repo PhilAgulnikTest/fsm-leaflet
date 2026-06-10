@@ -117,6 +117,24 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     ? `<div class="leaflet__hero-logo"><img src="${logoUrl}" alt="" class="leaflet__hero-logo-img"></div>`
     : '';
 
+  // Optional third info-box — a targeted notice (e.g. the reception/Year 1/
+  // Year 2 reminder on the CAB leaflet). Only rendered when the template
+  // supplies box3 content AND the "secondary school" flag is off (secondary
+  // schools have no infant pupils, so the universal-infant-FSM note is dropped).
+  // Templates without box3 content render exactly as before.
+  const isSecondary = content.is_secondary === 'true' || content.is_secondary === '1';
+  const box3Title = content.box3_title ?? '';
+  const box3Body = content.box3_body_html ?? '';
+  const extraBoxHtml = !isSecondary && (box3Title || box3Body)
+    ? `<article class="leaflet__info-box leaflet__info-box--notice">` +
+      (content.box3_eyebrow
+        ? `<p class="leaflet__info-box-eyebrow" data-edit-key="box3_eyebrow">${content.box3_eyebrow}</p>`
+        : '') +
+      `<h3 class="leaflet__info-box-title" data-edit-key="box3_title">${box3Title}</h3>` +
+      `<div class="leaflet__info-box-body" data-edit-key="box3_body_html">${box3Body}</div>` +
+      `</article>`
+    : '';
+
   // Per-template attribution block. Falls back to a NAWRA-only credit if a
   // template hasn't set its own (keeps CC BY 4.0 attribution intact).
   const defaultAttribution =
@@ -144,6 +162,7 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
     BOX1_BODY_HTML: content.box1_body_html ?? '',
     BOX2_TITLE: content.box2_title ?? '',
     BOX2_BODY_HTML: content.box2_body_html ?? '',
+    EXTRA_BOX_HTML: extraBoxHtml,
     HOW_TO_INTRO: content.how_to_intro ?? '',
     HOW_TO_STEPS_HTML: content.how_to_steps_html ?? '',
     CTA_SECONDARY_TITLE: content.cta_secondary_title ?? '',

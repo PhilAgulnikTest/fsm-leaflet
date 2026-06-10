@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { adminApi, type AdminTemplate, type AdminTemplateDetail } from './adminApi';
 
+/** The body strings live under default_palette.content. Read them defensively
+ *  — default_palette is typed as Record<string, unknown>. */
+function templateContent(t: AdminTemplateDetail): Record<string, string> {
+  const c = (t.default_palette as { content?: unknown }).content;
+  return c && typeof c === 'object' ? (c as Record<string, string>) : {};
+}
+
 export function AdminTemplates() {
   const [templates, setTemplates] = useState<AdminTemplate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +22,7 @@ export function AdminTemplates() {
   const [audience, setAudience] = useState<'school' | 'la' | 'housing-association' | 'cab'>('school');
   const [factsText, setFactsText] = useState('');
   const [paletteText, setPaletteText] = useState('');
+  const [isSecondary, setIsSecondary] = useState(false);
 
   // Version-bump form
   const [changelog, setChangelog] = useState('');
@@ -47,6 +55,7 @@ export function AdminTemplates() {
       setAudience(t.audience);
       setFactsText(JSON.stringify(t.facts, null, 2));
       setPaletteText(JSON.stringify(t.default_palette, null, 2));
+      setIsSecondary(templateContent(t).is_secondary === 'true');
       setChangelog('');
     } catch (e) {
       const msg = (e as Error).message;
@@ -72,6 +81,11 @@ export function AdminTemplates() {
         setBusy(false);
         return;
       }
+      // The "secondary school" checkbox is the source of truth for the
+      // is_secondary flag — merge it into the body content. The PATCH replaces
+      // the whole `content` key, so it must carry the merged value.
+      const pal = palette as { content?: Record<string, unknown> };
+      pal.content = { ...(pal.content ?? {}), is_secondary: isSecondary ? 'true' : '' };
       await adminApi.patchTemplate(selected.id, {
         name,
         description,
@@ -184,6 +198,30 @@ export function AdminTemplates() {
                 <option value="published">published</option>
               </select>
             </div>
+
+            {(templateContent(selected).box3_title || templateContent(selected).box3_body_html) && (
+              <div className="form-row">
+                <label htmlFor="is-secondary">Secondary school?</label>
+                <div>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 400 }}>
+                    <input
+                      id="is-secondary"
+                      type="checkbox"
+                      checked={isSecondary}
+                      onChange={(e) => setIsSecondary(e.target.checked)}
+                    />
+                    Is this for a secondary school?
+                  </label>
+                  {isSecondary && (
+                    <p className="alert" style={{ margin: '0.5rem 0 0', fontSize: '0.85rem' }}>
+                      ⚠ The <strong>Reception / Year 1 / Year 2</strong> reminder box has been
+                      removed from this leaflet (secondary schools have no infant pupils).
+                      Save changes to apply.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             <details style={{ margin: '1rem 0' }}>
               <summary><strong>Default palette + body content (JSON)</strong></summary>
