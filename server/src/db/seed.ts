@@ -150,8 +150,6 @@ const CAB_BODY = {
   contact_email: 'admin@citizensadvicewokingham.org.uk',
   contact_website:
     '<a href="https://citizensadvicewokingham.org.uk">citizensadvicewokingham.org.uk</a>',
-  show_logo: 'true',
-  logo_url: '/logos/wokingham-cab.png',
 };
 
 const CAB_FACTS = {
