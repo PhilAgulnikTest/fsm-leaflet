@@ -28,7 +28,7 @@ export type AdminTemplate = {
   slug: string;
   name: string;
   description: string;
-  audience: 'school' | 'la' | 'housing-association';
+  audience: 'school' | 'la' | 'housing-association' | 'cab';
   version: number;
   changelog: string;
   status: 'draft' | 'published';

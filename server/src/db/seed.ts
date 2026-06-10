@@ -107,11 +107,49 @@ const HOUSING_BODY = {
   attribution_html: LA_BESPOKE_ATTRIBUTION,
 };
 
+const CAB_BODY = {
+  ...NAWRA_BODY,
+  box1_body_html:
+    '<p>From the <strong>2026/27 school year</strong>, eligibility will be ' +
+    'checked every year. In some areas your local authority will auto-enrol ' +
+    'your child — otherwise make sure you claim again so your child keeps ' +
+    'their free meals <strong>and your school keeps its Pupil Premium ' +
+    'funding</strong>.</p>',
+  box2_body_html:
+    '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for ' +
+    'the start of September. Claiming also unlocks <strong>Pupil Premium' +
+    '</strong> funding for the school — extra money used for catch-up ' +
+    'tutoring, extra teaching support, and educational visits.</p>',
+  how_to_intro: 'About an hour of your time — and two things worth doing:',
+  how_to_steps_html:
+    '<li><strong>Apply for free school meals</strong> through your school ' +
+    "office, your school's website, or your local council. You'll need: " +
+    "your National Insurance number, your address and postcode, your child's " +
+    'full name and date of birth, and the name of the benefit you receive ' +
+    '(Universal Credit or another qualifying benefit).</li>' +
+    "<li><strong>Check you're claiming " +
+    '<a href="https://www.gov.uk/child-benefit/how-to-claim">Child Benefit</a>' +
+    '.</strong> Even if one parent earns over £80,000 and the payment is ' +
+    'fully clawed back by the High Income Child Benefit Charge, register ' +
+    'anyway and tick the box to opt out of payment — it protects the ' +
+    "at-home parent's National Insurance record.</li>",
+  contact_name: '[Citizens Advice office name]',
+  contact_phone: '[Telephone]',
+  contact_email: '[Email]',
+  contact_website: '[Website]',
+};
+
+const CAB_FACTS = {
+  ...NAWRA_FACTS,
+  application_route:
+    'School- or LA-distributed form; CAB advisers may help families complete.',
+};
+
 type TemplateSeed = {
   slug: string;
   name: string;
   description: string;
-  audience: 'school' | 'la' | 'housing-association';
+  audience: 'school' | 'la' | 'housing-association' | 'cab';
   body_path: string;
   body: Record<string, string>;
   palette: Record<string, string>;
@@ -154,6 +192,20 @@ const templates: TemplateSeed[] = [
     palette: NAWRA_PALETTE,
     facts: NAWRA_FACTS,
     status: 'draft',
+  },
+  {
+    slug: 'cab',
+    name: 'Citizens Advice (CAB)',
+    description:
+      'For Citizens Advice offices and other advice agencies to hand to ' +
+      'clients. Adds Pupil Premium and Child Benefit messaging to the NAWRA ' +
+      'structure.',
+    audience: 'cab',
+    body_path: 'nawra/leaflet.html',
+    body: CAB_BODY,
+    palette: NAWRA_PALETTE,
+    facts: CAB_FACTS,
+    status: 'published',
   },
 ];
 

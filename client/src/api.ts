@@ -47,7 +47,7 @@ export type Template = {
   slug: string;
   name: string;
   description: string;
-  audience: 'school' | 'la' | 'housing-association';
+  audience: 'school' | 'la' | 'housing-association' | 'cab';
   version: number;
   status: 'draft' | 'published';
 };

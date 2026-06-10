@@ -12,7 +12,7 @@ export function AdminTemplates() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
-  const [audience, setAudience] = useState<'school' | 'la' | 'housing-association'>('school');
+  const [audience, setAudience] = useState<'school' | 'la' | 'housing-association' | 'cab'>('school');
   const [factsText, setFactsText] = useState('');
   const [paletteText, setPaletteText] = useState('');
 
@@ -174,6 +174,7 @@ export function AdminTemplates() {
                 <option value="school">school</option>
                 <option value="la">la</option>
                 <option value="housing-association">housing-association</option>
+                <option value="cab">cab</option>
               </select>
             </div>
             <div className="form-row">

@@ -63,7 +63,7 @@ adminRouter.get('/templates/:id', (req, res) => {
 type TemplatePatch = {
   name?: string;
   description?: string;
-  audience?: 'school' | 'la' | 'housing-association';
+  audience?: 'school' | 'la' | 'housing-association' | 'cab';
   status?: 'draft' | 'published';
   default_palette?: Record<string, unknown>;
   facts?: Record<string, unknown>;
