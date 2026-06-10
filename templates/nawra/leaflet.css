@@ -82,13 +82,15 @@ html, body {
 }
 
 .leaflet__hero-logo {
-  position: absolute;
-  top: 6mm;
-  left: 8mm;
+  /* In normal flow at the top of the hero so the title sits below it rather
+     than being obscured. (Was absolute-positioned, which overlapped the
+     title's first word on logo'd leaflets.) */
+  display: inline-block;
   background: #fff;
   padding: 2mm 3mm;
   border-radius: 2mm;
   max-width: 50mm;
+  margin: 0 0 4mm;
 }
 .leaflet__hero-logo-img {
   display: block;
