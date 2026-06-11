@@ -20,6 +20,43 @@ type Customization = {
   public_slug: string;
 };
 
+// Friendly labels for the raw override keys stored on a customization. Anything
+// not listed falls back to a prettified version of the key (see prettifyKey).
+const FIELD_LABELS: Record<string, string> = {
+  hero_title: 'Headline',
+  hero_subtitle: 'Subtitle',
+  hero_date: 'Hero date line',
+  intro_html: 'Intro paragraph',
+  cta_primary_title: 'Primary CTA title',
+  cta_primary_body_html: 'Primary CTA body',
+  box1_title: 'Box 1 title',
+  box1_body_html: 'Box 1 body',
+  box2_title: 'Box 2 title',
+  box2_body_html: 'Box 2 body',
+  box3_title: 'Box 3 title',
+  box3_body_html: 'Box 3 body',
+  cta_secondary_title: 'Yellow box title',
+  cta_secondary_body_html: 'Yellow box body',
+  how_to_steps_html: 'How to claim — steps',
+  contact_name: 'Contact name',
+  contact_phone: 'Contact phone',
+  contact_email: 'Contact email',
+  contact_website: 'Contact website',
+  calculator_url: 'Benefit calculator address',
+  calculator_url_display: 'Calculator link text',
+  show_logo: 'Show logo',
+  logo_url: 'Logo image URL',
+};
+
+function prettifyKey(key: string): string {
+  const s = key.replace(/_html$/, '').replace(/_/g, ' ').trim();
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function fieldLabel(key: string): string {
+  return FIELD_LABELS[key] ?? prettifyKey(key);
+}
+
 export function EditFlow() {
   const { slug = '' } = useParams();
   const [customization, setCustomization] = useState<Customization | null>(null);
@@ -151,7 +188,7 @@ export function EditFlow() {
             <h3>Sections</h3>
             {Object.entries(overrides).map(([key, value]) => (
               <div className="form-row" key={key}>
-                <label htmlFor={`edit-${key}`}>{key}</label>
+                <label htmlFor={`edit-${key}`}>{fieldLabel(key)}</label>
                 <textarea
                   id={`edit-${key}`}
                   rows={value.length > 80 ? 4 : 2}
