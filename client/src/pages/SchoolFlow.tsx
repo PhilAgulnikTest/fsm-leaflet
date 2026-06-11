@@ -16,6 +16,7 @@ export function SchoolFlow() {
   const [website, setWebsite] = useState('');
   const [howToStep1, setHowToStep1] = useState('Download the form from your school\'s website');
   const [howToStep2, setHowToStep2] = useState('Or pick up a paper copy from the school office');
+  const [calculatorUrl, setCalculatorUrl] = useState('https://www.gov.uk/benefits-calculators');
 
   const [step, setStep] = useState<Step>('search');
   const [saveResult, setSaveResult] = useState<SaveResult>(null);
@@ -73,6 +74,15 @@ export function SchoolFlow() {
     return `<li>${step1}</li><li>${safe2}</li>`;
   }
 
+  // Normalise the calculator address: fall back to the GOV.UK default if blank,
+  // prepend https:// if the protocol is missing (so the leaflet link works), and
+  // show a protocol-free version as the visible link text.
+  function calculatorOverrides(): { calculator_url: string; calculator_url_display: string } {
+    const raw = calculatorUrl.trim() || 'https://www.gov.uk/benefits-calculators';
+    const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    return { calculator_url: url, calculator_url_display: url.replace(/^https?:\/\//i, '').replace(/\/+$/, '') };
+  }
+
   async function publish() {
     if (!selected) return;
     setError(null);
@@ -87,6 +97,7 @@ export function SchoolFlow() {
           contact_email: email,
           contact_website: website,
           how_to_steps_html: buildHowToStepsHtml(),
+          ...calculatorOverrides(),
         },
       });
       setSaveResult(result);
@@ -242,6 +253,20 @@ export function SchoolFlow() {
                 onChange={(e) => setHowToStep2(e.target.value)}
                 placeholder="Or pick up a paper copy from the school office"
               />
+            </div>
+
+            <div className="form-row">
+              <label htmlFor="school-calculator">Benefit calculator address</label>
+              <input
+                id="school-calculator"
+                value={calculatorUrl}
+                onChange={(e) => setCalculatorUrl(e.target.value)}
+                placeholder="https://www.gov.uk/benefits-calculators"
+              />
+              <small className="muted">
+                The "Not on Universal Credit yet?" box links here. Leave the GOV.UK default,
+                or enter your council's or another benefit calculator.
+              </small>
             </div>
 
             <button className="btn btn--large btn--primary" onClick={publish} disabled={busy}>

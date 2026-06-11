@@ -75,6 +75,14 @@ export function LAFlow() {
       o.show_logo = 'true';
       o.logo_url = selected.logo_url;
     }
+    // Normalise the calculator address: prepend https:// if missing (so the
+    // leaflet link works) and show a protocol-free version as the link text.
+    if (o.calculator_url && o.calculator_url.trim()) {
+      const raw = o.calculator_url.trim();
+      const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+      o.calculator_url = url;
+      o.calculator_url_display = url.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+    }
     return o;
   }, [overrides, showLogo, selected]);
 
@@ -237,6 +245,20 @@ export function LAFlow() {
                 )}
               </span>
             </label>
+
+            <div className="form-row" style={{ maxWidth: '32rem', marginTop: '0.75rem' }}>
+              <label htmlFor="la-calculator">Benefit calculator address</label>
+              <input
+                id="la-calculator"
+                value={overrides.calculator_url ?? ''}
+                onChange={(e) => setOverrides({ ...overrides, calculator_url: e.target.value })}
+                placeholder="https://www.gov.uk/benefits-calculators"
+              />
+              <small className="muted">
+                The "Not on Universal Credit yet?" box links here. Defaults to your
+                entitledto calculator — overtype to use GOV.UK or another address.
+              </small>
+            </div>
 
             <p className="muted" style={{ margin: '0.5rem 0 1rem' }}>
               Hover over any section of the leaflet below and click the
