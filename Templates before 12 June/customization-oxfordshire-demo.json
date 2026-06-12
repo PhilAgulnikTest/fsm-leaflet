@@ -1,0 +1,33 @@
+{
+  "public_slug": "oxfordshire-demo",
+  "template_slug": "entitledto-la",
+  "la_slug": "oxfordshire",
+  "school_urn": null,
+  "owner_email": "demo@entitledto.co.uk",
+  "template_version_at_publish": 1,
+  "overrides": {
+    "show_logo": "true",
+    "logo_url": "/logos/oxfordshire.svg",
+    "hero_title": "Free school meals: what's changing in Oxfordshire",
+    "hero_subtitle": "Important news for parents and carers",
+    "hero_date": "From September 2026",
+    "intro_html": "From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals.",
+    "cta_primary_title": "Apply by end of summer term",
+    "cta_primary_body_html": "Oxfordshire processes applications <strong><u>over the summer</u></strong> so your child is ready for free meals on the first day of the Autumn term.",
+    "cta_primary_bg": "#E8951A",
+    "box1_title": "If your child currently gets free school meals",
+    "box1_body_html": "<p>From the <strong>2026/27 school year</strong>, eligibility will be checked every year. Oxfordshire is <strong>exploring auto-enrolment</strong> — look out for a letter from us, and contact your school if you don't hear by the start of term.</p>",
+    "box2_title": "If you receive Universal Credit but haven't claimed before",
+    "box2_body_html": "<p>Your child is now eligible. <strong>Apply through your school by the end of the summer term</strong>. Full details: <a href=\"https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes\">schools.oxfordshire.gov.uk</a>.</p>",
+    "how_to_steps_html": "<li>Apply at <a href=\"https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes\">schools.oxfordshire.gov.uk</a></li><li>Or download the form from your school's website</li><li>Or pick up a paper copy from the school office</li>",
+    "cta_secondary_title": "Not on Universal Credit yet?",
+    "cta_secondary_body_html": "You may still be entitled. Use Oxfordshire's free benefit calculator to check if you could qualify for Universal Credit and free school meals.",
+    "calculator_url": "https://oxfordshire.entitledto.co.uk",
+    "calculator_url_display": "oxfordshire.entitledto.co.uk",
+    "contact_name": "Oxfordshire Free School Meals Team",
+    "contact_phone": "",
+    "contact_email": "Free.SchoolMeals@Oxfordshire.gov.uk",
+    "contact_website": "<a href=\"https://schools.oxfordshire.gov.uk/schools-news/2026/free-school-meal-eligibility-and-checking-processes\">schools.oxfordshire.gov.uk</a>"
+  },
+  "published_at": "2026-05-17 07:23:48"
+}

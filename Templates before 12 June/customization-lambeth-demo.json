@@ -1,0 +1,33 @@
+{
+  "public_slug": "lambeth-demo",
+  "template_slug": "entitledto-la",
+  "la_slug": "lambeth",
+  "school_urn": null,
+  "owner_email": "demo@entitledto.co.uk",
+  "template_version_at_publish": 1,
+  "overrides": {
+    "show_logo": "true",
+    "logo_url": "/logos/lambeth.svg",
+    "hero_title": "Free school meals: Lambeth's expanded offer",
+    "hero_subtitle": "Important news for parents and carers",
+    "hero_date": "From September 2026",
+    "intro_html": "From September 2026, every Lambeth child whose family receives <strong>Universal Credit</strong> can get free school meals.",
+    "cta_primary_title": "We may auto-enrol your child",
+    "cta_primary_body_html": "Lambeth has been auto-enrolling children for years. <strong><u>Most eligible children will be signed up automatically</u></strong> — but contact your school if you don't hear from us by September.",
+    "cta_primary_bg": "#C2185B",
+    "box1_title": "If your child currently gets free school meals",
+    "box1_body_html": "<p>Lambeth checks eligibility every year and <strong>auto-enrols most eligible children</strong>. If your circumstances have changed, contact your school or the Lambeth Welfare team to make sure your child stays signed up.</p>",
+    "box2_title": "If you receive Universal Credit but haven't claimed before",
+    "box2_body_html": "<p>Your child is now eligible. <strong>Lambeth may auto-enrol you from 1 June</strong> — or apply directly through your school for the start of September. Full details: <a href=\"https://lambeth.gov.uk/freeschoolmeals\">lambeth.gov.uk/freeschoolmeals</a>.</p>",
+    "how_to_steps_html": "<li>Apply at <a href=\"https://lambeth.gov.uk/freeschoolmeals\">lambeth.gov.uk/freeschoolmeals</a></li><li>Or via your school's website</li><li>Or pick up a paper copy from the school office</li>",
+    "cta_secondary_title": "Not on Universal Credit yet?",
+    "cta_secondary_body_html": "You may still be entitled. Use Lambeth's free benefit calculator to check if you could qualify for Universal Credit and free school meals.",
+    "calculator_url": "https://lambeth.entitledto.co.uk",
+    "calculator_url_display": "lambeth.entitledto.co.uk",
+    "contact_name": "Lambeth Welfare and Benefits Team",
+    "contact_phone": "",
+    "contact_email": "fsm@lambeth.gov.uk",
+    "contact_website": "<a href=\"https://lambeth.gov.uk/freeschoolmeals\">lambeth.gov.uk/freeschoolmeals</a>"
+  },
+  "published_at": "2026-05-17 07:23:48"
+}

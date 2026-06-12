@@ -1,0 +1,50 @@
+{
+  "slug": "housing-association",
+  "name": "Housing association (stub)",
+  "description": "Placeholder template demonstrating the platform supports audiences beyond schools/LAs. Not yet wired into a public flow.",
+  "audience": "housing-association",
+  "status": "draft",
+  "body_path": "nawra/leaflet.html",
+  "version": 1,
+  "changelog": "Initial seed.",
+  "palette": {
+    "brand": "#1F4F5C",
+    "accent": "#16A34A",
+    "cta_primary_bg": "#1F7A3F"
+  },
+  "body": {
+    "hero_title": "Free school meals — for tenant families",
+    "hero_subtitle": "Information from your housing association",
+    "hero_date": "From September 2026",
+    "intro_html": "<strong>Every child whose family receives Universal Credit</strong> can get free school meals.",
+    "cta_primary_title": "Register from 1 June",
+    "cta_primary_body_html": "Sign up <strong><u>before the Autumn term starts</u></strong> so your child gets every free meal they're entitled to.",
+    "cta_primary_bg": "#1F7A3F",
+    "box1_title": "If your child currently gets free school meals",
+    "box1_body_html": "<p>From the <strong>2026/27 school year</strong>, eligibility will be checked every year. In some areas your local authority will auto-enrol your child — otherwise make sure you claim again so your child keeps their free meals.</p>",
+    "box2_title": "If you receive Universal Credit but haven't claimed before",
+    "box2_body_html": "<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September.</p>",
+    "how_to_intro": "For both situations above:",
+    "how_to_steps_html": "<li>Download the form from your school's website</li><li>Or pick up a paper copy from the school office</li>",
+    "cta_secondary_title": "Not on Universal Credit yet?",
+    "cta_secondary_body_html": "You may still be entitled. A free benefit calculator will tell you if you could qualify for Universal Credit and free school meals.",
+    "calculator_url": "https://www.gov.uk/benefits-calculators",
+    "calculator_url_display": "https://www.gov.uk/benefits-calculators",
+    "contact_name": "[Housing association name]",
+    "contact_phone": "[Telephone]",
+    "contact_email": "[Email]",
+    "contact_website": "[Website]",
+    "attribution_html": "<p class=\"leaflet__credit-licence\">Published by <a href=\"https://entitledto.co.uk\">entitledto.co.uk</a> · Free to copy, adapt and share · <span class=\"leaflet__cc\">CC BY 4.0</span></p>"
+  },
+  "facts": {
+    "eligibility_basis": "Receipt of Universal Credit (England, from September 2026)",
+    "auto_enrolment_status": "Some LAs auto-enrol; others require parents to claim each year.",
+    "claim_window_opens": "1 June 2026",
+    "claim_window_purpose": "To be ready for the start of September.",
+    "re_check_cadence": "Eligibility re-checked annually from 2026/27 onwards.",
+    "application_route": "School-distributed form (paper or online).",
+    "benefit_calculator_url": "https://www.gov.uk/benefits-calculators"
+  },
+  "created_at": "2026-05-15 15:43:08",
+  "updated_at": "2026-06-11 08:15:48"
+}
