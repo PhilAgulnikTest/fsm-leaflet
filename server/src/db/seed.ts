@@ -132,8 +132,8 @@ const CAB_BODY = {
   // universal infant free meals that Reception/Y1/Y2 children get
   // automatically, so the PP point lives here. Dropped automatically when
   // content.is_secondary is set (secondary schools have no infant pupils).
+  // Kicker alone labels this box; the heading would just repeat it, so it's omitted.
   box3_kicker: 'RECEPTION · YEAR 1 · YEAR 2',
-  box3_title: 'If your child is in Reception, Year 1 or Year 2',
   box3_body_html:
     '<p>All children in Reception, Year 1 and Year 2 get free school meals ' +
     'automatically, whatever the family income. If you receive Universal ' +

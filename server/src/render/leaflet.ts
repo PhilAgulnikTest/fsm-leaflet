@@ -131,7 +131,9 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
       (box3Kicker
         ? `<p class="leaflet__info-box-eyebrow" data-edit-key="box3_kicker">${box3Kicker}</p>`
         : '') +
-      `<h3 class="leaflet__info-box-title" data-edit-key="box3_title">${box3Title}</h3>` +
+      (box3Title
+        ? `<h3 class="leaflet__info-box-title" data-edit-key="box3_title">${box3Title}</h3>`
+        : '') +
       `<div class="leaflet__info-box-body" data-edit-key="box3_body_html">${box3Body}</div>` +
       `</article>`
     : '';
