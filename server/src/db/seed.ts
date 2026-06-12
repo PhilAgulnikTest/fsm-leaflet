@@ -107,29 +107,39 @@ const HOUSING_BODY = {
   attribution_html: LA_BESPOKE_ATTRIBUTION,
 };
 
+// CAB template — June 2026 converged text. Generic Citizens Advice version;
+// contact slots are placeholders for each office to fill in. The "Not on
+// Universal Credit yet?" message stays in the inherited yellow CTA box (with
+// the GOV.UK calculator link); box 3 carries the Pupil Premium point.
 const CAB_BODY = {
   ...NAWRA_BODY,
+  hero_title: 'More children will be entitled to free school meals',
+  hero_subtitle: 'Important news for parents and carers — from September 2026',
+  // Date is now folded into the subtitle above, so the separate date line is
+  // suppressed (it would otherwise repeat "From September 2026").
+  hero_date: '',
   box1_body_html:
     '<p>From the <strong>2026/27 school year</strong>, eligibility will be ' +
     'checked every year. In some areas your local authority will auto-enrol ' +
-    'your child — otherwise make sure you claim again so your child keeps ' +
-    'their free meals <strong>and your school keeps its Pupil Premium ' +
-    'funding</strong>.</p>',
+    'your child — check on the school or council website — and otherwise make ' +
+    'sure you claim again if you need to, so your child keeps their free meals ' +
+    '<strong>and your school keeps its Pupil Premium funding</strong>.</p>',
   box2_body_html:
-    '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for ' +
-    'the start of September.</p>',
-  // Third info-box — a targeted reminder for infant pupils. Pupil Premium
-  // only attaches to *registered* (benefits-based) FSM, not the universal
-  // infant free meals that reception/Y1/Y2 children get automatically, so the
-  // PP point lives here. Dropped automatically when content.is_secondary is set
-  // (secondary schools have no infant pupils). See render/leaflet.ts.
-  box3_eyebrow: 'Reception · Year 1 · Year 2',
-  box3_title: 'If your child is in reception, Year 1 or Year 2',
+    '<p>Your child is now eligible for free school meals. <strong>Claim from ' +
+    '1 June</strong> for the start of September term.</p>',
+  // Third scenario box — same visual style as boxes 1 and 2, with a kicker.
+  // Pupil Premium only attaches to registered (benefits-based) FSM, not the
+  // universal infant free meals that Reception/Y1/Y2 children get
+  // automatically, so the PP point lives here. Dropped automatically when
+  // content.is_secondary is set (secondary schools have no infant pupils).
+  box3_kicker: 'RECEPTION · YEAR 1 · YEAR 2',
+  box3_title: 'If your child is in Reception, Year 1 or Year 2',
   box3_body_html:
-    '<p>All children in reception, Year 1 and Year 2 get free school meals ' +
+    '<p>All children in Reception, Year 1 and Year 2 get free school meals ' +
     'automatically, whatever the family income. If you receive Universal ' +
-    'Credit, <strong>still tell the school office and register</strong> — ' +
-    "it's what brings the school its <strong>Pupil Premium funding</strong>.</p>",
+    'Credit, <strong>still tell the school office and register</strong>. This ' +
+    'will also bring the school its extra funding called <strong>Pupil ' +
+    'Premium</strong>, which is used to support educational outcomes for all.</p>',
   how_to_intro: 'About an hour of your time — and two things worth doing:',
   how_to_steps_html:
     '<li><strong>Apply for free school meals</strong> through your school ' +
@@ -137,19 +147,17 @@ const CAB_BODY = {
     "your National Insurance number, your address and postcode, your child's " +
     'full name and date of birth, and the name of the benefit you receive ' +
     '(Universal Credit or another qualifying benefit).</li>' +
-    "<li><strong>Check you're claiming " +
-    '<a href="https://www.gov.uk/child-benefit/how-to-claim">Child Benefit</a>' +
-    '.</strong> Even if one parent earns over £80,000 and the payment is ' +
-    'fully clawed back by the High Income Child Benefit Charge, register ' +
-    'anyway and tick the box to opt out of payment — it protects the ' +
-    "at-home parent's National Insurance record.</li>",
-  // Badged to Citizens Advice Wokingham. Contact details from their public
-  // site (citizensadvicewokingham.org.uk) — verify before any real use.
-  contact_name: 'Citizens Advice Wokingham',
-  contact_phone: '0808 278 7958',
-  contact_email: 'admin@citizensadvicewokingham.org.uk',
-  contact_website:
-    '<a href="https://citizensadvicewokingham.org.uk">citizensadvicewokingham.org.uk</a>',
+    '<li><strong>Check you have made a claim for ' +
+    '<a href="https://www.gov.uk/child-benefit/how-to-claim">Child Benefit</a>.</strong> ' +
+    'If you are entitled it could mean some extra income. And it is worth ' +
+    "claiming as it protects the at-home parent's National Insurance record — " +
+    'even if one parent earns over £80,000 and the payment is fully clawed ' +
+    'back by the High Income Child Benefit Charge, register anyway and tick ' +
+    'the box to opt out of payment.</li>',
+  contact_name: '[Citizens Advice office name]',
+  contact_phone: '[Telephone]',
+  contact_email: '[Email]',
+  contact_website: '[Website]',
 };
 
 const CAB_FACTS = {

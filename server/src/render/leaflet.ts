@@ -125,10 +125,11 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
   const isSecondary = content.is_secondary === 'true' || content.is_secondary === '1';
   const box3Title = content.box3_title ?? '';
   const box3Body = content.box3_body_html ?? '';
+  const box3Kicker = content.box3_kicker ?? content.box3_eyebrow ?? '';
   const extraBoxHtml = !isSecondary && (box3Title || box3Body)
-    ? `<article class="leaflet__info-box leaflet__info-box--notice">` +
-      (content.box3_eyebrow
-        ? `<p class="leaflet__info-box-eyebrow" data-edit-key="box3_eyebrow">${content.box3_eyebrow}</p>`
+    ? `<article class="leaflet__info-box">` +
+      (box3Kicker
+        ? `<p class="leaflet__info-box-eyebrow" data-edit-key="box3_kicker">${box3Kicker}</p>`
         : '') +
       `<h3 class="leaflet__info-box-title" data-edit-key="box3_title">${box3Title}</h3>` +
       `<div class="leaflet__info-box-body" data-edit-key="box3_body_html">${box3Body}</div>` +
