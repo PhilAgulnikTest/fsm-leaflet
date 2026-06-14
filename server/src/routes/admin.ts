@@ -18,17 +18,86 @@
  *   DELETE /trust-domain-allowlist/:domain             — revoke
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Router } from 'express';
 import { parse } from 'csv-parse/sync';
 import { db } from '../db/index.js';
 import { requireSession } from '../auth/sessions.js';
 import { checkBrandColour } from '../render/contrast.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url)); // server/src/routes
+
 export const adminRouter = Router();
 
 // Gated by the platform-admin session cookie set by POST /api/auth/platform/login.
 // Password is the ADMIN_PASSWORD env var on Render (default '3ntitledto').
 adminRouter.use(requireSession('platform-admin'));
+
+// --- Backups --------------------------------------------------------------
+//
+// Self-service snapshots, gated behind the platform-admin session like the rest
+// of this router. /backup/current is a live export of the DB; /backup/pre-12-june
+// is the frozen snapshot taken before the 12 June 2026 CAB text updates (shipped
+// inside the image at server/src/backups, since the repo-root backup folder is
+// not copied into the runtime container).
+
+function templateExportRow(t: Record<string, unknown>) {
+  const palette = JSON.parse((t.default_palette_json as string) || '{}') as Record<string, unknown>;
+  const body = (palette.content as Record<string, string>) ?? {};
+  const paletteOnly = { ...palette };
+  delete (paletteOnly as Record<string, unknown>).content;
+  return {
+    slug: t.slug, name: t.name, description: t.description, audience: t.audience,
+    status: t.status, body_path: t.body_path, version: t.version, changelog: t.changelog,
+    palette: paletteOnly, body, facts: JSON.parse((t.facts_json as string) || '{}'),
+    created_at: t.created_at, updated_at: t.updated_at,
+  };
+}
+
+adminRouter.get('/backup/current', (_req, res) => {
+  const templates = (db
+    .prepare(
+      `SELECT slug, name, description, audience, body_path, default_palette_json,
+              facts_json, version, changelog, status, created_at, updated_at
+         FROM templates ORDER BY id`
+    )
+    .all() as Array<Record<string, unknown>>).map(templateExportRow);
+  const customizations = (db
+    .prepare(
+      `SELECT c.public_slug, c.la_slug, c.school_urn, c.owner_email,
+              c.template_version_at_publish, c.overrides_json, c.published_at,
+              t.slug AS template_slug
+         FROM customizations c JOIN templates t ON t.id = c.template_id
+        ORDER BY c.id`
+    )
+    .all() as Array<Record<string, unknown>>).map((c) => ({
+    public_slug: c.public_slug, template_slug: c.template_slug, la_slug: c.la_slug,
+    school_urn: c.school_urn, owner_email: c.owner_email,
+    template_version_at_publish: c.template_version_at_publish,
+    overrides: JSON.parse((c.overrides_json as string) || '{}'), published_at: c.published_at,
+  }));
+  const now = new Date();
+  const stamp = now.toISOString().slice(0, 10);
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="templates-backup-${stamp}.json"`);
+  res.send(
+    JSON.stringify(
+      { snapshot: 'current', exported_at: now.toISOString(), templates, customizations },
+      null,
+      2
+    )
+  );
+});
+
+adminRouter.get('/backup/pre-12-june', (_req, res) => {
+  const file = path.resolve(__dirname, '..', 'backups', 'pre-12-june.json');
+  if (!fs.existsSync(file)) return res.status(404).json({ error: 'snapshot_not_found' });
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Content-Disposition', 'attachment; filename="templates-before-12-june.json"');
+  res.send(fs.readFileSync(file, 'utf8'));
+});
 
 // --- Templates -----------------------------------------------------------
 

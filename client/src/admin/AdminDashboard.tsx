@@ -41,6 +41,8 @@ export function AdminDashboard() {
           </Link>
           <nav className="app-header__nav">
             <Link to="/">Public site</Link>
+            <a href="/api/admin/backup/current" title="Download a snapshot of all current templates and customisations as JSON">⬇ Download backup</a>
+            <a href="/api/admin/backup/pre-12-june" title="Download the snapshot of all templates as they were before the 12 June 2026 updates">Pre-12 June version</a>
             <span style={{ color: 'rgba(255,255,255,0.7)' }}>{email}</span>
             <a href="#" onClick={(e) => { e.preventDefault(); logout(); }}>Sign out</a>
           </nav>
