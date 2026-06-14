@@ -69,8 +69,12 @@ export async function renderLeaflet(input: RenderInput): Promise<string> {
   const overrides = customization
     ? (JSON.parse(customization.overrides_json || '{}') as Record<string, string>)
     : {};
+  // An override that is *present* wins over the default even when it's an empty
+  // string — that's how a customiser deletes a sentence/section for good
+  // (clearing a field blanks it on the leaflet instead of reverting to the
+  // template default). Only a genuinely absent (undefined/null) key falls back.
   for (const [k, v] of Object.entries(overrides)) {
-    if (v != null && v !== '') content[k] = v;
+    if (v != null) content[k] = v;
   }
 
   // School flow lets parents leave the email blank; the template default is

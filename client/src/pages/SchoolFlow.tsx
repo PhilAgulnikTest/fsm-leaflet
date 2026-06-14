@@ -54,24 +54,26 @@ export function SchoolFlow() {
   }
 
   function buildHowToStepsHtml(): string {
-    // Step 1: show the user's wording AND the actual website URL on the leaflet
-    // — Phil wants parents to be able to read the URL, not just click it. The
-    // displayed URL is the clickable target; the protocol prefix is stripped
-    // for readability.
-    const safe1 = escapeHtml(howToStep1.trim() || 'Download the form from your school\'s website');
-    const safe2 = escapeHtml(howToStep2.trim() || 'Or pick up a paper copy from the school office');
+    // A cleared step is dropped entirely (no <li>) rather than reverting to a
+    // default — so a school can delete a line completely. Step 1 also shows the
+    // actual website URL as a clickable, readable link (protocol stripped).
+    const s1 = howToStep1.trim();
+    const s2 = howToStep2.trim();
     const url = website.trim();
-    const isHttpUrl = /^https?:\/\//i.test(url);
-    let step1: string;
-    if (isHttpUrl) {
-      const display = url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
-      step1 = `${safe1} — <a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(display)}</a>`;
-    } else if (url) {
-      step1 = `${safe1} — ${escapeHtml(url)}`;
-    } else {
-      step1 = safe1;
+    const items: string[] = [];
+    if (s1) {
+      const safe1 = escapeHtml(s1);
+      if (/^https?:\/\//i.test(url)) {
+        const display = url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
+        items.push(`${safe1} — <a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(display)}</a>`);
+      } else if (url) {
+        items.push(`${safe1} — ${escapeHtml(url)}`);
+      } else {
+        items.push(safe1);
+      }
     }
-    return `<li>${step1}</li><li>${safe2}</li>`;
+    if (s2) items.push(escapeHtml(s2));
+    return items.map((i) => `<li>${i}</li>`).join('');
   }
 
   // Normalise the calculator address: fall back to the GOV.UK default if blank,
@@ -227,7 +229,8 @@ export function SchoolFlow() {
             <h3 style={{ marginTop: '1.5rem' }}>How to claim — two lines parents see</h3>
             <p className="muted" style={{ marginTop: 0 }}>
               These appear under "HOW TO CLAIM" on the leaflet. Edit the wording to match
-              how your school distributes the form.
+              how your school distributes the form. Clear a line to leave it off the
+              leaflet completely.
             </p>
 
             <div className="form-row">

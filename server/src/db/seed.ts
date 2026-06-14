@@ -25,10 +25,15 @@ const LA_BESPOKE_ATTRIBUTION =
 
 // --- Template defaults -----------------------------------------------------
 
+// Shared base = the June 2026 converged copy. Every template spreads this and
+// then overrides only its own identity (palette, calculator link, contact,
+// attribution). So nawra, entitledto-la, housing and cab all show the same
+// hero / boxes / how-to, including the Reception/Y1/Y2 box.
 const NAWRA_BODY = {
-  hero_title: 'Free school meals are changing',
-  hero_subtitle: 'Important news for parents and carers',
-  hero_date: 'From September 2026',
+  hero_title: 'More children will be entitled to free school meals',
+  hero_subtitle: 'Important news for parents and carers — from September 2026',
+  // Date folded into the subtitle; the separate hero date line is suppressed.
+  hero_date: '',
   intro_html:
     '<strong>Every child whose family receives Universal Credit</strong> can get free school meals.',
   cta_primary_title: 'Register from 1 June',
@@ -37,13 +42,38 @@ const NAWRA_BODY = {
   cta_primary_bg: '#1F7A3F',
   box1_title: 'If your child currently gets free school meals',
   box1_body_html:
-    '<p>From the <strong>2026/27 school year</strong>, eligibility will be checked every year. In some areas your local authority will auto-enrol your child — otherwise make sure you claim again so your child keeps their free meals.</p>',
+    '<p>From the <strong>2026/27 school year</strong>, eligibility will be ' +
+    'checked every year. In some areas your local authority will auto-enrol ' +
+    'your child — check on the school or council website — and otherwise make ' +
+    'sure you claim again if you need to, so your child keeps their free meals ' +
+    '<strong>and your school keeps its Pupil Premium funding</strong>.</p>',
   box2_title: 'If you receive Universal Credit but haven\'t claimed before',
   box2_body_html:
-    '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September.</p>',
-  how_to_intro: 'For both situations above:',
+    '<p>Your child is now eligible for free school meals. <strong>Claim from ' +
+    '1 June</strong> for the start of September term.</p>',
+  // Third scenario box (Reception/Y1/Y2). The kicker labels it; the heading is
+  // omitted. Suppressed when content.is_secondary is set (see render/leaflet.ts).
+  box3_kicker: 'RECEPTION · YEAR 1 · YEAR 2',
+  box3_body_html:
+    '<p>All children in Reception, Year 1 and Year 2 get free school meals ' +
+    'automatically, whatever the family income. If you receive Universal ' +
+    'Credit, <strong>still tell the school office and register</strong>. This ' +
+    'will also bring the school its extra funding called <strong>Pupil ' +
+    'Premium</strong>, which is used to support educational outcomes for all.</p>',
+  how_to_intro: 'About an hour of your time — and two things worth doing:',
   how_to_steps_html:
-    '<li>Download the form from your school\'s website</li><li>Or pick up a paper copy from the school office</li>',
+    '<li><strong>Apply for free school meals</strong> through your school ' +
+    "office, your school's website, or your local council. You'll need: " +
+    "your National Insurance number, your address and postcode, your child's " +
+    'full name and date of birth, and the name of the benefit you receive ' +
+    '(Universal Credit or another qualifying benefit).</li>' +
+    '<li><strong>Check you have made a claim for ' +
+    '<a href="https://www.gov.uk/child-benefit/how-to-claim">Child Benefit</a>.</strong> ' +
+    'If you are entitled it could mean some extra income. And it is worth ' +
+    "claiming as it protects the at-home parent's National Insurance record — " +
+    'even if one parent earns over £80,000 and the payment is fully clawed ' +
+    'back by the High Income Child Benefit Charge, register anyway and tick ' +
+    'the box to opt out of payment.</li>',
   cta_secondary_title: 'Not on Universal Credit yet?',
   cta_secondary_body_html:
     'You may still be entitled. A free benefit calculator will tell you if you could qualify for Universal Credit and free school meals.',
@@ -72,16 +102,12 @@ const NAWRA_FACTS = {
   benefit_calculator_url: 'https://www.gov.uk/benefits-calculators',
 };
 
+// entitledto LA-bespoke. Same converged copy as the base; only the identity
+// differs — navy CTA, the entitledto calculator + its promo line, and the
+// entitledto credit. Palette comes from ENTITLEDTO_PALETTE.
 const ENTITLEDTO_BODY = {
   ...NAWRA_BODY,
-  intro_html:
-    'From September 2026, every child whose family receives <strong>Universal Credit</strong> can get free school meals.',
-  cta_primary_title: 'The government are expanding free school meals and getting everyone to register annually.',
-  cta_primary_body_html:
-    '<strong><u>Apply before the Autumn term starts</u></strong> so your child doesn\'t miss out.',
   cta_primary_bg: '#2858E5',
-  box2_body_html:
-    '<p>Your child is now eligible. <strong>Claim from 1 June</strong> for the start of September.</p>',
   cta_secondary_body_html:
     'You may still be entitled. Use the free, independent entitledto calculator to check Universal Credit, free school meals, and 30+ other benefits in under 10 minutes.',
   calculator_url: 'https://entitledto.co.uk',
@@ -101,59 +127,15 @@ const ENTITLEDTO_PALETTE = {
 
 const HOUSING_BODY = {
   ...NAWRA_BODY,
-  hero_title: 'Free school meals — for tenant families',
-  hero_subtitle: 'Information from your housing association',
   contact_name: '[Housing association name]',
   attribution_html: LA_BESPOKE_ATTRIBUTION,
 };
 
-// CAB template — June 2026 converged text. Generic Citizens Advice version;
-// contact slots are placeholders for each office to fill in. The "Not on
-// Universal Credit yet?" message stays in the inherited yellow CTA box (with
-// the GOV.UK calculator link); box 3 carries the Pupil Premium point.
+// CAB template — the converged copy now lives in the shared base, so CAB only
+// sets its own contact placeholders. The "Not on Universal Credit yet?" yellow
+// box (gov.uk calculator) and box 3 come from the base.
 const CAB_BODY = {
   ...NAWRA_BODY,
-  hero_title: 'More children will be entitled to free school meals',
-  hero_subtitle: 'Important news for parents and carers — from September 2026',
-  // Date is now folded into the subtitle above, so the separate date line is
-  // suppressed (it would otherwise repeat "From September 2026").
-  hero_date: '',
-  box1_body_html:
-    '<p>From the <strong>2026/27 school year</strong>, eligibility will be ' +
-    'checked every year. In some areas your local authority will auto-enrol ' +
-    'your child — check on the school or council website — and otherwise make ' +
-    'sure you claim again if you need to, so your child keeps their free meals ' +
-    '<strong>and your school keeps its Pupil Premium funding</strong>.</p>',
-  box2_body_html:
-    '<p>Your child is now eligible for free school meals. <strong>Claim from ' +
-    '1 June</strong> for the start of September term.</p>',
-  // Third scenario box — same visual style as boxes 1 and 2, with a kicker.
-  // Pupil Premium only attaches to registered (benefits-based) FSM, not the
-  // universal infant free meals that Reception/Y1/Y2 children get
-  // automatically, so the PP point lives here. Dropped automatically when
-  // content.is_secondary is set (secondary schools have no infant pupils).
-  // Kicker alone labels this box; the heading would just repeat it, so it's omitted.
-  box3_kicker: 'RECEPTION · YEAR 1 · YEAR 2',
-  box3_body_html:
-    '<p>All children in Reception, Year 1 and Year 2 get free school meals ' +
-    'automatically, whatever the family income. If you receive Universal ' +
-    'Credit, <strong>still tell the school office and register</strong>. This ' +
-    'will also bring the school its extra funding called <strong>Pupil ' +
-    'Premium</strong>, which is used to support educational outcomes for all.</p>',
-  how_to_intro: 'About an hour of your time — and two things worth doing:',
-  how_to_steps_html:
-    '<li><strong>Apply for free school meals</strong> through your school ' +
-    "office, your school's website, or your local council. You'll need: " +
-    "your National Insurance number, your address and postcode, your child's " +
-    'full name and date of birth, and the name of the benefit you receive ' +
-    '(Universal Credit or another qualifying benefit).</li>' +
-    '<li><strong>Check you have made a claim for ' +
-    '<a href="https://www.gov.uk/child-benefit/how-to-claim">Child Benefit</a>.</strong> ' +
-    'If you are entitled it could mean some extra income. And it is worth ' +
-    "claiming as it protects the at-home parent's National Insurance record — " +
-    'even if one parent earns over £80,000 and the payment is fully clawed ' +
-    'back by the High Income Child Benefit Charge, register anyway and tick ' +
-    'the box to opt out of payment.</li>',
   contact_name: '[Citizens Advice office name]',
   contact_phone: '[Telephone]',
   contact_email: '[Email]',

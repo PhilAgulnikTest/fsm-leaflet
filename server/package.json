@@ -14,6 +14,7 @@
     "translate:templates": "tsx src/db/translate-templates.ts",
     "translate:scaffold": "tsx src/db/scaffold-translations.ts",
     "translate:import": "tsx src/db/import-translations.ts",
+    "translate:export": "tsx src/db/export-translations.ts",
     "admin:set-password": "tsx src/db/admin-set-password.ts",
     "typecheck": "tsc --noEmit"
   },

@@ -52,10 +52,15 @@ const TRANSLATABLE_KEYS = [
   'box1_body_html',
   'box2_title',
   'box2_body_html',
+  'box3_kicker',
+  'box3_body_html',
   'how_to_intro',
   'how_to_steps_html',
   'cta_secondary_title',
   'cta_secondary_body_html',
+  'label_what_this_means',
+  'label_how_to_claim',
+  'attribution_html',
 ];
 
 type TemplateRow = {

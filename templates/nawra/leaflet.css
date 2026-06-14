@@ -419,32 +419,32 @@ html, body {
   content: "‹";
 }
 
-/* CAB-only fit (12 June 2026 converged text) -----------------------------
-   The CAB leaflet carries a third scenario box plus the longer Child Benefit
-   step, so it needs tighter vertical rhythm than the other templates to stay
-   on one A4 page. Everything here is scoped to .leaflet--cab, so no other
-   template is affected. Step 5.1 (whitespace) of the fit procedure. */
-.leaflet--cab .leaflet__hero { padding-bottom: 5mm; margin-bottom: 3.5mm; }
-.leaflet--cab .leaflet__intro p { margin: 2mm 0 3mm; }
-.leaflet--cab .leaflet__cta-primary { padding: 4.5mm 8mm; margin-bottom: 3.5mm; }
-.leaflet--cab .leaflet__section-heading { margin: 2mm 0 2mm; }
-.leaflet--cab .leaflet__info-boxes { gap: 2.5mm; margin-bottom: 3mm; }
-.leaflet--cab .leaflet__info-box { padding: 3mm 5mm; }
-.leaflet--cab .leaflet__info-box-title { margin-bottom: 1mm; }
-.leaflet--cab .leaflet__how-to-claim { padding: 2.5mm 5mm; margin-bottom: 3mm; }
-.leaflet--cab .leaflet__how-to-list li { padding-top: 0.3mm; padding-bottom: 0.3mm; }
-.leaflet--cab .leaflet__cta-secondary { padding: 3mm 5mm; margin-bottom: 3mm; }
-.leaflet--cab .leaflet__contact { margin-top: 3mm; padding-top: 2.5mm; }
+/* One-A4 fit (June 2026 converged text) ----------------------------------
+   Every template now carries the third scenario box plus the longer Child
+   Benefit step, so they all need the tighter vertical rhythm that was first
+   applied to CAB. These rules sit after the base rules above and so win on
+   cascade order; they apply to all leaflets. Whitespace first: */
+.leaflet__hero { padding-bottom: 5mm; margin-bottom: 3.5mm; }
+.leaflet__intro p { margin: 2mm 0 3mm; }
+.leaflet__cta-primary { padding: 4.5mm 8mm; margin-bottom: 3.5mm; }
+.leaflet__section-heading { margin: 2mm 0 2mm; }
+.leaflet__info-boxes { gap: 2.5mm; margin-bottom: 3mm; }
+.leaflet__info-box { padding: 2.5mm 5mm; }
+.leaflet__info-box-title { margin-bottom: 1mm; }
+.leaflet__how-to-claim { padding: 2mm 5mm; margin-bottom: 3mm; }
+.leaflet__how-to-list li { padding-top: 0.3mm; padding-bottom: 0.3mm; }
+.leaflet__cta-secondary { padding: 3mm 5mm; margin-bottom: 3mm; }
+.leaflet__contact { margin-top: 3mm; padding-top: 2.5mm; }
 
-/* Step 5.2 — type ~1pt smaller with tighter line-height, CAB only. */
-.leaflet--cab .leaflet__title { font-size: 23pt; }
-.leaflet--cab .leaflet__intro p { font-size: 11pt; line-height: 1.3; }
-.leaflet--cab .leaflet__cta-primary-title,
-.leaflet--cab .leaflet__cta-primary-body { font-size: 13pt; line-height: 1.25; }
-.leaflet--cab .leaflet__info-box-title { font-size: 11.5pt; }
-.leaflet--cab .leaflet__info-box-body { font-size: 9.5pt; line-height: 1.3; }
-.leaflet--cab .leaflet__info-box-eyebrow { font-size: 7.5pt; }
-.leaflet--cab .leaflet__how-to-intro { font-size: 9pt; }
-.leaflet--cab .leaflet__how-to-list li { font-size: 9.5pt; line-height: 1.3; }
-.leaflet--cab .leaflet__cta-secondary-title { font-size: 11.5pt; }
-.leaflet--cab .leaflet__cta-secondary-body { font-size: 9.5pt; line-height: 1.3; }
+/* Then type ~1pt smaller with tighter line-height. */
+.leaflet__title { font-size: 23pt; }
+.leaflet__intro p { font-size: 11pt; line-height: 1.3; }
+.leaflet__cta-primary-title,
+.leaflet__cta-primary-body { font-size: 13pt; line-height: 1.25; }
+.leaflet__info-box-title { font-size: 11.5pt; }
+.leaflet__info-box-body { font-size: 9.5pt; line-height: 1.25; }
+.leaflet__info-box-eyebrow { font-size: 7.5pt; }
+.leaflet__how-to-intro { font-size: 9pt; }
+.leaflet__how-to-list li { font-size: 9.5pt; line-height: 1.25; }
+.leaflet__cta-secondary-title { font-size: 11.5pt; }
+.leaflet__cta-secondary-body { font-size: 9.5pt; line-height: 1.3; }

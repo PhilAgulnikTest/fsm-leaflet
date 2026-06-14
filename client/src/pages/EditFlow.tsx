@@ -186,6 +186,7 @@ export function EditFlow() {
         ) : (
           <>
             <h3>Sections</h3>
+            <p className="muted">Clear a field and save to remove that text from the leaflet completely — it won't revert to the default wording.</p>
             {Object.entries(overrides).map(([key, value]) => (
               <div className="form-row" key={key}>
                 <label htmlFor={`edit-${key}`}>{fieldLabel(key)}</label>
