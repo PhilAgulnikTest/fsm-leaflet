@@ -47,15 +47,11 @@
     <section class="leaflet__how-to-claim">
       <h3 class="leaflet__how-to-title">{{LABEL_HOW_TO_CLAIM}}</h3>
       <p class="leaflet__how-to-intro">{{HOW_TO_INTRO}}</p>
-      <ul class="leaflet__how-to-list" data-edit-key="how_to_steps_html">
+      <ol class="leaflet__how-to-list" data-edit-key="how_to_steps_html">
         {{HOW_TO_STEPS_HTML}}
-      </ul>
-    </section>
-
-    <section class="leaflet__cta-secondary">
-      <h3 class="leaflet__cta-secondary-title" data-edit-key="cta_secondary_title">{{CTA_SECONDARY_TITLE}}</h3>
-      <p class="leaflet__cta-secondary-body" data-edit-key="cta_secondary_body_html">{{CTA_SECONDARY_BODY_HTML}}</p>
-      <p class="leaflet__cta-secondary-link">
+        <li data-edit-key="cta_secondary_body_html"><strong>{{CTA_SECONDARY_TITLE}}</strong> {{CTA_SECONDARY_BODY_HTML}}</li>
+      </ol>
+      <p class="leaflet__how-to-cta-link">
         <a href="{{CALCULATOR_URL}}" target="_blank" rel="noopener">{{CALCULATOR_URL_DISPLAY}}</a>
       </p>
     </section>

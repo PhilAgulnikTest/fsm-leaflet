@@ -36,13 +36,13 @@ const NAWRA_BODY = {
   hero_date: '',
   intro_html:
     '<strong>Every child whose family receives Universal Credit</strong> can get free school meals.',
-  cta_primary_title: 'Register from 1 June',
+  cta_primary_title: 'Register from 1 June 2026',
   cta_primary_body_html:
     'Sign up <strong><u>before the Autumn term starts</u></strong> so your child gets every free meal they\'re entitled to.',
   cta_primary_bg: '#1F7A3F',
   box1_title: 'If your child currently gets free school meals',
   box1_body_html:
-    '<p>From the <strong>2026/27 school year</strong>, eligibility will be ' +
+    '<p>From the <strong>next (2026/27)</strong> school year, eligibility will be ' +
     'checked every year. In some areas your local authority will auto-enrol ' +
     'your child — check on the school or council website — and otherwise make ' +
     'sure you claim again if you need to, so your child keeps their free meals ' +
@@ -59,8 +59,8 @@ const NAWRA_BODY = {
     'automatically, whatever the family income. If you receive Universal ' +
     'Credit, <strong>still tell the school office and register</strong>. This ' +
     'will also bring the school its extra funding called <strong>Pupil ' +
-    'Premium</strong>, which is used to support educational outcomes for all.</p>',
-  how_to_intro: 'About an hour of your time — and two things worth doing:',
+    'Premium</strong>, which is used to support educational outcomes for all pupils.</p>',
+  how_to_intro: 'About an hour of your time.',
   how_to_steps_html:
     '<li><strong>Apply for free school meals</strong> through your school ' +
     "office, your school's website, or your local council. You'll need: " +
@@ -76,7 +76,8 @@ const NAWRA_BODY = {
     'the box to opt out of payment.</li>',
   cta_secondary_title: 'Not on Universal Credit yet?',
   cta_secondary_body_html:
-    'You may still be entitled. A free benefit calculator will tell you if you could qualify for Universal Credit and free school meals.',
+    'You may be entitled. A free and confidential benefit calculator will tell you if you could qualify for Universal Credit and free school meals.',
+  label_how_to_claim: 'HOW TO CLAIM THESE BENEFITS',
   calculator_url: 'https://www.gov.uk/benefits-calculators',
   calculator_url_display: 'https://www.gov.uk/benefits-calculators',
   contact_name: '[School name]',

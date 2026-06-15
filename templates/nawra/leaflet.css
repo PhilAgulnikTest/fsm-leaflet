@@ -223,9 +223,10 @@ html, body {
 /* How to claim ----------------------------------------------------------- */
 
 .leaflet__how-to-claim {
-  border: 1px solid var(--box-blue-border);
-  border-radius: 2mm;
-  padding: 3mm 5mm;
+  background: var(--warning-yellow);
+  border-left: 3mm solid var(--warning-yellow-border);
+  border-radius: 0 2mm 2mm 0;
+  padding: 4mm 5mm;
   margin: 0 0 4mm;
 }
 
@@ -246,22 +247,36 @@ html, body {
 
 .leaflet__how-to-list {
   list-style: none;
+  counter-reset: howstep;
   padding: 0;
   margin: 0;
 }
 
 .leaflet__how-to-list li {
   position: relative;
-  padding: 0.5mm 0 0.5mm 6mm;
+  counter-increment: howstep;
+  padding: 1mm 0 1mm 7mm;
   font-size: 10.5pt;
 }
 
 .leaflet__how-to-list li::before {
-  content: "›";
+  content: counter(howstep) ".";
   position: absolute;
-  left: 2mm;
+  left: 1mm;
   color: var(--brand);
   font-weight: 700;
+}
+
+/* Calculator link, centred under the numbered list (was the old yellow box). */
+.leaflet__how-to-cta-link {
+  text-align: center;
+  margin: 2mm 0 0;
+}
+.leaflet__how-to-cta-link a {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: underline;
+  word-break: break-all;
 }
 
 /* Secondary CTA (yellow) ------------------------------------------------- */
@@ -415,8 +430,8 @@ html, body {
 
 [dir="rtl"] .leaflet__how-to-list li::before {
   left: auto;
-  right: 2mm;
-  content: "‹";
+  right: 1mm;
+  content: counter(howstep) ".";
 }
 
 /* One-A4 fit (June 2026 converged text) ----------------------------------
